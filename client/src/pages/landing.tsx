@@ -17,10 +17,10 @@ const Landing: React.FC = () => {
 
         <div className="font-inter hidden md:block">
           <Link to="/login">
-            <button className="mr-6 text-white">Login</button>
+            <button className="mr-6 text-white font-semibold">Login</button>
           </Link>
           <Link to="/signup">
-            <button className="py-2 px-4 text-white bg-lightPurple rounded-3xl">
+            <button className="py-2 px-4 text-white font-semibold bg-lightPurple rounded-3xl">
               Sign Up
             </button>
           </Link>

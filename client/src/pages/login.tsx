@@ -7,13 +7,13 @@ const Registration: React.FC = () => {
       <div className="max-w-sm mx-auto w-full">
         <div className="sm:mx-auto sm:w-full sm:max-w-sm flex flex-col items-center">
           <Logo />
-          <h2 className="mt-4 text-center text-2xl font-bold leading-9 tracking-tight text-white">
+          <h2 className="font-inter mt-4 text-center text-2xl font-bold leading-9 tracking-tight text-white">
             Sign in to your account
           </h2>
         </div>
         <button
           className="w-full group h-12 mt-5 mb-2 px-6 border-2 border-gray-300 rounded-full transition duration-300 
- hover:border-blue-400 focus:bg-blue-50 active:bg-blue-100"
+ hover:border-lightPurple focus:bg-[#212834] active:bg-[#212834]"
         >
           <div className="relative flex items-center space-x-4 justify-center">
             <img
@@ -21,7 +21,7 @@ const Registration: React.FC = () => {
               className="absolute left-0 w-5"
               alt="google logo"
             />
-            <span className="block w-max font-semibold tracking-wide text-white text-sm transition duration-300 group-hover:text-blue-600 sm:text-base">
+            <span className="block w-max font-semibold tracking-wide text-white text-sm transition duration-300 group-hover:text-lightPurple sm:text-base">
               Continue with Google
             </span>
           </div>
