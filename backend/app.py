@@ -51,6 +51,10 @@ def upload_file():
 
         app.logger.info(
             'Image uploaded and processed successfully! %s', filename)
+
+        os.remove(file_path)
+        app.logger.info('Image deleted! %s', filename)
+
         return jsonify(stock_data)
 
     except Exception as e:
