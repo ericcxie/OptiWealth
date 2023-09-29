@@ -1,18 +1,29 @@
 import React from "react";
+import { Link } from "react-router-dom";
+import Logo from "../components/ui/logo";
 
 const Landing: React.FC = () => {
   return (
-    <div className="bg-white">
-      <nav className="fixed flex justify-between py-6 w-full lg:px-48 md:px-12 px-4 content-center bg-white z-10">
-        <div className="flex items-center">
-          <img src="/dist/assets/Logo_black.svg" alt="Logo" className="h-4" />
+    <div className="bg-background">
+      <nav className="fixed flex justify-between py-6 w-full lg:px-48 md:px-12 px-4 content-center bg-background z-10">
+        <div className="flex flex-row">
+          <div className="mr-4">
+            <Logo />
+          </div>
+          <h1 className="text-inter text-transparent font-bold bg-clip-text bg-gradient-to-r from-blue-700 to-purple-600 text-2xl">
+            OptiWealth
+          </h1>
         </div>
 
-        <div className="font-montserrat hidden md:block">
-          <button className="mr-6">Login</button>
-          <button className="py-2 px-4 text-white bg-black rounded-3xl">
-            Signup
-          </button>
+        <div className="font-inter hidden md:block">
+          <Link to="/login">
+            <button className="mr-6 text-white">Login</button>
+          </Link>
+          <Link to="/signup">
+            <button className="py-2 px-4 text-white bg-lightPurple rounded-3xl">
+              Sign Up
+            </button>
+          </Link>
         </div>
         <div id="showMenu" className="md:hidden">
           <img src="dist/assets/logos/Menu.svg" alt="Menu icon" />
@@ -30,47 +41,48 @@ const Landing: React.FC = () => {
       {/* Hero */}
       <section className="md:mt-0 md:h-screen flex flex-col justify-center text-center md:text-left md:flex-row md:justify-between md:items-center lg:px-48 md:px-12 px-4 bg-secondary">
         <div className="mt-24 md:mt-0 md:flex-1 md:mr-10">
-          <h1 className="font-pt-serif text-4xl font-bold mb-7">
+          <h1 className="font-inter text-3xl font-bold mb-5 text-white">
             Rebalance your{" "}
-            <span className="bg-clip-text text-4xl text-transparent bg-gradient-to-r from-blue-800 to-teal-500">
-              portfolio
+            <span className="bg-clip-text text-3xl text-transparent bg-gradient-to-r from-blue-700 to-teal-500">
+              Portfolio
             </span>{" "}
             with{" "}
-            <span className="bg-clip-text text-5xl text-transparent bg-gradient-to-r from-blue-500 to-purple-500">
-              OptiWealth
+            <span className="bg-clip-text text-5xl text-transparent bg-gradient-to-r from-blue-700 to-purple-600">
+              OptiWealth.
             </span>
           </h1>
-          <p className="font-pt-serif font-normal mb-7">
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Laborum
-            harum tempore consectetur voluptas, cumque nobis laboriosam
-            voluptatem.
+          <p className="font-inter text-lg font-medium mb-7 text-white">
+            Optimize your investments. Take control of your financial future.
+            Sign up today.
           </p>
-          <div className="font-montserrat">
-            <button className="bg-black px-6 py-4 rounded-3xl border-2 border-black border-solid text-white mr-2 mb-2">
-              Get started
-            </button>
-            <button className="px-6 py-4 border-2 border-black border-solid rounded-3xl hover:bg-black hover:text-white">
+          <div className="font-inter">
+            <Link to="/signup">
+              <button className="bg-gradient-to-r from-purple-900 to-blue-600 px-6 py-3 rounded-3xl border-2 border-background border-solid text-white mr-2 mb-2">
+                Get started
+              </button>
+            </Link>
+            <button className="text-white px-6 py-3 border-2 border-white border-solid rounded-3xl">
               Learn more
             </button>
           </div>
         </div>
-        <div className="flex justify-around md:block scale-125 mt-8 md:mt-0 md:flex-1">
+        <div className="flex justify-around md:block mt-8 md:mt-0 md:flex-1">
           <img src="/dist/assets/MacBook.png" alt="Macbook" />
         </div>
       </section>
 
       {/* <!-- How it works --> */}
-      <section className="bg-black text-white sectionSize">
+      <section className="bg-gradient-to-r from-purple-950 via-background to-blue-950 text-white sectionSize">
         <div>
-          <h2 className="text-3xl font-bold bg-100%">How It Works</h2>
+          <h2 className="mb-4 text-3xl font-inter font-bold">How It Works</h2>
         </div>
         <div className="flex flex-col md:flex-row">
           <div className="flex-1 mx-8 flex flex-col items-center my-4">
             <div className="border-2 rounded-full bg-secondary text-white h-12 w-12 flex justify-center items-center mb-3">
               1
             </div>
-            <h3 className="font-montserrat font-medium text-xl mb-2">Eat</h3>
-            <p className="text-center font-montserrat">
+            <h3 className="font-inter font-medium text-xl mb-2">Scan</h3>
+            <p className="text-center font-inter">
               Lorem ipsum dolor, sit amet consectetur adipisicing elit.
             </p>
           </div>
@@ -78,8 +90,8 @@ const Landing: React.FC = () => {
             <div className="border-2 rounded-full bg-secondary text-white h-12 w-12 flex justify-center items-center mb-3">
               2
             </div>
-            <h3 className="font-montserrat font-medium text-xl mb-2">Sleep</h3>
-            <p className="text-center font-montserrat">
+            <h3 className="font-inter font-medium text-xl mb-2">Modify</h3>
+            <p className="text-center font-inter">
               Lorem ipsum dolor, sit amet consectetur adipisicing elit.
             </p>
           </div>
@@ -87,8 +99,8 @@ const Landing: React.FC = () => {
             <div className="border-2 rounded-full bg-secondary text-white h-12 w-12 flex justify-center items-center mb-3">
               3
             </div>
-            <h3 className="font-montserrat font-medium text-xl mb-2">Rave</h3>
-            <p className="text-center font-montserrat">
+            <h3 className="font-inter font-medium text-xl mb-2">Optimize</h3>
+            <p className="text-center font-inter">
               Lorem ipsum dolor, sit amet consectetur adipisicing elit.
             </p>
           </div>
@@ -97,7 +109,7 @@ const Landing: React.FC = () => {
 
       {/* footer */}
       <section>
-        <div className="px-14 md:flex md:items-center md:justify-between py-4 md:py-8 border-t border-gray-200">
+        <div className="px-14 md:flex md:items-center md:justify-between py-4 md:py-8 border-t border-gray-600">
           {/* Social as */}
           <ul className="flex mb-4 md:order-1 md:ml-4 md:mb-0">
             <li>
@@ -148,7 +160,7 @@ const Landing: React.FC = () => {
           </ul>
 
           {/* Copyrights note */}
-          <div className="text-sm text-gray-600 mr-4">
+          <div className="text-sm font-inter text-white mr-4">
             &copy; 2023 Eric Xie. | Designed & Built with ☕️
           </div>
         </div>
