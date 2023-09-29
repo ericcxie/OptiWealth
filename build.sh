@@ -5,5 +5,10 @@ npm start
 
 cd ../backend
 pip install -r requirements.txt
-run flask
+
+# Run tests
+python -m pytest
+
+# Start server
+python3 app.py
 
