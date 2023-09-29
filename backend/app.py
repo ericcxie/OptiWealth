@@ -27,28 +27,35 @@ def allowed_file(filename):
         filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 
-@app.route('/upload', methods=['GET', 'POST'])
+@app.route('/upload', methods=['POST'])
 def upload_file():
-    if request.method == 'POST':
-        print("Request data", request.data)
-        print("Request files", request.files)
+    if 'file' not in request.files:
+        app.logger.error('No file part in the request')
+        return jsonify({'error': 'No file part in the request'}), 400
 
-        if 'file' not in request.files:
-            return 'bad request!', 400
-        file = request.files['file']
+    file = request.files['file']
 
-        if file and allowed_file(file.filename):
-            filename = secure_filename(file.filename)
-            file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+    if not allowed_file(file.filename):
+        app.logger.error('Invalid file format: %s', file.filename)
+        return jsonify({'error': 'Invalid file format'}), 400
 
-            # Process the uploaded image with OCR
-            extracted_text = parse_image(os.path.join(
-                app.config['UPLOAD_FOLDER'], filename))
-            stock_data = clean_data(extracted_text)
+    filename = secure_filename(file.filename)
+    file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
 
-            return jsonify(stock_data)
-        else:
-            return jsonify({'error': 'Invalid file format'})
+    try:
+        file.save(file_path)
+
+        # Process the uploaded image with OCR
+        extracted_text = parse_image(file_path)
+        stock_data = clean_data(extracted_text)
+
+        app.logger.info(
+            'Image uploaded and processed successfully! %s', filename)
+        return jsonify(stock_data)
+
+    except Exception as e:
+        app.logger.error('Error processing uploaded image: %s', str(e))
+        return jsonify({'error': 'Error processing uploaded image'}), 500
 
 
 if __name__ == "__main__":
