@@ -1,13 +1,13 @@
 import React from "react";
 import "./App.css";
-import Landing from "./components/landing";
+import Landing from "./pages/landing";
 import ImageUpload from "./components/imageUpload";
 
 function App() {
   return (
     <div>
       {/* <Landing /> */}
-      <ImageUpload />
+      {/* <ImageUpload /> */}
     </div>
   );
 }

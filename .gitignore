@@ -154,3 +154,4 @@ cython_debug/
 #.idea/
 
 git.sh
+.DS_Store
