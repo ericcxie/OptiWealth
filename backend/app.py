@@ -7,6 +7,7 @@ import os
 
 
 app = Flask(__name__)
+CORS(app)
 
 # Path for uploaded images
 UPLOAD_FOLDER = 'data/uploads/'
