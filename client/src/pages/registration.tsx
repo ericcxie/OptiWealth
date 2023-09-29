@@ -1,7 +1,19 @@
 import React from "react";
+import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 import Logo from "../components/ui/logo";
+import { auth } from "../utils/firebase";
 
 const Registration: React.FC = () => {
+  // Sign in with google
+  const googleProvider = new GoogleAuthProvider();
+  const GoogleLogin = async () => {
+    try {
+      const result = await signInWithPopup(auth, googleProvider);
+      console.log(result.user);
+    } catch (error) {
+      console.log(error);
+    }
+  };
   return (
     <div className="bg-background flex h-screen flex-1 flex-col justify-center px-6 py-12 lg:px-8">
       <div className="max-w-sm mx-auto w-full">
@@ -12,8 +24,8 @@ const Registration: React.FC = () => {
           </h2>
         </div>
         <button
-          className="w-full group h-12 mt-5 mb-2 px-6 border-2 border-gray-300 rounded-full transition duration-300 
- hover:border-lightPurple focus:bg-[#212834] active:bg-[#212834]"
+          onClick={GoogleLogin}
+          className="w-full group h-12 mt-5 mb-2 px-6 border-2 border-gray-300 rounded-full transition duration-300 hover:border-lightPurple focus:bg-[#212834] active:bg-[#212834]"
         >
           <div className="relative flex items-center space-x-4 justify-center">
             <img
@@ -34,24 +46,6 @@ const Registration: React.FC = () => {
 
         <div className="mt-4 sm:mx-auto sm:w-full sm:max-w-sm">
           <form className="space-y-6" action="#" method="POST">
-            <div>
-              <label
-                htmlFor="name"
-                className="block text-sm font-medium leading-6 text-white"
-              >
-                Full Name
-              </label>
-              <div className="mt-2">
-                <input
-                  id="name"
-                  name="name"
-                  type="text"
-                  autoComplete="name"
-                  required
-                  className="block w-full rounded-md border-0 py-1.5 bg-[#212834] text-white shadow-sm ring-1 ring-inset ring-gray-600 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                />
-              </div>
-            </div>
             <div>
               <label
                 htmlFor="email"
