@@ -6,14 +6,16 @@ const Landing: React.FC = () => {
   return (
     <div className="bg-background">
       <nav className="fixed flex justify-between py-6 w-full lg:px-48 md:px-12 px-4 content-center bg-background z-10">
-        <div className="flex flex-row">
-          <div className="mr-4">
-            <Logo />
+        <Link to="/">
+          <div className="flex flex-row">
+            <div className="mr-4">
+              <Logo />
+            </div>
+            <h1 className="text-inter text-transparent font-bold bg-clip-text bg-gradient-to-r from-blue-700 to-purple-600 text-2xl">
+              OptiWealth
+            </h1>
           </div>
-          <h1 className="text-inter text-transparent font-bold bg-clip-text bg-gradient-to-r from-blue-700 to-purple-600 text-2xl">
-            OptiWealth
-          </h1>
-        </div>
+        </Link>
 
         <div className="font-inter hidden md:block">
           <Link to="/login">
@@ -52,7 +54,7 @@ const Landing: React.FC = () => {
             OptiWealth.
           </h1>
           <p className="font-inter text-lg font-medium mb-7 text-white">
-            Optimize your investments. Take control of your financial future.
+            🚀 Optimize your investments. Take control of your financial future.
             Sign up today.
           </p>
           <div className="font-inter">

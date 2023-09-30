@@ -6,11 +6,13 @@ import {
   signInWithEmailAndPassword,
   GoogleAuthProvider,
   signInWithPopup,
+  AuthErrorCodes,
 } from "firebase/auth";
 
 const Login: React.FC = () => {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
+  const [errorMessage, setErrorMessage] = useState("");
 
   const SignIn = async (e: React.FormEvent<HTMLFormElement>) => {
     // TODO: Sign in
@@ -20,7 +22,13 @@ const Login: React.FC = () => {
         console.log(userCredential);
       })
       .catch((error) => {
-        console.log(error);
+        if (error.code === "auth/invalid-login-credentials") {
+          setErrorMessage(
+            "Invalid login credentials. Please check your email and password."
+          );
+        } else {
+          console.log(error);
+        }
       });
   };
 
@@ -130,6 +138,10 @@ const Login: React.FC = () => {
                 Sign in
               </button>
             </div>
+            {/* Error message for users */}
+            {errorMessage && (
+              <p className="text-red-600 text-sm">{errorMessage}</p>
+            )}
           </form>
 
           <p className="mt-10 text-center text-sm text-gray-500">
