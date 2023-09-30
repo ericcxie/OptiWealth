@@ -47,9 +47,9 @@ const Landing: React.FC = () => {
               Portfolio
             </span>{" "}
             with{" "}
-            <span className="bg-clip-text text-5xl text-transparent bg-gradient-to-r from-blue-700 to-purple-600">
-              OptiWealth.
-            </span>
+          </h1>
+          <h1 className="font-inter font-bold mb-5 bg-clip-text text-5xl text-transparent bg-gradient-to-r from-blue-700 to-purple-600">
+            OptiWealth.
           </h1>
           <p className="font-inter text-lg font-medium mb-7 text-white">
             Optimize your investments. Take control of your financial future.

@@ -1,9 +1,20 @@
-import React from "react";
-import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
+import React, { useState } from "react";
+import {
+  GoogleAuthProvider,
+  signInWithPopup,
+  createUserWithEmailAndPassword,
+  AuthErrorCodes,
+} from "firebase/auth";
 import Logo from "../components/ui/logo";
 import { auth } from "../utils/firebase";
+import { Link } from "react-router-dom";
 
 const Registration: React.FC = () => {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
+
   // Sign in with google
   const googleProvider = new GoogleAuthProvider();
   const GoogleLogin = async () => {
@@ -14,6 +25,34 @@ const Registration: React.FC = () => {
       console.log(error);
     }
   };
+
+  const SignUp = async (e: React.FormEvent<HTMLFormElement>) => {
+    // TODO: Sign in
+    e.preventDefault();
+
+    //  password check
+    if (password !== confirmPassword) {
+      console.log("Passwords do not match");
+      setErrorMessage("Passwords do not match.");
+      return;
+    }
+
+    // Clear error message
+    setErrorMessage("");
+
+    createUserWithEmailAndPassword(auth, email, password)
+      .then((userCredential) => {
+        console.log(userCredential);
+      })
+      .catch((error) => {
+        if (error.code === AuthErrorCodes.EMAIL_EXISTS) {
+          setErrorMessage("Email is already in use");
+        } else {
+          console.log(error);
+        }
+      });
+  };
+
   return (
     <div className="bg-background flex h-screen flex-1 flex-col justify-center px-6 py-12 lg:px-8">
       <div className="max-w-sm mx-auto w-full">
@@ -45,7 +84,12 @@ const Registration: React.FC = () => {
         </div>
 
         <div className="mt-4 sm:mx-auto sm:w-full sm:max-w-sm">
-          <form className="space-y-6" action="#" method="POST">
+          <form
+            className="space-y-6"
+            action="#"
+            method="POST"
+            onSubmit={SignUp}
+          >
             <div>
               <label
                 htmlFor="email"
@@ -58,9 +102,11 @@ const Registration: React.FC = () => {
                   id="email"
                   name="email"
                   type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
                   autoComplete="email"
                   required
-                  className="block w-full rounded-md border-0 py-1.5 bg-[#212834] text-white shadow-sm ring-1 ring-inset ring-gray-600 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                  className="pl-2 block w-full rounded-md border-0 py-1.5 bg-[#212834] text-white shadow-sm ring-1 ring-inset ring-gray-600 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                 />
               </div>
             </div>
@@ -79,9 +125,33 @@ const Registration: React.FC = () => {
                   id="password"
                   name="password"
                   type="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
                   autoComplete="new-password"
                   required
-                  className="block w-full rounded-md border-0 py-1.5 bg-[#212834] text-white shadow-sm ring-1 ring-inset ring-gray-600 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                  className="pl-2 block w-full rounded-md border-0 py-1.5 bg-[#212834] text-white shadow-sm ring-1 ring-inset ring-gray-600 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                />
+              </div>
+            </div>
+            <div>
+              <div className="flex items-center justify-between">
+                <label
+                  htmlFor="password"
+                  className="block text-sm font-medium leading-6 text-white"
+                >
+                  Confirm password
+                </label>
+              </div>
+              <div className="mt-2">
+                <input
+                  id="confirmPassword"
+                  name="confirmPassword"
+                  type="password"
+                  value={confirmPassword}
+                  onChange={(e) => setConfirmPassword(e.target.value)}
+                  autoComplete="new-password"
+                  required
+                  className="pl-2 block w-full rounded-md border-0 py-1.5 bg-[#212834] text-white shadow-sm ring-1 ring-inset ring-gray-600 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                 />
               </div>
             </div>
@@ -94,16 +164,21 @@ const Registration: React.FC = () => {
                 Register
               </button>
             </div>
+
+            {/* Error message for users */}
+            {errorMessage && (
+              <p className="text-red-600 text-sm">{errorMessage}</p>
+            )}
           </form>
 
           <p className="mt-4 text-center text-sm text-gray-500">
             Already have an account?{" "}
-            <a
-              href="#"
+            <Link
+              to="/login"
               className="font-semibold leading-6 text-indigo-600 hover:text-indigo-500"
             >
               Sign in here
-            </a>
+            </Link>
           </p>
         </div>
       </div>
