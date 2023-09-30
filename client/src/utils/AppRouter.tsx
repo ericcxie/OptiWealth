@@ -1,9 +1,10 @@
 import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Landing from "../pages/landing";
-import Registration from "../pages/registration";
-import Login from "../pages/login";
+import Registration from "../pages/auth/registration";
+import Login from "../pages/auth/login";
 import CreatePortfolio from "../pages/createPortfolio";
+import ResetPassword from "../pages/auth/resetPass";
 
 const AppRouter: React.FC = () => {
   return (
@@ -13,6 +14,7 @@ const AppRouter: React.FC = () => {
         <Route path="/signup" element={<Registration />} />
         <Route path="/login" element={<Login />} />
         <Route path="/createportfolio" element={<CreatePortfolio />} />
+        <Route path="/resetpassword" element={<ResetPassword />} />
       </Routes>
     </Router>
   );

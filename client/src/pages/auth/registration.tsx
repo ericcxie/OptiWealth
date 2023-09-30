@@ -1,29 +1,21 @@
 import React, { useState } from "react";
-import Logo from "../components/ui/logo";
-import { Link } from "react-router-dom";
-import { auth } from "../utils/firebase";
 import {
-  signInWithEmailAndPassword,
   GoogleAuthProvider,
   signInWithPopup,
+  createUserWithEmailAndPassword,
+  AuthErrorCodes,
 } from "firebase/auth";
+import Logo from "../../components/ui/logo";
+import { auth } from "../../utils/firebase";
+import { Link } from "react-router-dom";
 
-const Login: React.FC = () => {
-  const [email, setEmail] = useState<string>("");
-  const [password, setPassword] = useState<string>("");
+const Registration: React.FC = () => {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
 
-  const SignIn = async (e: React.FormEvent<HTMLFormElement>) => {
-    // TODO: Sign in
-    e.preventDefault();
-    signInWithEmailAndPassword(auth, email, password)
-      .then((userCredential) => {
-        console.log(userCredential);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  };
-
+  // Sign in with google
   const googleProvider = new GoogleAuthProvider();
   const GoogleLogin = async () => {
     try {
@@ -33,13 +25,41 @@ const Login: React.FC = () => {
       console.log(error);
     }
   };
+
+  const SignUp = async (e: React.FormEvent<HTMLFormElement>) => {
+    // TODO: Sign in
+    e.preventDefault();
+
+    //  password check
+    if (password !== confirmPassword) {
+      console.log("Passwords do not match");
+      setErrorMessage("Passwords do not match.");
+      return;
+    }
+
+    // Clear error message
+    setErrorMessage("");
+
+    createUserWithEmailAndPassword(auth, email, password)
+      .then((userCredential) => {
+        console.log(userCredential);
+      })
+      .catch((error) => {
+        if (error.code === AuthErrorCodes.EMAIL_EXISTS) {
+          setErrorMessage("Email is already in use");
+        } else {
+          console.log(error);
+        }
+      });
+  };
+
   return (
     <div className="bg-background flex h-screen flex-1 flex-col justify-center px-6 py-12 lg:px-8">
       <div className="max-w-sm mx-auto w-full">
         <div className="sm:mx-auto sm:w-full sm:max-w-sm flex flex-col items-center">
           <Logo />
-          <h2 className="font-inter mt-4 text-center text-2xl font-bold leading-9 tracking-tight text-white">
-            Sign in to your account
+          <h2 className="mt-4 text-center text-2xl font-bold leading-9 tracking-tight text-white">
+            Create an Account
           </h2>
         </div>
         <button
@@ -53,7 +73,7 @@ const Login: React.FC = () => {
               alt="google logo"
             />
             <span className="block w-max font-semibold tracking-wide text-white text-sm transition duration-300 group-hover:text-lightPurple sm:text-base">
-              Continue with Google
+              Sign up with Google
             </span>
           </div>
         </button>
@@ -68,7 +88,7 @@ const Login: React.FC = () => {
             className="space-y-6"
             action="#"
             method="POST"
-            onSubmit={SignIn}
+            onSubmit={SignUp}
           >
             <div>
               <label
@@ -99,14 +119,6 @@ const Login: React.FC = () => {
                 >
                   Password
                 </label>
-                <div className="text-sm">
-                  <a
-                    href="#"
-                    className="font-semibold text-indigo-600 hover:text-indigo-500"
-                  >
-                    Forgot password?
-                  </a>
-                </div>
               </div>
               <div className="mt-2">
                 <input
@@ -115,7 +127,29 @@ const Login: React.FC = () => {
                   type="password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  autoComplete="current-password"
+                  autoComplete="new-password"
+                  required
+                  className="pl-2 block w-full rounded-md border-0 py-1.5 bg-[#212834] text-white shadow-sm ring-1 ring-inset ring-gray-600 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                />
+              </div>
+            </div>
+            <div>
+              <div className="flex items-center justify-between">
+                <label
+                  htmlFor="password"
+                  className="block text-sm font-medium leading-6 text-white"
+                >
+                  Confirm password
+                </label>
+              </div>
+              <div className="mt-2">
+                <input
+                  id="confirmPassword"
+                  name="confirmPassword"
+                  type="password"
+                  value={confirmPassword}
+                  onChange={(e) => setConfirmPassword(e.target.value)}
+                  autoComplete="new-password"
                   required
                   className="pl-2 block w-full rounded-md border-0 py-1.5 bg-[#212834] text-white shadow-sm ring-1 ring-inset ring-gray-600 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                 />
@@ -127,18 +161,23 @@ const Login: React.FC = () => {
                 type="submit"
                 className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
               >
-                Sign in
+                Register
               </button>
             </div>
+
+            {/* Error message for users */}
+            {errorMessage && (
+              <p className="text-red-600 text-sm">{errorMessage}</p>
+            )}
           </form>
 
-          <p className="mt-10 text-center text-sm text-gray-500">
-            Don't have an account yet?{" "}
+          <p className="mt-4 text-center text-sm text-gray-500">
+            Already have an account?{" "}
             <Link
-              to="/signup"
+              to="/login"
               className="font-semibold leading-6 text-indigo-600 hover:text-indigo-500"
             >
-              Sign up here
+              Sign in here
             </Link>
           </p>
         </div>
@@ -147,4 +186,4 @@ const Login: React.FC = () => {
   );
 };
 
-export default Login;
+export default Registration;
