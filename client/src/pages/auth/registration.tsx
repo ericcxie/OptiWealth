@@ -7,7 +7,7 @@ import {
 } from "firebase/auth";
 import Logo from "../../components/ui/logo";
 import { auth } from "../../utils/firebase";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const Registration: React.FC = () => {
   const [email, setEmail] = useState("");
@@ -15,12 +15,15 @@ const Registration: React.FC = () => {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
 
+  const navigate = useNavigate();
+
   // Sign in with google
   const googleProvider = new GoogleAuthProvider();
   const GoogleLogin = async () => {
     try {
       const result = await signInWithPopup(auth, googleProvider);
       console.log(result.user);
+      navigate("/setup");
     } catch (error) {
       console.log(error);
     }
@@ -42,13 +45,20 @@ const Registration: React.FC = () => {
 
     createUserWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
+        console.log(
+          "Account successfully created for user:",
+          userCredential.user.email
+        );
         console.log(userCredential);
+        navigate("/setup");
       })
       .catch((error) => {
         if (error.code === AuthErrorCodes.EMAIL_EXISTS) {
           setErrorMessage("Email is already in use");
-        } else {
-          console.log(error);
+        }
+
+        if (error.code === AuthErrorCodes.WEAK_PASSWORD) {
+          setErrorMessage("Password should be at least 6 characters");
         }
       });
   };
@@ -59,7 +69,7 @@ const Registration: React.FC = () => {
         <div className="sm:mx-auto sm:w-full sm:max-w-sm flex flex-col items-center">
           <Logo />
           <h2 className="mt-4 text-center text-2xl font-bold leading-9 tracking-tight text-white">
-            Create an Account
+            Sign up for OptiWealth
           </h2>
         </div>
         <button
@@ -161,7 +171,7 @@ const Registration: React.FC = () => {
                 type="submit"
                 className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
               >
-                Register
+                Create account
               </button>
             </div>
 
@@ -177,7 +187,7 @@ const Registration: React.FC = () => {
               to="/login"
               className="font-semibold leading-6 text-indigo-600 hover:text-indigo-500"
             >
-              Sign in here
+              Log in
             </Link>
           </p>
         </div>

@@ -1,7 +1,7 @@
 import React from "react";
 import ImageUpload from "../components/imageUpload";
 
-const CreatePortfolio: React.FC = () => {
+const Upload: React.FC = () => {
   return (
     <div>
       <ImageUpload />
@@ -9,4 +9,4 @@ const CreatePortfolio: React.FC = () => {
   );
 };
 
-export default CreatePortfolio;
+export default Upload;

@@ -19,6 +19,7 @@ const Login: React.FC = () => {
     e.preventDefault();
     signInWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
+        console.log("Successfully signed in:", userCredential.user.email);
         console.log(userCredential);
       })
       .catch((error) => {
@@ -47,7 +48,7 @@ const Login: React.FC = () => {
         <div className="sm:mx-auto sm:w-full sm:max-w-sm flex flex-col items-center">
           <Logo />
           <h2 className="font-inter mt-4 text-center text-2xl font-bold leading-9 tracking-tight text-white">
-            Sign in to your account
+            Sign in to OptiWealth
           </h2>
         </div>
         <button
@@ -150,7 +151,7 @@ const Login: React.FC = () => {
               to="/signup"
               className="font-semibold leading-6 text-indigo-600 hover:text-indigo-500"
             >
-              Sign up here
+              Create one
             </Link>
           </p>
         </div>
