@@ -27,5 +27,5 @@ npm start
 
 ```
 cd backend/tests && pip install -r test-requirements.txt
-cd .. && python -m pytest
+python -m pytest
 ```
