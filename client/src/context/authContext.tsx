@@ -6,41 +6,44 @@ import React, {
   ReactNode,
 } from "react";
 import { auth } from "../utils/firebase";
-import { User } from "firebase/auth";
+import { User, onAuthStateChanged } from "firebase/auth";
 
-interface AuthContextProps {
+interface Props {
   children: ReactNode;
 }
 
-// Define an authentication context with a default value of null
-const AuthContext = createContext<User | null>(null);
+export const AuthContext = createContext({
+  currentUser: {} as User | null,
+  setCurrentUser: (_user: User) => {},
+  signOut: () => {},
+});
 
-// Create a provider component
-export const AuthProvider = ({ children }: AuthContextProps) => {
-  const [user, setUser] = useState<User | null>(null);
+export const AuthProvider = ({ children }: Props) => {
+  const [currentUser, setCurrentUser] = useState<User | null>(null);
 
   useEffect(() => {
-    // Use Firebase's auth state change listener to update the user status
-    const unsubscribe = auth.onAuthStateChanged((authUser) => {
-      if (authUser) {
-        // User is signed in.
-        setUser(authUser);
-      } else {
-        // User is signed out.
-        setUser(null);
+    const unsubscribe = auth.onAuthStateChanged((user) => {
+      if (user) {
+        setCurrentUser(user);
       }
     });
-
-    return () => {
-      // Unsubscribe from the Firebase listener when the component unmounts
-      unsubscribe();
-    };
+    return () => unsubscribe();
   }, []);
 
-  return <AuthContext.Provider value={user}>{children}</AuthContext.Provider>;
+  const signOut = () => {
+    auth.signOut();
+    setCurrentUser(null);
+  };
+
+  const value = {
+    currentUser,
+    setCurrentUser,
+    signOut,
+  };
+
+  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };
 
-// Create a custom hook to use the context
 export const useAuth = () => {
   return useContext(AuthContext);
 };

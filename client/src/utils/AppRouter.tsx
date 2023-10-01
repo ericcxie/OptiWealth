@@ -1,33 +1,39 @@
 import React from "react";
-import {
-  BrowserRouter as Router,
-  Routes,
-  Route,
-  Navigate,
-} from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Landing from "../pages/landing";
 import Registration from "../pages/auth/registration";
-import Login from "../pages/auth/login";
-import Upload from "../pages/createPortfolio";
-import ResetPassword from "../pages/auth/resetPass";
+import ProtectedRoute from "./ProtectedRoute";
+import { AuthProvider } from "../context/authContext";
 import Setup from "../pages/setup";
-
-import { useAuth } from "../context/authContext";
+import Login from "../pages/auth/login";
+import Dashboard from "../pages/dashboard";
 
 const AppRouter: React.FC = () => {
-  const auth = useAuth();
   return (
     <Router>
-      <Routes>
-        <Route path="/" element={<Landing />} />
-        <Route path="/signup" element={<Registration />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/resetpassword" element={<ResetPassword />} />
-        <Route
-          path="/setup"
-          element={auth ? <Setup /> : <Navigate to="/login" />}
-        />
-      </Routes>
+      <AuthProvider>
+        <Routes>
+          <Route path="/" element={<Landing />} />
+          <Route path="/signup" element={<Registration />} />
+          <Route path="/login" element={<Login />} />
+          <Route
+            path="/setup"
+            element={
+              <ProtectedRoute>
+                <Setup />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/dashboard"
+            element={
+              <ProtectedRoute>
+                <Dashboard />
+              </ProtectedRoute>
+            }
+          />
+        </Routes>
+      </AuthProvider>
     </Router>
   );
 };

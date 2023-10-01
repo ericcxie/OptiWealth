@@ -22,6 +22,8 @@ const Setup: React.FC = () => {
     }
   };
 
+  // Handle logout
+
   return (
     <div className="bg-background flex h-screen flex-1 flex-col justify-center px-6 py-12 lg:px-8">
       <div className="max-w-sm mx-auto w-full">

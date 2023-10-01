@@ -15,8 +15,8 @@ export default function Hero() {
           OptiWealth.
         </h1>
         <p className="font-inter text-lg px-10 md:px-0 font-medium mb-7 text-white">
-          🚀 Optimize your investments. Take control of your financial future.
-          Sign up today.
+          🚀 Optimize your investments. 📈 Take control of your wealth. Sign up
+          today.
         </p>
         <div className="font-inter">
           <Link to="/signup">
@@ -25,7 +25,7 @@ export default function Hero() {
             </button>
           </Link>
           <button className="text-white px-6 py-3 border-2 border-white border-solid rounded-3xl">
-            Learn more
+            <a href="https://github.com/ericcxie/OptiWealth">Learn more</a>
           </button>
         </div>
       </div>

@@ -54,7 +54,7 @@ export default function Footer() {
 
         {/* Copyrights note */}
         <div className="text-sm font-inter text-white mr-4">
-          &copy; 2023 Eric Xie. | Designed & Built with ☕️
+          &copy; 2023 OptiWealth | Designed & Built with ☕️
         </div>
       </div>
     </section>

@@ -23,6 +23,7 @@ const Registration: React.FC = () => {
     try {
       const result = await signInWithPopup(auth, googleProvider);
       console.log(result.user);
+      console.log("User signed up with Google");
       navigate("/setup");
     } catch (error) {
       console.log(error);
@@ -30,9 +31,7 @@ const Registration: React.FC = () => {
   };
 
   const SignUp = async (e: React.FormEvent<HTMLFormElement>) => {
-    // TODO: Sign in
     e.preventDefault();
-
     //  password check
     if (password !== confirmPassword) {
       console.log("Passwords do not match");
@@ -53,13 +52,25 @@ const Registration: React.FC = () => {
         navigate("/setup");
       })
       .catch((error) => {
-        if (error.code === AuthErrorCodes.EMAIL_EXISTS) {
-          setErrorMessage("Email is already in use");
+        switch (error.code) {
+          case "auth/email-already-in-use":
+            setErrorMessage("Email is already in use by another account.");
+            break;
+          case "auth/invalid-email":
+            setErrorMessage("Email address is not valid.");
+            break;
+          case "auth/operation-not-allowed":
+            setErrorMessage("Email/password accounts are not enabled.");
+            break;
+          case "auth/weak-password":
+            setErrorMessage("Password is too weak.");
+            break;
+          default:
+            setErrorMessage(
+              "An unknown error occurred. Please try again later."
+            );
         }
-
-        if (error.code === AuthErrorCodes.WEAK_PASSWORD) {
-          setErrorMessage("Password should be at least 6 characters");
-        }
+        console.error("Error signing up with password and email:", error);
       });
   };
 

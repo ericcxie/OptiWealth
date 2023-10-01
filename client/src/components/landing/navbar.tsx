@@ -18,7 +18,7 @@ export default function Navbar() {
 
         <div className="font-inter hidden md:block">
           <Link to="/login">
-            <button className="mr-6 text-white font-semibold">Login</button>
+            <button className="mr-6 text-white font-semibold">Log in</button>
           </Link>
           <Link to="/signup">
             <button className="py-2 px-4 text-white font-semibold bg-lightPurple rounded-3xl">

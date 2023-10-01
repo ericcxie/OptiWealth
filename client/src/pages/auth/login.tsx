@@ -8,11 +8,14 @@ import {
   signInWithPopup,
   AuthErrorCodes,
 } from "firebase/auth";
+import { useNavigate } from "react-router-dom";
 
 const Login: React.FC = () => {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [errorMessage, setErrorMessage] = useState("");
+
+  const navigate = useNavigate();
 
   const SignIn = async (e: React.FormEvent<HTMLFormElement>) => {
     // TODO: Sign in
@@ -21,6 +24,7 @@ const Login: React.FC = () => {
       .then((userCredential) => {
         console.log("Successfully signed in:", userCredential.user.email);
         console.log(userCredential);
+        navigate("/dashboard");
       })
       .catch((error) => {
         if (error.code === "auth/invalid-login-credentials") {
@@ -37,7 +41,9 @@ const Login: React.FC = () => {
   const GoogleLogin = async () => {
     try {
       const result = await signInWithPopup(auth, googleProvider);
+      console.log("User signed in with Google");
       console.log(result.user);
+      navigate("/dashboard");
     } catch (error) {
       console.log(error);
     }

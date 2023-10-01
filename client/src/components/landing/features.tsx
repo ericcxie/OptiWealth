@@ -59,7 +59,7 @@ export default function FeaturesBlocks() {
                 </g>
               </svg>
               <h4 className="text-xl font-bold leading-snug tracking-tight mb-1">
-                Headless CMS
+                Manage your portfolio
               </h4>
               <p className="text-gray-600 text-center">
                 Lorem ipsum dolor sit amet, consectetur adipiscing elit.
@@ -100,7 +100,7 @@ export default function FeaturesBlocks() {
                 </g>
               </svg>
               <h4 className="text-xl font-bold leading-snug tracking-tight mb-1">
-                Headless CMS
+                Optimize your investments
               </h4>
               <p className="text-gray-600 text-center">
                 Lorem ipsum dolor sit amet, consectetur adipiscing elit.
@@ -144,7 +144,7 @@ export default function FeaturesBlocks() {
                 </g>
               </svg>
               <h4 className="text-xl font-bold leading-snug tracking-tight mb-1">
-                Headless CMS
+                Set financial goals
               </h4>
               <p className="text-gray-600 text-center">
                 Lorem ipsum dolor sit amet, consectetur adipiscing elit.
