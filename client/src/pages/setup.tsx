@@ -34,17 +34,33 @@ const Setup: React.FC = () => {
             },
           }
         );
-        setData(response.data);
+        console.log("Received Data:", response.data);
+
+        // Check if received data is an object (from image)
+        if (
+          response.data &&
+          typeof response.data === "object" &&
+          !Array.isArray(response.data)
+        ) {
+          // Convert the object to an array of objects
+          const dataArray = Object.entries(response.data).map(
+            ([Ticker, TotalShares]) => ({ Ticker, "Total Shares": TotalShares })
+          );
+          setData(dataArray);
+        } else {
+          // If it’s already an array (from excel), set it directly
+          setData(response.data);
+        }
       } catch (error) {
         console.error("Error uploading file:", error);
       } finally {
-        setTimeout(() => setIsLoading(false), 2000); // Display loading for a minimum of 3000ms
+        setTimeout(() => setIsLoading(false), 2000);
       }
     }
   };
 
   const handleSubmit = async () => {
-    // Handle the submission logic here. E.g. send data to an API endpoint.
+    // TODO: Handle the submission logic here. E.g. send data to an API endpoint.
     console.log("Portfolio Submitted:", data);
   };
 
