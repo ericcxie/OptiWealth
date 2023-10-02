@@ -7,6 +7,7 @@ import { AuthProvider } from "../context/authContext";
 import Setup from "../pages/setup";
 import Login from "../pages/auth/login";
 import Dashboard from "../pages/dashboard";
+import ForgotPassword from "../pages/auth/resetPass";
 
 const AppRouter: React.FC = () => {
   return (
@@ -16,6 +17,7 @@ const AppRouter: React.FC = () => {
           <Route path="/" element={<Landing />} />
           <Route path="/signup" element={<Registration />} />
           <Route path="/login" element={<Login />} />
+          <Route path="/resetpassword" element={<ForgotPassword />} />
           <Route
             path="/setup"
             element={

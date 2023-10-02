@@ -18,10 +18,12 @@ export default function Navbar() {
 
         <div className="font-inter hidden md:block">
           <Link to="/login">
-            <button className="mr-6 text-white font-semibold">Log in</button>
+            <button className="mr-6 text-white font-semibold transition duration-300 ease-in-out hover:text-gray-300">
+              Log in
+            </button>
           </Link>
           <Link to="/signup">
-            <button className="py-2 px-4 text-white font-semibold bg-lightPurple rounded-3xl">
+            <button className="py-2 px-4 text-white font-semibold bg-indigo-600 shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 rounded-3xl">
               Sign Up
             </button>
           </Link>

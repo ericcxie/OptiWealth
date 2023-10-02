@@ -20,12 +20,17 @@ export default function Hero() {
         </p>
         <div className="font-inter">
           <Link to="/signup">
-            <button className="bg-gradient-to-r from-purple-900 to-blue-600 px-6 py-3 rounded-3xl border-2 border-background border-solid text-white mr-2 mb-2 hover:brightness-90 transition delay-100">
+            <button className="transition duration-300 ease-in-out bg-gradient-to-r from-purple-900 to-blue-600 px-6 py-3 rounded-3xl border-2 border-background border-solid text-white mr-2 mb-2 hover:brightness-90 hover:shadow-lg">
               Get started
             </button>
           </Link>
-          <button className="text-white px-6 py-3 border-2 border-white border-solid rounded-3xl">
-            <a href="https://github.com/ericcxie/OptiWealth">Learn more</a>
+          <button className="transition duration-300 ease-in-out text-white px-6 py-3 border-2 border-white border-solid rounded-3xl hover:bg-white hover:text-black hover:shadow-lg">
+            <a
+              href="https://github.com/ericcxie/OptiWealth"
+              className="transition duration-100 ease-in-out hover:text-black"
+            >
+              Learn more
+            </a>
           </button>
         </div>
       </div>
