@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import axios from "axios";
-import { BarLoader, BeatLoader } from "react-spinners";
+import { BarLoader } from "react-spinners";
+import { Link } from "react-router-dom";
+import PortfolioTable from "../components/portfolioTable";
 
 const Setup: React.FC = () => {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
@@ -11,6 +13,10 @@ const Setup: React.FC = () => {
     if (e.target.files && e.target.files.length > 0) {
       setSelectedFile(e.target.files[0]);
     }
+  };
+
+  const handleTableUpdate = (updatedData: any[]) => {
+    setData(updatedData);
   };
 
   const handleUpload = async () => {
@@ -32,9 +38,14 @@ const Setup: React.FC = () => {
       } catch (error) {
         console.error("Error uploading file:", error);
       } finally {
-        setTimeout(() => setIsLoading(false), 3000); // Display loading for a minimum of 3000ms
+        setTimeout(() => setIsLoading(false), 2000); // Display loading for a minimum of 3000ms
       }
     }
+  };
+
+  const handleSubmit = async () => {
+    // Handle the submission logic here. E.g. send data to an API endpoint.
+    console.log("Portfolio Submitted:", data);
   };
 
   return (
@@ -52,43 +63,48 @@ const Setup: React.FC = () => {
             <BarLoader color="#FFFFFF" />
           </div>
         ) : data.length > 0 ? (
-          <div className="mt-8 max-w-xl mx-auto w-full overflow-auto">
-            <table className="min-w-full bg-white">
-              <thead>
-                <tr>
-                  <th className="py-2 px-4 border-b border-gray-200 text-left text-sm leading-4 text-gray-500 uppercase tracking-wider">
-                    Ticker
-                  </th>
-                  <th className="py-2 px-4 border-b border-gray-200 text-left text-sm leading-4 text-gray-500 uppercase tracking-wider">
-                    Total Shares
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
-                {data.map((row, index) => (
-                  <tr key={index}>
-                    <td className="py-2 px-4 border-b border-gray-200 text-sm">
-                      {row.Ticker}
-                    </td>
-                    <td className="py-2 px-4 border-b border-gray-200 text-sm">
-                      {row["Total Shares"]}
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+          <div>
+            <h2 className="mt-4 text-center text-4xl font-bold leading-9 tracking-tight text-white">
+              Modify Your{" "}
+              <span className="bg-clip-text text-transparent bg-gradient-to-r from-blue-700 to-teal-500">
+                Portfolio
+              </span>
+            </h2>
+            <p className="text-md mt-2 text-gray-400 mb-4 text-center">
+              Once finished, press submit to save.
+            </p>
+            <PortfolioTable data={data} onUpdate={handleTableUpdate} />
+            <div className="mt-6">
+              <button
+                onClick={handleSubmit}
+                className="w-full h-12 bg-indigo-600 text-white rounded-md hover:bg-indigo-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-600"
+              >
+                Submit
+              </button>
+              <p className="mt-5 text-center text-sm text-gray-500">
+                <button
+                  onClick={() => setData([])}
+                  className="font-semibold leading-6 text-indigo-600 hover:text-indigo-500"
+                >
+                  Back
+                </button>
+              </p>
+            </div>
           </div>
         ) : (
           <>
-            <h2 className="mt-4 text-center text-2xl font-bold leading-9 tracking-tight text-white">
-              Set Up Your Portfolio
+            <h2 className="mt-4 text-center text-4xl font-bold leading-9 tracking-tight text-white">
+              Set Up Your{" "}
+              <span className="bg-clip-text text-transparent bg-gradient-to-r from-blue-700 to-teal-500">
+                Portfolio
+              </span>
             </h2>
             <div className="mt-8">
-              <label className="block text-sm font-medium text-white">
+              <label className="block text-lg font-medium text-white">
                 Upload Your Investment Portfolio
               </label>
-              <p className="text-sm text-gray-400 mb-4">
-                You can upload a CSV/Excel file or an image (Beta, currently
+              <p className="text-md text-gray-400 mb-4">
+                You can upload a CSV/Excel file or an image (Currently beta,
                 only supports Wealthsimple)
               </p>
               <input
