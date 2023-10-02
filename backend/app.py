@@ -5,6 +5,9 @@ from werkzeug.utils import secure_filename
 import pandas as pd
 from flask_cors import CORS
 from dotenv import load_dotenv
+from sqlalchemy.exc import IntegrityError
+import logging
+
 from image_processing import parse_image, clean_data
 from models.models import UserPortfolio
 from db.db import db
@@ -36,6 +39,7 @@ def hello_world():
 
 @app.route('/upload', methods=['POST'])
 def upload_file():
+    logging.info("Endpoint /upload hit with POST method.")
     if 'file' not in request.files:
         return jsonify({'error': 'No file part'}), 400
 
@@ -75,6 +79,41 @@ def upload_file():
                 return jsonify({'error': 'Error processing uploaded file: ' + str(e)}), 500
 
     return jsonify({'error': 'Invalid file format'}), 400
+
+
+@app.route('/submit-portfolio', methods=['POST'])
+def submit_portfolio():
+    logging.info("Endpoint /submit-portfolio hit with POST method.")
+    logging.info("Received Data: %s", request.json)
+    try:
+        payload = request.json
+        user_email = payload.get('user_email')
+        user_uid = payload.get('user_uid')
+        portfolio_data = payload.get('portfolio_data')
+
+        new_entry = UserPortfolio(
+            user_email=user_email,
+            user_uid=user_uid,
+            portfolio_data=portfolio_data
+        )
+
+        db.session.add(new_entry)
+        db.session.commit()
+
+        logging.info(
+            "Portfolio for user %s successfully submitted.", user_email)
+        return jsonify({'message': 'Portfolio submitted successfully'}), 200
+
+    except IntegrityError:
+        logging.error(
+            "IntegrityError occurred. Possible duplicate portfolio for user: %s", user_email)
+        db.session.rollback()
+        return jsonify({'error': 'A portfolio for this user already exists'}), 400
+    except Exception as e:
+        logging.error(
+            "Error occurred while saving to the database: %s", str(e))
+        db.session.rollback()
+        return jsonify({'error': 'Error saving to database: ' + str(e)}), 500
 
 
 if __name__ == '__main__':

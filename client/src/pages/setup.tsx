@@ -3,6 +3,7 @@ import axios from "axios";
 import { BarLoader } from "react-spinners";
 import { Link } from "react-router-dom";
 import PortfolioTable from "../components/portfolioTable";
+import { auth } from "../utils/firebase";
 
 const Setup: React.FC = () => {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
@@ -83,8 +84,40 @@ const Setup: React.FC = () => {
   };
 
   const handleSubmit = async () => {
+    const user = auth.currentUser;
+    if (!user) {
+      console.error("No user logged in.");
+      return;
+    }
+
+    const userEmail = user.email;
+    const userUID = user.uid;
+
+    console.log("User Email:", userEmail);
+    console.log("User UID:", userUID);
     // TODO: Handle the submission logic here. E.g. send data to an API endpoint.
     console.log("Portfolio Submitted:", data);
+    try {
+      // Construct the payload object.
+      const payload = {
+        user_email: userEmail, // Replace with actual user email
+        user_uid: userUID, // Replace with actual user UID
+        portfolio_data: data,
+      };
+
+      console.log("Payload:", payload);
+
+      // Make a post request to a new endpoint dedicated for submitting the portfolio.
+      const response = await axios.post(
+        "http://127.0.0.1:5000/submit-portfolio",
+        payload
+      );
+
+      // Handle the response as needed, e.g., by showing a success message or by redirecting the user.
+      console.log("Response from server:", response.data);
+    } catch (error) {
+      console.error("Error submitting portfolio:", error);
+    }
   };
 
   return (
