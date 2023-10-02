@@ -1,11 +1,21 @@
-from flask import Flask, request, jsonify
-from werkzeug.utils import secure_filename
 import os
+from flask import Flask, request, jsonify
+from flask_sqlalchemy import SQLAlchemy
+from werkzeug.utils import secure_filename
 import pandas as pd
 from flask_cors import CORS
+from dotenv import load_dotenv
 from image_processing import parse_image, clean_data
+from models.models import UserPortfolio
+from db.db import db
 
 app = Flask(__name__)
+load_dotenv()
+# print(os.getenv('DATABASE_URI'))
+app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URI')
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+
+db.init_app(app)
 CORS(app)  # Enabling Cross-Origin Resource Sharing
 
 # Path for uploaded files
@@ -53,6 +63,7 @@ def upload_file():
 
         # Check if the uploaded file is a csv or xlsx
         elif filename.rsplit('.', 1)[1].lower() in {'csv', 'xlsx'}:
+            print("CSV/XLSX received!")
             try:
                 df = pd.read_excel(filepath) if filepath.endswith(
                     '.xlsx') else pd.read_csv(filepath)
