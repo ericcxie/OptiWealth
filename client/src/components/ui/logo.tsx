@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 export default function Logo() {
   return (
     <Link to="/" className="block" aria-label="Cruip">
-      <svg
+      {/* <svg
         className="w-8 h-8"
         viewBox="0 0 32 32"
         xmlns="http://www.w3.org/2000/svg"
@@ -29,7 +29,8 @@ export default function Logo() {
           fill="url(#footer-logo)"
           fillRule="nonzero"
         />
-      </svg>
+      </svg> */}
+      <img src="/dist/assets/logos/logo.png" alt="logo" />
     </Link>
   );
 }

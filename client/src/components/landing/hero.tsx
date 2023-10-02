@@ -4,7 +4,7 @@ export default function Hero() {
   return (
     <section className="md:mt-0 md:h-screen flex flex-col justify-center text-center md:text-left md:flex-row md:justify-between md:items-center lg:px-48 md:px-12 px-4 bg-secondary">
       <div className="mt-24 md:mt-0 md:flex-1 md:mr-10">
-        <h1 className="font-inter text-3xl font-bold mb-5 text-white">
+        <h1 className="font-inter text-3xl font-bold mb-3 text-white">
           Rebalance your{" "}
           <span className="bg-clip-text text-3xl text-transparent bg-gradient-to-r from-blue-700 to-teal-500">
             Portfolio

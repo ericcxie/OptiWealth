@@ -7,7 +7,7 @@ export default function Navbar() {
       <nav className="fixed flex justify-between py-6 w-full lg:px-48 md:px-12 px-4 content-center bg-background z-10">
         <Link to="/">
           <div className="flex flex-row">
-            <div className="mr-4">
+            <div className="mr-2 mt-0.5 w-7">
               <Logo />
             </div>
             <h1 className="text-inter text-transparent font-bold bg-clip-text bg-gradient-to-r from-blue-700 to-purple-600 text-2xl">
