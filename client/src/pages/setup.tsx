@@ -1,7 +1,7 @@
 import React, { useRef, useState } from "react";
 import axios from "axios";
 import { BarLoader } from "react-spinners";
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import PortfolioTable from "../components/portfolioTable";
 import { auth } from "../utils/firebase";
 
@@ -10,6 +10,8 @@ const Setup: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [data, setData] = useState<any[]>([]);
   const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const navigate = useNavigate();
 
   const handleDrop = (e: React.DragEvent<HTMLLabelElement>) => {
     e.preventDefault();
@@ -90,8 +92,14 @@ const Setup: React.FC = () => {
       return;
     }
 
+    setIsLoading(true);
+
     const userEmail = user.email;
     const userUID = user.uid;
+
+    const threeSecondsPromise = new Promise((resolve) =>
+      setTimeout(resolve, 3000)
+    );
 
     console.log("User Email:", userEmail);
     console.log("User UID:", userUID);
@@ -100,23 +108,31 @@ const Setup: React.FC = () => {
     try {
       // Construct the payload object.
       const payload = {
-        user_email: userEmail, // Replace with actual user email
-        user_uid: userUID, // Replace with actual user UID
+        user_email: userEmail,
+        user_uid: userUID,
         portfolio_data: data,
       };
 
-      console.log("Payload:", payload);
-
-      // Make a post request to a new endpoint dedicated for submitting the portfolio.
-      const response = await axios.post(
+      const apiCall = axios.post(
         "http://127.0.0.1:5000/submit-portfolio",
         payload
       );
+      const [response] = await Promise.all([apiCall, threeSecondsPromise]);
+
+      console.log("Payload:", payload);
+
+      // const response = await axios.post(
+      //   "http://127.0.0.1:5000/submit-portfolio",
+      //   payload
+      // );
 
       // Handle the response as needed, e.g., by showing a success message or by redirecting the user.
       console.log("Response from server:", response.data);
+      setIsLoading(false);
+      navigate("/dashboard");
     } catch (error) {
       console.error("Error submitting portfolio:", error);
+      setIsLoading(false);
     }
   };
 
