@@ -30,6 +30,12 @@ const PortfolioTable: React.FC<PortfolioTableProps> = ({ data, onUpdate }) => {
 
   const handleSave = (index: number) => {
     if (editableData) {
+      // Check if "Total Shares" is less than 0, and if so, default it to 0
+      if (Number(editableData["Total Shares"]) < 0) {
+        editableData["Total Shares"] = "1";
+        console.log("Negative number detected during save, set to 1");
+      }
+
       const updatedData = [...data];
       updatedData[index] = editableData;
       onUpdate(updatedData);
@@ -95,7 +101,12 @@ const PortfolioTable: React.FC<PortfolioTableProps> = ({ data, onUpdate }) => {
                 {editingRow === index ? (
                   <input
                     type="number"
-                    value={editableData?.["Total Shares"] || 0}
+                    value={
+                      editableData?.["Total Shares"] !== undefined &&
+                      editableData?.["Total Shares"] !== null
+                        ? editableData["Total Shares"]
+                        : 0
+                    }
                     onChange={(e) =>
                       handleInputChange(e, "Total Shares", index)
                     }
