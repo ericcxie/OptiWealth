@@ -7,20 +7,10 @@ import SideBar from "../components/sidebar";
 const Dashboard: React.FC = () => {
   const navigate = useNavigate();
 
-  const handleLogout = () => {
-    signOut(auth)
-      .then(() => {
-        console.log("User signed out");
-        navigate("/login"); // Redirect to login after successful logout.
-      })
-      .catch((error) => {
-        console.error("Error signing out:", error); // Handle errors here.
-      });
-  };
-
   return (
-    <div className="flex h-screen bg-background text-white">
+    <div className="flex h-screen bg-background text-white font-inter">
       <SideBar />
+      <h1 className="text-3xl font-bold mb-4 mx-auto mt-10">Portfolio</h1>
     </div>
   );
 };
