@@ -31,7 +31,7 @@ const PortfolioTable: React.FC<PortfolioTableProps> = ({ data, onUpdate }) => {
   const handleSave = (index: number) => {
     if (editableData) {
       // Check if "Total Shares" is less than 0, and if so, default it to 0
-      if (Number(editableData["Total Shares"]) < 0) {
+      if (Number(editableData["Total Shares"]) <= 0) {
         editableData["Total Shares"] = "1";
         console.log("Negative number detected during save, set to 1");
       }

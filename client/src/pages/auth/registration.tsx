@@ -4,12 +4,14 @@ import {
   signInWithPopup,
   createUserWithEmailAndPassword,
   AuthErrorCodes,
+  updateProfile,
 } from "firebase/auth";
 import Logo from "../../components/ui/logo";
 import { auth } from "../../utils/firebase";
 import { Link, useNavigate } from "react-router-dom";
 
 const Registration: React.FC = () => {
+  const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -32,7 +34,8 @@ const Registration: React.FC = () => {
 
   const SignUp = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    //  password check
+
+    // Password check
     if (password !== confirmPassword) {
       console.log("Passwords do not match");
       setErrorMessage("Passwords do not match.");
@@ -44,11 +47,14 @@ const Registration: React.FC = () => {
 
     createUserWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
-        console.log(
-          "Account successfully created for user:",
-          userCredential.user.email
-        );
-        console.log(userCredential);
+        if (userCredential.user) {
+          return updateProfile(userCredential.user, { displayName: name }); // Use Firebase's function
+        }
+        throw new Error("User registration failed");
+      })
+      .then(() => {
+        console.log("Display name updated successfully");
+        console.log("User registered:", auth.currentUser);
         navigate("/setup");
       })
       .catch((error) => {
@@ -70,7 +76,7 @@ const Registration: React.FC = () => {
               "An unknown error occurred. Please try again later."
             );
         }
-        console.error("Error signing up with password and email:", error);
+        console.error("Error during registration:", error);
       });
   };
 
@@ -108,11 +114,30 @@ const Registration: React.FC = () => {
 
         <div className="mt-4 sm:mx-auto sm:w-full sm:max-w-sm">
           <form
-            className="space-y-6"
+            className="space-y-5"
             action="#"
             method="POST"
             onSubmit={SignUp}
           >
+            <div>
+              <label
+                htmlFor="name"
+                className="block text-sm font-medium leading-6 text-white"
+              >
+                Name
+              </label>
+              <div className="mt-1">
+                <input
+                  id="name"
+                  name="name"
+                  type="text"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  required
+                  className="pl-2 block w-full rounded-md border-0 py-1.5 bg-[#212834] text-white shadow-sm ring-1 ring-inset ring-gray-600 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                />
+              </div>
+            </div>
             <div>
               <label
                 htmlFor="email"
@@ -120,7 +145,7 @@ const Registration: React.FC = () => {
               >
                 Email address
               </label>
-              <div className="mt-2">
+              <div className="mt-1">
                 <input
                   id="email"
                   name="email"
@@ -143,7 +168,7 @@ const Registration: React.FC = () => {
                   Password
                 </label>
               </div>
-              <div className="mt-2">
+              <div className="mt-1">
                 <input
                   id="password"
                   name="password"
@@ -165,7 +190,7 @@ const Registration: React.FC = () => {
                   Confirm password
                 </label>
               </div>
-              <div className="mt-2">
+              <div className="mt-1">
                 <input
                   id="confirmPassword"
                   name="confirmPassword"

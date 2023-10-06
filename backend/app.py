@@ -8,7 +8,7 @@ from dotenv import load_dotenv
 from sqlalchemy.exc import IntegrityError
 import logging
 
-from image_processing import parse_image, clean_data
+from app_functions import parse_image, clean_data, get_portfolio_data, get_stock_prices
 from models.models import UserPortfolio
 from db.db import db
 
@@ -19,7 +19,7 @@ app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URI')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db.init_app(app)
-CORS(app)  # Enabling Cross-Origin Resource Sharing
+CORS(app)
 
 # Path for uploaded files
 UPLOAD_FOLDER = 'data/uploads/'
@@ -114,6 +114,22 @@ def submit_portfolio():
             "Error occurred while saving to the database: %s", str(e))
         db.session.rollback()
         return jsonify({'error': 'Error saving to database: ' + str(e)}), 500
+
+
+@app.route('/get-portfolio-value', methods=['POST'])
+def get_portfolio_value():
+    user_email = request.json.get('email')
+    portfolio_data = get_portfolio_data(user_email)
+
+    portfolio_dict = {stock['Ticker']: stock['Total Shares']
+                      for stock in portfolio_data[0]}
+
+    tickers = list(portfolio_dict.keys())
+    stock_prices = get_stock_prices(tickers)
+
+    total_value = sum(stock_prices[ticker] *
+                      portfolio_dict[ticker] for ticker in tickers)
+    return jsonify({'portfolio_value': total_value})
 
 
 if __name__ == '__main__':
