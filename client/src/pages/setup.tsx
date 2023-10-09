@@ -2,7 +2,7 @@ import React, { useRef, useState, useEffect } from "react";
 import axios from "axios";
 import { BarLoader } from "react-spinners";
 import { useNavigate } from "react-router-dom";
-import PortfolioTable from "../components/portfolioTable";
+import UploadPortfolioTable from "../components/UploadPortfolioTable";
 import { auth } from "../utils/firebase";
 import Aos from "aos";
 import "aos/dist/aos.css";
@@ -167,7 +167,7 @@ const Setup: React.FC = () => {
             <p className="text-md mt-2 text-gray-400 mb-4 text-center">
               Once finished, press submit to save.
             </p>
-            <PortfolioTable data={data} onUpdate={handleTableUpdate} />
+            <UploadPortfolioTable data={data} onUpdate={handleTableUpdate} />
             <div className="mt-6">
               <button
                 onClick={handleSubmit}

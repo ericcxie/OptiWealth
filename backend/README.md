@@ -3,9 +3,6 @@
 ## Starting server
 
 ```
-# Activate virtual environment
-source venv/bin/activate
-
 # Start server
 python3 app.py
 ```

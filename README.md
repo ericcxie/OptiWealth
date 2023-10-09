@@ -15,28 +15,35 @@
     <br><br>
 </div>
 
-
 ## What is OptiWealth?
-*OptiWealth is a modern investment management platform designed to assist users in optimizing their portfolio allocations. It helps users maintain an ideal asset allocation that aligns with their risk tolerance and financial goals.*
+
+_OptiWealth is a modern investment management platform designed to assist users in optimizing their portfolio allocations. It helps users maintain an ideal asset allocation that aligns with their risk tolerance and financial goals._
 
 ## Getting started
+
 ### Starting the server
+
 _(127.0.0.1:5000 by default)_
+
 1. `cd backend`
 1. `pip install -r requirements.txt`
 1. `python3 app.py`
 
 ### Starting the app
+
 _(localhost:3000 by default)_
+
 1. `cd client`
 1. `npm install`
 1. `npm start`
 
 ### Running unit tests
+
 1. `cd backend/tests && pip install -r test-requirements.txt`
 1. `python -m pytest`
 
 ## Architecture Overview
+
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="https://github.com/ericcxie/OptiWealth/assets/66566975/7af25ed5-41a8-43b2-a674-aae10d32d98c">  
   <source media="(prefers-color-scheme: light)" srcset="https://github.com/ericcxie/OptiWealth/assets/66566975/6093f3a0-806b-4c87-afca-a10300b5b9d6">
@@ -44,7 +51,3 @@ _(localhost:3000 by default)_
 </picture>
 
 _(As of Oct. 8, 2023)_
-
-
-
-

@@ -13,19 +13,19 @@ interface Props {
 }
 
 export const AuthContext = createContext({
-  currentUser: {} as User | null,
+  currentUser: null as User | null,
   setCurrentUser: (_user: User) => {},
   signOut: () => {},
+  loading: true,
 });
 
 export const AuthProvider = ({ children }: Props) => {
   const [currentUser, setCurrentUser] = useState<User | null>(null);
-
+  const [loading, setLoading] = useState(true);
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged((user) => {
-      if (user) {
-        setCurrentUser(user);
-      }
+      setCurrentUser(user);
+      setLoading(false);
     });
     return () => unsubscribe();
   }, []);
@@ -39,6 +39,7 @@ export const AuthProvider = ({ children }: Props) => {
     currentUser,
     setCurrentUser,
     signOut,
+    loading,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

@@ -5,7 +5,10 @@ interface PortfolioTableProps {
   onUpdate: (updatedData: any[]) => void;
 }
 
-const PortfolioTable: React.FC<PortfolioTableProps> = ({ data, onUpdate }) => {
+const UploadPortfolioTable: React.FC<PortfolioTableProps> = ({
+  data,
+  onUpdate,
+}) => {
   const [editingRow, setEditingRow] = useState<number | null>(null);
   const [editableData, setEditableData] = useState<any | null>(null);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -169,4 +172,4 @@ const PortfolioTable: React.FC<PortfolioTableProps> = ({ data, onUpdate }) => {
   );
 };
 
-export default PortfolioTable;
+export default UploadPortfolioTable;

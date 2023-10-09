@@ -8,6 +8,7 @@ import Setup from "../pages/setup";
 import Login from "../pages/auth/login";
 import Dashboard from "../pages/dashboard";
 import ForgotPassword from "../pages/auth/resetPass";
+import ManagePortfolio from "../pages/managePortfolio";
 
 const AppRouter: React.FC = () => {
   return (
@@ -34,6 +35,7 @@ const AppRouter: React.FC = () => {
               </ProtectedRoute>
             }
           />
+          <Route path="/manage" element={<ManagePortfolio />} />
         </Routes>
       </AuthProvider>
     </Router>

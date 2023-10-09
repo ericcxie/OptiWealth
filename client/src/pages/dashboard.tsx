@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { auth } from "../utils/firebase";
 import SideBar from "../components/sidebar";
+import { PulseLoader } from "react-spinners";
 
 const Dashboard: React.FC = () => {
   const navigate = useNavigate();
@@ -58,16 +59,23 @@ const Dashboard: React.FC = () => {
         <h1 className="text-xl font-medium mb-4 text-gray-200">
           {getGreeting()} {firstName}. You have
         </h1>
+
         <h2 className="text-4xl font-bold">
-          $
-          {loading
-            ? "..."
-            : portfolioValue
-            ? portfolioValue.toLocaleString("en-US", {
+          {loading ? (
+            <div>
+              <PulseLoader color="#FFFFFF" size={12} />
+            </div>
+          ) : portfolioValue ? (
+            <>
+              $
+              {portfolioValue.toLocaleString("en-US", {
                 minimumFractionDigits: 2,
                 maximumFractionDigits: 2,
-              })
-            : "0.00"}
+              })}
+            </>
+          ) : (
+            "$0.00"
+          )}
         </h2>
       </div>
     </div>
