@@ -38,12 +38,13 @@ _(localhost:3000 by default)_
 1. `python -m pytest`
 
 ## Architecture Overview
-_(As of Oct. 8, 2023)_
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="https://github.com/ericcxie/OptiWealth/assets/66566975/7af25ed5-41a8-43b2-a674-aae10d32d98c">  
   <source media="(prefers-color-scheme: light)" srcset="https://github.com/ericcxie/OptiWealth/assets/66566975/6093f3a0-806b-4c87-afca-a10300b5b9d6">
   <img alt="OptiWealth Architecture" src="https://github.com/ericcxie/OptiWealth/assets/66566975/7af25ed5-41a8-43b2-a674-aae10d32d98c">
 </picture>
+
+_(As of Oct. 8, 2023)_
 
 
 
