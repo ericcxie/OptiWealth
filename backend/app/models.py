@@ -1,4 +1,4 @@
-from db.db import db
+from app import db
 
 
 class UserPortfolio(db.Model):
