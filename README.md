@@ -19,7 +19,7 @@
 
 _OptiWealth is a modern investment management platform designed to assist users in optimizing their portfolio allocations. It helps users maintain an ideal asset allocation that aligns with their risk tolerance and financial goals._
 
-## Getting started
+## Getting Started
 
 ### Starting the server
 
