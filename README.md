@@ -38,5 +38,9 @@ _(localhost:3000 by default)_
 1. `cd backend/tests && pip install -r test-requirements.txt`
 1. `python -m pytest`
 
+## Architecture Overview
+![OptiWealth-Architecture](https://github.com/ericcxie/OptiWealth/assets/66566975/7af25ed5-41a8-43b2-a674-aae10d32d98c#gh-dark-mode-only)
+![OptiWealth-Architecutre-light](https://github.com/ericcxie/OptiWealth/assets/66566975/6093f3a0-806b-4c87-afca-a10300b5b9d6#gh-light-mode-only)
+
 
 
