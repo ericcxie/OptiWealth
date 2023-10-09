@@ -23,7 +23,6 @@
 ### Starting the server
 _(127.0.0.1:5000 by default)_
 1. `cd backend`
-1. `source venv/bin/activate`
 1. `pip install -r requirements.txt`
 1. `python3 app.py`
 
