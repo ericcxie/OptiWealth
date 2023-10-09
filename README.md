@@ -39,8 +39,9 @@ _(localhost:3000 by default)_
 
 ### Running unit tests
 
-1. `cd backend/tests && pip install -r test-requirements.txt`
-1. `python -m pytest`
+1. `cd backend/tests`
+1. `pip install -r test-requirements.txt`
+1. `python3 -m pytest`
 
 ## Architecture Overview
 
