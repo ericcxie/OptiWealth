@@ -4,7 +4,7 @@
 
 ```
 # Start server
-python3 app.py
+python3 run.py
 ```
 
 ## Run unit testing with Pytest

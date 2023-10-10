@@ -1,5 +1,3 @@
-# /app/views.py
-
 from flask import request, jsonify
 from werkzeug.utils import secure_filename
 import os

@@ -2,7 +2,7 @@
 import os
 import pytest
 from PIL import Image
-from image_processing import parse_image, clean_data
+from app.utils.app_functions import parse_image, clean_data
 
 # Define the path to the test image
 TEST_IMAGE_PATH = os.path.join(os.path.dirname(
