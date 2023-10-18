@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { auth } from "../utils/firebase";
 import SideBar from "../components/sidebar";
 import { PulseLoader } from "react-spinners";
+import Greeting from "../components/ui/greeting";
 
 const Dashboard: React.FC = () => {
   const navigate = useNavigate();
@@ -32,6 +33,7 @@ const Dashboard: React.FC = () => {
         });
 
         const data = await response.json();
+        console.log("Portfolio value fetched!", data.portfolio_value);
         setPortfolioValue(data.portfolio_value);
       } catch (error) {
         console.error("Error fetching portfolio value:", error);
@@ -54,30 +56,12 @@ const Dashboard: React.FC = () => {
   return (
     <div className="flex h-screen bg-background text-white font-inter">
       <SideBar />
-
-      <div className="flex-1 flex flex-col justify-start items-start pt-14 pl-80">
-        <h1 className="text-xl font-medium mb-4 text-gray-200">
-          {getGreeting()} {firstName}. You have
-        </h1>
-
-        <h2 className="text-4xl font-bold">
-          {loading ? (
-            <div>
-              <PulseLoader color="#FFFFFF" size={12} />
-            </div>
-          ) : portfolioValue ? (
-            <>
-              $
-              {portfolioValue.toLocaleString("en-US", {
-                minimumFractionDigits: 2,
-                maximumFractionDigits: 2,
-              })}
-            </>
-          ) : (
-            "$0.00"
-          )}
-        </h2>
-      </div>
+      <Greeting
+        name={firstName}
+        portfolioValue={portfolioValue}
+        loading={loading}
+      />
+      ;
     </div>
   );
 };
