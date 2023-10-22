@@ -15,9 +15,11 @@ from .config import ALLOWED_EXTENSIONS
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
+
 @app.route('/')
 def hello_world():
     return 'Hello World!'
+
 
 @app.route('/upload', methods=['POST'])
 def upload_file():
@@ -98,6 +100,22 @@ def submit_portfolio():
         return jsonify({'error': 'Error saving to database: ' + str(e)}), 500
 
 
+@app.route('/get_portfolio', methods=['POST'])
+def get_portfolio():
+    """Returns a current users portfolio
+    Ticker, Share count
+    """
+    user_email = request.json.get('user_email')
+    portfolio_data = get_portfolio_data(user_email)
+
+    if portfolio_data and len(portfolio_data) > 0:
+        portfolio_list = portfolio_data[0]
+    else:
+        portfolio_data = []
+
+    return jsonify(portfolio_list)
+
+
 @app.route('/get-portfolio-value', methods=['POST'])
 def get_portfolio_value():
     user_email = request.json.get('email')
@@ -129,3 +147,25 @@ def calculate_portfolio_value(user_email):
 def update_portfolio_cache(user_email, cache_key):
     value = calculate_portfolio_value(user_email)
     cache.set(cache_key, value)
+
+
+@app.route('/get-user-stocks', methods=['POST'])
+def get_user_stocks():
+    email = request.json.get('email')
+    if not email:
+        return jsonify({"error": "Email is required"}), 400
+
+    # Fetch the user's stocks using the existing function
+    portfolio_data = get_portfolio_data(email)
+    if not portfolio_data:
+        return jsonify({"error": "User not found"}), 404
+
+    # Extract tickers and fetch current stock prices using existing functions
+    tickers = [stock['Ticker'] for stock in portfolio_data[0]]
+    stock_prices = get_stock_prices(tickers)
+
+    # Attach the current prices to the portfolio data
+    for stock in portfolio_data[0]:
+        stock['Current Price'] = stock_prices.get(stock['Ticker'], None)
+
+    return jsonify(portfolio_data[0])

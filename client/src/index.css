@@ -37,3 +37,27 @@
 .growing-underline:focus::after {
   transform: translate3d(0, 0, 0);
 }
+
+/* Custom Scrollbar styles with Tailwind */
+.scrollbar-hide {
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none; /* WebKit */
+}
+
+.scrollbar-thin::-webkit-scrollbar {
+  width: 0.7rem;
+}
+
+.scrollbar-thumb-gray::-webkit-scrollbar-thumb {
+  background-color: #4a5568;
+  border-radius: 1rem;
+  border: 3px solid #2d3748;
+}
+
+.scrollbar-track-gray::-webkit-scrollbar-track {
+  background: #2d3748;
+}

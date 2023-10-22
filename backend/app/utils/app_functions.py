@@ -6,7 +6,11 @@ from forex_python.converter import CurrencyRates
 from PIL import Image
 import pytesseract
 import re
+import requests
+from cachetools import cached, TTLCache
+from concurrent.futures import ThreadPoolExecutor
 
+EXCHANGE_RATE_CACHE = {}
 
 load_dotenv()
 
@@ -85,32 +89,55 @@ def get_portfolio_data(user_email):
             connection.close()
 
 
+# def convert_usd_to_cad(amount):
+#     print("Converting USD to CAD", amount)
+#     try:
+#         return c.convert('USD', 'CAD', amount)
+#     except:
+#         print("Error converting USD to CAD.")
+#         return amount
+
+@cached(cache=TTLCache(maxsize=1, ttl=3600))
+def get_exchange_rate():
+    response = requests.get(
+        'https://api.exchangeratesapi.io/latest?base=USD&symbols=CAD')
+    if response.status_code == 200:
+        data = response.json()
+        return data['rates']['CAD']
+    else:
+        raise Exception("Error fetching exchange rate data.")
+
+
 def convert_usd_to_cad(amount):
     try:
-        return c.convert('USD', 'CAD', amount)
+        exchange_rate = get_exchange_rate()
+        return amount * exchange_rate
     except:
-        print("Error converting USD to CAD.")
         return amount
 
 
+def get_stock_price(ticker):
+    try:
+        data = yf.Ticker(ticker)
+        stock_info = data.info
+        stock_price = stock_info.get(
+            'currentPrice', stock_info.get('regularMarketPreviousClose'))
+
+        if 'currency' in stock_info:
+            return (ticker, round(convert_usd_to_cad(stock_price), 2) if stock_info.get(
+                'currency') == 'USD' else stock_price)
+        else:
+            print(f"No currency info for {ticker}")
+            return (ticker, None)
+    except Exception as e:
+        print(f"Error fetching price for {ticker}: {e}")
+        return (ticker, None)
+
+
 def get_stock_prices(tickers):
-    data = yf.Tickers(' '.join(tickers))
-    prices = {}
-
-    for ticker in tickers:
-        try:
-            stock_info = data.tickers[ticker].info
-            stock_price = stock_info.get(
-                'currentPrice', stock_info.get('regularMarketPreviousClose'))
-
-            if 'currency' in stock_info:
-                prices[ticker] = round(convert_usd_to_cad(stock_price), 2) if stock_info.get(
-                    'currency') == 'USD' else stock_price
-            else:
-                print(f"No currency info for {ticker}")
-        except KeyError as e:
-            print(f"Error fetching price for {ticker}: {e}")
-    return prices  # returns price in CAD
+    with ThreadPoolExecutor() as executor:
+        results = executor.map(get_stock_price, tickers)
+    return dict(result for result in results if result[1] is not None)
 
 
 if __name__ == "__main__":

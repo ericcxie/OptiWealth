@@ -44,11 +44,11 @@ export default function SideBar() {
 
       <aside
         id="logo-sidebar"
-        className="fixed top-4 left-0 z-40 w-64 h-screen transition-transform -translate-x-full sm:translate-x-0"
+        className="fixed left-0 z-40 w-64 h-screen transition-transform -translate-x-full sm:translate-x-0"
         aria-label="Sidebar"
       >
-        <div className="h-full px-3 py-4 overflow-y-auto bg-[#111828]">
-          <Link to="/dashboard" className="flex items-center pl-2.5 mb-5">
+        <div className="h-full px-3 py-4 overflow-y-auto bg-[#111828] pt-10">
+          <Link to="/dashboard" className="flex items-center pl-4 mb-5">
             <div className="w-7 mr-2">
               <Logo />
             </div>

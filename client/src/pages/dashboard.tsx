@@ -2,8 +2,13 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { auth } from "../utils/firebase";
 import SideBar from "../components/sidebar";
-import { PulseLoader } from "react-spinners";
+import Aos from "aos";
+import "aos/dist/aos.css";
+
 import Greeting from "../components/ui/greeting";
+import PortfolioAreaChart from "../components/charts/PortfolioAreaChart";
+import PortfolioPieChart from "../components/charts/PortfolioPieChart";
+import Portfolio from "../components/Portfolio";
 
 const Dashboard: React.FC = () => {
   const navigate = useNavigate();
@@ -45,23 +50,31 @@ const Dashboard: React.FC = () => {
     fetchPortfolioValue();
   }, [userEmail]);
 
-  const getGreeting = () => {
-    const currentHour = new Date().getHours();
-
-    if (currentHour < 12) return "Good morning";
-    if (currentHour < 18) return "Good afternoon";
-    return "Good evening";
-  };
+  useEffect(() => {
+    Aos.init({ duration: 1000 });
+  }, []);
 
   return (
     <div className="flex h-screen bg-background text-white font-inter">
       <SideBar />
-      <Greeting
-        name={firstName}
-        portfolioValue={portfolioValue}
-        loading={loading}
-      />
-      ;
+      <div
+        data-aos="fade-up"
+        data-aos-once
+        className="flex-initial flex flex-col items-start justify-start pl-80"
+      >
+        <Greeting
+          name={firstName}
+          portfolioValue={portfolioValue}
+          loading={loading}
+        />
+        <div className="flex gap-10">
+          <PortfolioAreaChart />
+          <PortfolioPieChart />
+        </div>
+        <div className="mb-10 w-full">
+          {userEmail && <Portfolio userEmail={userEmail} />}
+        </div>
+      </div>
     </div>
   );
 };
