@@ -15,6 +15,8 @@
     <br><br>
 </div>
 
+![preview](https://github.com/ericcxie/OptiWealth/assets/66566975/48d51d8e-acb3-4f0b-9a98-78c450f2ea14)
+
 ## What is OptiWealth?
 
 _OptiWealth is a modern investment management platform designed to assist users in optimizing their portfolio allocations. It helps users maintain an ideal asset allocation that aligns with their risk tolerance and financial goals._
@@ -54,6 +56,4 @@ _(localhost:3000 by default)_
 _(As of Oct. 8, 2023)_
 
 ## Preview
-<img width="1512" alt="Screenshot 2023-10-08 at 8 49 00 PM" src="https://github.com/ericcxie/OptiWealth/assets/66566975/08e51f5f-8703-4fb8-a667-0e5c501d3405">
-<img width="1512" alt="Screenshot 2023-10-08 at 8 49 14 PM" src="https://github.com/ericcxie/OptiWealth/assets/66566975/8d4e67f1-7526-42b6-b1d3-ce6025756716">
-<img width="1512" alt="Screenshot 2023-10-08 at 8 50 58 PM" src="https://github.com/ericcxie/OptiWealth/assets/66566975/b5a4d2b3-daa5-4e82-b010-fe34c50ed2ea">
+<img src="https://github.com/ericcxie/OptiWealth/assets/66566975/6fde1071-29f7-4bae-b08b-70ce1842556b" width="45%"></img> <img src="https://github.com/ericcxie/OptiWealth/assets/66566975/704b74ee-6efe-4829-853b-d0e049e05b8e" width="45%"></img> <img src="https://github.com/ericcxie/OptiWealth/assets/66566975/c91d8e02-2d7e-488c-b287-5efc1f47395a" width="45%"></img> <img src="https://github.com/ericcxie/OptiWealth/assets/66566975/2632333e-8763-4f89-b804-4a0cfe2a4c27" width="45%"></img> 
