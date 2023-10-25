@@ -14,8 +14,6 @@ const ManagePortfolio: React.FC = () => {
   const displayName = user ? user.displayName : "User";
   const firstName = displayName ? displayName.split(" ")[0] : "User";
 
-  console.log("Portfolio data", portfolioData);
-
   const setMessageWithTimeout = (message: string, timeout: number) => {
     setMessage(message);
     setTimeout(() => {

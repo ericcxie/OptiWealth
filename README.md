@@ -28,6 +28,9 @@ _OptiWealth is a modern investment management platform designed to assist users 
 _(127.0.0.1:5000 by default)_
 
 1. `cd backend`
+1. `python3 -m venv venv`
+1. `source venv/bin/activate` (MacOS)
+1. `venv/scripts/activate` (Powershell)
 1. `pip install -r requirements.txt`
 1. `python3 run.py`
 
@@ -56,4 +59,5 @@ _(localhost:3000 by default)_
 _(As of Oct. 8, 2023)_
 
 ## Preview
-<img src="https://github.com/ericcxie/OptiWealth/assets/66566975/6fde1071-29f7-4bae-b08b-70ce1842556b" width="45%"></img> <img src="https://github.com/ericcxie/OptiWealth/assets/66566975/704b74ee-6efe-4829-853b-d0e049e05b8e" width="45%"></img> <img src="https://github.com/ericcxie/OptiWealth/assets/66566975/c91d8e02-2d7e-488c-b287-5efc1f47395a" width="45%"></img> <img src="https://github.com/ericcxie/OptiWealth/assets/66566975/2632333e-8763-4f89-b804-4a0cfe2a4c27" width="45%"></img> 
+
+<img src="https://github.com/ericcxie/OptiWealth/assets/66566975/6fde1071-29f7-4bae-b08b-70ce1842556b" width="45%"></img> <img src="https://github.com/ericcxie/OptiWealth/assets/66566975/704b74ee-6efe-4829-853b-d0e049e05b8e" width="45%"></img> <img src="https://github.com/ericcxie/OptiWealth/assets/66566975/c91d8e02-2d7e-488c-b287-5efc1f47395a" width="45%"></img> <img src="https://github.com/ericcxie/OptiWealth/assets/66566975/2632333e-8763-4f89-b804-4a0cfe2a4c27" width="45%"></img>

@@ -1,12 +1,11 @@
 import React, { useState, useEffect, useRef } from "react";
-import { PulseLoader } from "react-spinners";
 
 interface PortfolioTableProps {
   data: any[];
   onUpdate: (updatedData: any[]) => void;
 }
 
-const UpdatePortfolioTable: React.FC<PortfolioTableProps> = ({
+const UploadPortfolioTable: React.FC<PortfolioTableProps> = ({
   data,
   onUpdate,
 }) => {
@@ -20,20 +19,16 @@ const UpdatePortfolioTable: React.FC<PortfolioTableProps> = ({
     }
   }, [editingRow]);
 
-  const addNewInvestment = () => {
-    const newInvestment = {
-      Ticker: "",
-      "Total Shares": 0,
-    };
-    const updatedData = [...data, newInvestment];
-    onUpdate(updatedData);
-    setEditingRow(updatedData.length - 1);
-    setEditableData(newInvestment);
-  };
-
   const handleEdit = (index: number) => {
     setEditingRow(index);
     setEditableData({ ...data[index] });
+  };
+
+  const handleAddRow = () => {
+    const newRow = { Ticker: "", "Total Shares": 0 };
+    onUpdate([...data, newRow]);
+    setEditingRow(data.length); // Set the new row to be in edit mode
+    setEditableData(newRow);
   };
 
   const handleSave = (index: number) => {
@@ -79,12 +74,9 @@ const UpdatePortfolioTable: React.FC<PortfolioTableProps> = ({
   };
 
   return (
-    <div className="relative overflow-y-auto h-96 mt-2 shadow-md sm:rounded-lg scrollbar-thin scrollbar-thumb-gray scrollbar-track-gray">
+    <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
       <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
-        <thead
-          className="sticky uppercase top-0 bg-gray-50 dark:bg-gray-700 dark:text-gray-400"
-          style={{ zIndex: 1 }}
-        >
+        <thead className="text-md text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
           <tr>
             <th scope="col" className="px-6 py-3">
               Ticker
@@ -93,7 +85,7 @@ const UpdatePortfolioTable: React.FC<PortfolioTableProps> = ({
               Total Shares
             </th>
             <th scope="col" className="px-6 py-3">
-              Actions
+              <span className="sr-only">Edit</span>
             </th>
           </tr>
         </thead>
@@ -103,7 +95,10 @@ const UpdatePortfolioTable: React.FC<PortfolioTableProps> = ({
               key={index}
               className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
             >
-              <td className="px-6 py-4">
+              <th
+                scope="row"
+                className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
+              >
                 {editingRow === index ? (
                   <input
                     ref={inputRef}
@@ -116,14 +111,14 @@ const UpdatePortfolioTable: React.FC<PortfolioTableProps> = ({
                 ) : (
                   row.Ticker
                 )}
-              </td>
+              </th>
               <td className="px-6 py-4">
                 {editingRow === index ? (
                   <input
                     type="number"
                     value={
-                      editableData?.["Total Shares"] !== undefined
-                        ? editableData["Total Shares"].toFixed(2)
+                      editableData?.["Total Shares"] !== ""
+                        ? editableData["Total Shares"]
                         : ""
                     }
                     onChange={(e) =>
@@ -133,7 +128,7 @@ const UpdatePortfolioTable: React.FC<PortfolioTableProps> = ({
                     className="px-2 py-1 rounded-md bg-gray-200 dark:bg-gray-700 dark:text-white"
                   />
                 ) : (
-                  row["Total Shares"].toFixed(2)
+                  row["Total Shares"]
                 )}
               </td>
               <td className="px-6 py-4 text-right">
@@ -165,8 +160,16 @@ const UpdatePortfolioTable: React.FC<PortfolioTableProps> = ({
           ))}
         </tbody>
       </table>
+      {/* <div>
+        <button
+          onClick={handleAddRow}
+          className="mt-10 bg-indigo-600 hover:bg-indigo-500 text-white h-10 w-full px-3 rounded-md"
+        >
+          Add Row
+        </button>
+      </div> */}
     </div>
   );
 };
 
-export default UpdatePortfolioTable;
+export default UploadPortfolioTable;

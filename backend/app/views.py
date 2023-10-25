@@ -169,3 +169,25 @@ def get_user_stocks():
         stock['Current Price'] = stock_prices.get(stock['Ticker'], None)
 
     return jsonify(portfolio_data[0])
+
+
+@app.route('/update-portfolio', methods=['POST'])
+def update_portfolio():
+    user_email = request.json.get('user_email')
+    portfolio_data = request.json.get('portfolio_data')
+
+    if not user_email:
+        return jsonify({'error': 'Email is required'}), 400
+
+    if not portfolio_data:
+        return jsonify({'error': 'Portfolio data is required'}), 400
+
+    user_portfolio = UserPortfolio.query.filter_by(
+        user_email=user_email).first()
+    if not user_portfolio:
+        return jsonify({'error': 'User not found in db'}), 404
+
+    user_portfolio.portfolio_data = portfolio_data
+    db.session.commit()
+
+    return jsonify({'message': 'Portfolio updated successfully'}), 200
