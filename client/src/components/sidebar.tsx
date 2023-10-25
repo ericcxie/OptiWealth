@@ -76,8 +76,8 @@ export default function SideBar() {
               </Link>
             </li>
             <li>
-              <a
-                href="#"
+              <Link
+                to="/rebalance"
                 className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
               >
                 <svg
@@ -95,8 +95,8 @@ export default function SideBar() {
                     d="M1 1v14h16M4 10l3-4 4 4 5-5m0 0h-3.207M16 5v3.207"
                   />
                 </svg>
-                <span className="flex-1 ml-3 whitespace-nowrap">Optimize</span>
-              </a>
+                <span className="flex-1 ml-3 whitespace-nowrap">Rebalance</span>
+              </Link>
             </li>
             {/* <li>
               <a

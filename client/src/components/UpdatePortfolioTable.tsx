@@ -74,9 +74,9 @@ const UploadPortfolioTable: React.FC<PortfolioTableProps> = ({
   };
 
   return (
-    <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
+    <div className="relative overflow-y-auto h-96 mt-2 shadow-md sm:rounded-lg scrollbar-thin scrollbar-thumb-gray scrollbar-track-gray">
       <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
-        <thead className="text-md text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+        <thead className="sticky uppercase top-0 bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
           <tr>
             <th scope="col" className="px-6 py-3">
               Ticker

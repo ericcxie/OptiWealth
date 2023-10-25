@@ -4,11 +4,13 @@ import Landing from "../pages/landing";
 import Registration from "../pages/auth/registration";
 import ProtectedRoute from "./ProtectedRoute";
 import { AuthProvider } from "../context/authContext";
+
 import Setup from "../pages/setup";
 import Login from "../pages/auth/login";
 import Dashboard from "../pages/dashboard";
 import ForgotPassword from "../pages/auth/resetPass";
 import ManagePortfolio from "../pages/managePortfolio";
+import Rebalance from "../pages/reblanace";
 
 const AppRouter: React.FC = () => {
   return (
@@ -40,6 +42,14 @@ const AppRouter: React.FC = () => {
             element={
               <ProtectedRoute>
                 <ManagePortfolio />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/rebalance"
+            element={
+              <ProtectedRoute>
+                <Rebalance />
               </ProtectedRoute>
             }
           />

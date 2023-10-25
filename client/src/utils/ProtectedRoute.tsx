@@ -13,7 +13,7 @@ const ProtectedRoute: React.FC<Props> = ({ children }) => {
   if (loading) {
     return (
       <div className="flex items-center justify-center h-screen bg-background text-white font-inter">
-        <BounceLoader color="#007BFF" size={50} />
+        <BounceLoader color="#FFFFFF" size={50} />
       </div>
     );
   }
