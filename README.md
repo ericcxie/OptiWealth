@@ -30,7 +30,7 @@ _(127.0.0.1:5000 by default)_
 1. `cd backend`
 1. `python3 -m venv venv`
 1. `source venv/bin/activate` (MacOS)
-1. `venv/scripts/activate` (Powershell)
+1. `venv/Scripts/activate` (Powershell)
 1. `pip install -r requirements.txt`
 1. `python3 run.py`
 
