@@ -123,7 +123,7 @@ const UpdatePortfolioTable: React.FC<PortfolioTableProps> = ({
                     type="number"
                     value={
                       editableData?.["Total Shares"] !== undefined
-                        ? editableData["Total Shares"]
+                        ? editableData["Total Shares"].toFixed(2)
                         : ""
                     }
                     onChange={(e) =>
@@ -133,7 +133,7 @@ const UpdatePortfolioTable: React.FC<PortfolioTableProps> = ({
                     className="px-2 py-1 rounded-md bg-gray-200 dark:bg-gray-700 dark:text-white"
                   />
                 ) : (
-                  row["Total Shares"]
+                  row["Total Shares"].toFixed(2)
                 )}
               </td>
               <td className="px-6 py-4 text-right">

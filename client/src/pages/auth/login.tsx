@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Logo from "../../components/ui/logo";
 import { Link } from "react-router-dom";
 import { auth } from "../../utils/firebase";
@@ -9,6 +9,8 @@ import {
   AuthErrorCodes,
 } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
+import Aos from "aos";
+import "aos/dist/aos.css";
 
 const Login: React.FC = () => {
   const [email, setEmail] = useState<string>("");
@@ -48,9 +50,14 @@ const Login: React.FC = () => {
       console.log(error);
     }
   };
+
+  useEffect(() => {
+    Aos.init({ duration: 1000 });
+  }, []);
+
   return (
     <div className="bg-background flex h-screen flex-1 flex-col justify-center px-6 py-12 lg:px-8">
-      <div className="max-w-sm mx-auto w-full">
+      <div data-aos="fade-up" data-aos-once className="max-w-sm mx-auto w-full">
         <div className="sm:mx-auto sm:w-full sm:max-w-sm flex flex-col items-center">
           <div className="w-14">
             <Logo />

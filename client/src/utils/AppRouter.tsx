@@ -35,7 +35,14 @@ const AppRouter: React.FC = () => {
               </ProtectedRoute>
             }
           />
-          <Route path="/manage" element={<ManagePortfolio />} />
+          <Route
+            path="/manage"
+            element={
+              <ProtectedRoute>
+                <ManagePortfolio />
+              </ProtectedRoute>
+            }
+          />
         </Routes>
       </AuthProvider>
     </Router>

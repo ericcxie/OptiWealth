@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   GoogleAuthProvider,
   signInWithPopup,
@@ -9,6 +9,8 @@ import {
 import Logo from "../../components/ui/logo";
 import { auth } from "../../utils/firebase";
 import { Link, useNavigate } from "react-router-dom";
+import Aos from "aos";
+import "aos/dist/aos.css";
 
 const Registration: React.FC = () => {
   const [name, setName] = useState("");
@@ -80,9 +82,13 @@ const Registration: React.FC = () => {
       });
   };
 
+  useEffect(() => {
+    Aos.init({ duration: 1000 });
+  }, []);
+
   return (
     <div className="bg-background flex h-screen flex-1 flex-col justify-center px-6 py-12 lg:px-8">
-      <div className="max-w-sm mx-auto w-full">
+      <div data-aos="fade-up" data-aos-once className="max-w-sm mx-auto w-full">
         <div className="sm:mx-auto sm:w-full sm:max-w-sm flex flex-col items-center">
           <div className="w-14">
             <Logo />
