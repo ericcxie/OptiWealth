@@ -95,7 +95,7 @@ export default function SideBar() {
                     d="M1 1v14h16M4 10l3-4 4 4 5-5m0 0h-3.207M16 5v3.207"
                   />
                 </svg>
-                <span className="flex-1 ml-3 whitespace-nowrap">Rebalance</span>
+                <span className="flex-1 ml-3 whitespace-nowrap">Optimize</span>
               </Link>
             </li>
             {/* <li>
