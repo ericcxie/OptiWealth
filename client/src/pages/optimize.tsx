@@ -2,13 +2,20 @@ import React, { useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { portfolios } from "../utils/models";
 import { auth } from "../utils/firebase";
+import Aos from "aos";
+import "aos/dist/aos.css";
+
 import ModelCard from "../components/optimize/ModelCard";
 import InvestmentInput from "../components/optimize/InvestmentInput";
 import { BarLoader } from "react-spinners";
+import BackButton from "../components/ui/BackButton";
+import { FiInfo } from "react-icons/fi";
+import InfoModal from "../components/ui/InfoModal";
 
 const Optimize: React.FC = () => {
   const [selectedModel, setSelectedModel] = React.useState<string | null>(null);
   const [loading, setLoading] = React.useState<boolean>(false);
+  const [isModalOpen, setIsModalOpen] = React.useState(false);
   const navigate = useNavigate();
 
   const user = auth.currentUser;
@@ -65,6 +72,10 @@ const Optimize: React.FC = () => {
     setSelectedModel(null);
   };
 
+  useEffect(() => {
+    Aos.init({ duration: 800 });
+  }, []);
+
   return (
     <div className="bg-background min-h-screen p-4 text-inter">
       {loading && (
@@ -79,9 +90,13 @@ const Optimize: React.FC = () => {
           <BarLoader color="#FFFFFF" />
         </div>
       )}
-      <div className="text-center mb-16 mt-14">
-        <h1 className="text-4xl text-white font-bold mb-3">
+      <div data-aos="fade-up" data-aos-once className="text-center mb-16 mt-14">
+        <h1 className="text-4xl text-white font-bold mb-3 inline-flex items-center">
           {selectedModel ? "Your Current Holdings" : "Pick a Portfolio Model"}
+          <FiInfo
+            className="ml-2 cursor-pointer text-white hover:text-gray-400 scale-75"
+            onClick={() => setIsModalOpen(true)}
+          />
         </h1>
         <p className="text-gray-400 mb-2 max-w-xl mx-auto">
           {selectedModel
@@ -89,6 +104,7 @@ const Optimize: React.FC = () => {
             : "Select a target portfolio that most closely matches your desired investment style."}
         </p>
       </div>
+      <InfoModal show={isModalOpen} onClose={() => setIsModalOpen(false)} />
       {selectedModel ? (
         <InvestmentInput
           onInputSubmit={handleSubmit}
@@ -96,7 +112,11 @@ const Optimize: React.FC = () => {
           portfolioModel={selectedModel}
         />
       ) : (
-        <div className="flex flex-wrap justify-center items-start gap-6">
+        <div
+          data-aos="fade-up"
+          data-aos-once
+          className="flex flex-wrap justify-center items-start gap-6"
+        >
           {portfolios.map((portfolio) => (
             <ModelCard
               key={portfolio.name}
@@ -106,25 +126,12 @@ const Optimize: React.FC = () => {
           ))}
         </div>
       )}
-      <a
-        href="/dashboard"
-        className="absolute bottom-10 left-10 inline-block rounded-full border border-indigo-600 p-3 text-indigo-600 hover:bg-indigo-600 hover:text-white focus:outline-none focus:ring active:bg-indigo-500"
-      >
-        <svg
-          className="h-5 w-5 transform rotate-180"
-          xmlns="http://www.w3.org/2000/svg"
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke="currentColor"
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth="2"
-            d="M14 5l7 7m0 0l-7 7m7-7H3"
-          />
-        </svg>
-      </a>
+
+      {selectedModel ? (
+        <BackButton onClick={resetModelSelection} />
+      ) : (
+        <BackButton link="/dashboard" />
+      )}
     </div>
   );
 };

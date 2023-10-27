@@ -57,13 +57,13 @@ const Dashboard: React.FC = () => {
   return (
     <div className="flex h-screen bg-background text-white font-inter">
       <SideBar />
-      <div className="flex-initial flex flex-col items-start justify-start pl-80">
+      <div className="flex-initial flex flex-col w-full pr-16 items-start justify-start pl-80">
         <Greeting
           name={firstName}
           portfolioValue={portfolioValue}
           loading={loading}
         />
-        <div data-aos="fade-up" data-aos-once className="flex gap-10">
+        <div data-aos="fade-up" data-aos-once className="flex gap-10 w-full">
           <PortfolioAreaChart />
           <PortfolioPieChart />
         </div>

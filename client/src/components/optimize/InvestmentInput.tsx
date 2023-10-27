@@ -1,4 +1,6 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import Aos from "aos";
+import "aos/dist/aos.css";
 
 interface Props {
   onInputSubmit: (bonds: number, cash: number) => void;
@@ -11,15 +13,23 @@ const InvestmentInput: React.FC<Props> = ({
   onReset,
   portfolioModel,
 }) => {
-  const [bonds, setBonds] = useState<number>(0);
-  const [cash, setCash] = useState<number>(0);
+  const [bonds, setBonds] = useState<string>("");
+  const [cash, setCash] = useState<string>("");
 
   const handleSubmit = () => {
-    onInputSubmit(bonds, cash);
+    onInputSubmit(Number(bonds), Number(cash));
   };
 
+  useEffect(() => {
+    Aos.init({ duration: 800 });
+  }, []);
+
   return (
-    <div className="bg-gray-800 pt-6 pb-3 px-6 m-4 w-96 rounded-xl mx-auto">
+    <div
+      className="bg-gray-800 py-6 px-6 m-4 w-96 rounded-xl mx-auto"
+      data-aos="fade-up"
+      data-aos-once
+    >
       <h2 className="text-white text-2xl font-bold mb-3">
         {portfolioModel} Model
       </h2>
@@ -30,7 +40,7 @@ const InvestmentInput: React.FC<Props> = ({
         <input
           type="number"
           value={bonds}
-          onChange={(e) => setBonds(Number(e.target.value))}
+          onChange={(e) => setBonds(e.target.value)}
           className="p-2 w-full bg-gray-700 rounded text-white outline-none"
         />
 
@@ -38,7 +48,7 @@ const InvestmentInput: React.FC<Props> = ({
         <input
           type="number"
           value={cash}
-          onChange={(e) => setCash(Number(e.target.value))}
+          onChange={(e) => setCash(e.target.value)}
           className="p-2 w-full bg-gray-700 rounded text-white outline-none"
         />
       </div>
@@ -48,12 +58,6 @@ const InvestmentInput: React.FC<Props> = ({
         onClick={handleSubmit}
       >
         Submit
-      </button>
-      <button
-        className="leading-6 text-white hover:text-indigo-500 w-full mt-3"
-        onClick={onReset}
-      >
-        Back
       </button>
     </div>
   );
