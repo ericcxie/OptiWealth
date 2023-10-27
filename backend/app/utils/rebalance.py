@@ -12,14 +12,21 @@ def fetch_price_and_pe(ticker):
     return current_price, pe_ratio
 
 
-def rebalance_portfolio(user_portfolio, target_model, bonds_value, cash_value):
+def rebalance(user_portfolio, target_model, bonds_value, cash_value):
     total_value = bonds_value + cash_value
     asset_values = {}
+
+    # Fetch price and P/E ratio once and store in a dictionary.
+    price_pe_dict = {}
+    for asset in user_portfolio:
+        ticker = asset["Ticker"]
+        if ticker not in price_pe_dict:
+            price_pe_dict[ticker] = fetch_price_and_pe(ticker)
 
     # Calculate total portfolio value and individual asset values.
     for asset in user_portfolio:
         ticker = asset["Ticker"]
-        current_price, _ = fetch_price_and_pe(ticker)
+        current_price, _ = price_pe_dict[ticker]
         value = current_price * asset["Total Shares"]
         asset_values[ticker] = value
         total_value += value
@@ -36,11 +43,11 @@ def rebalance_portfolio(user_portfolio, target_model, bonds_value, cash_value):
     stock_tickers = [asset["Ticker"] for asset in user_portfolio]
     total_stock_value = sum([asset_values[ticker] for ticker in stock_tickers])
     total_difference = total_stock_value - target_values["Stocks"]
-    total_pe = sum([fetch_price_and_pe(ticker)[1]
-                   or 0 for ticker in stock_tickers])
+    total_pe = sum([price_pe_dict[ticker][1]
+                    or 0 for ticker in stock_tickers])
 
     for ticker in stock_tickers:
-        current_price, pe_ratio = fetch_price_and_pe(ticker)
+        current_price, pe_ratio = price_pe_dict[ticker]
         pe_ratio = pe_ratio or 0
         instructions[ticker] = - \
             (total_difference * (pe_ratio / total_pe)) / current_price
@@ -53,7 +60,7 @@ def rebalance_portfolio(user_portfolio, target_model, bonds_value, cash_value):
     }
 
     updated_stock_value = total_stock_value + \
-        sum([instructions[ticker] * fetch_price_and_pe(ticker)[0]
+        sum([instructions[ticker] * price_pe_dict[ticker][0]
             for ticker in stock_tickers])
     updated_allocations = {
         "Stocks": (updated_stock_value / total_value) * 100,
@@ -75,6 +82,7 @@ current_user_portfolio = [
     {"Ticker": "META", "Total Shares": 50},
     {"Ticker": "TSLA", "Total Shares": 10.5}
 ]
+
 conservative_model = {
     "allocation": {
         "Stocks": 30,
@@ -91,10 +99,10 @@ aggressive_model = {
 }
 
 
-result = rebalance_portfolio(
-    current_user_portfolio, conservative_model, 5000, 1000)
+# result = rebalance_portfolio(
+#     current_user_portfolio, conservative_model, 5000, 1000)
 
-print(result)
+# print(result)
 
 # print("\nInitial Allocation:")
 # for category, percentage in result["initial_allocations"].items():

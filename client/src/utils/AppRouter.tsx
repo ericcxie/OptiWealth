@@ -10,7 +10,8 @@ import Login from "../pages/auth/login";
 import Dashboard from "../pages/dashboard";
 import ForgotPassword from "../pages/auth/resetPass";
 import ManagePortfolio from "../pages/managePortfolio";
-import Rebalance from "../pages/reblanace";
+import Optimize from "../pages/optimize";
+import Results from "../pages/results";
 
 const AppRouter: React.FC = () => {
   return (
@@ -46,10 +47,18 @@ const AppRouter: React.FC = () => {
             }
           />
           <Route
-            path="/rebalance"
+            path="/optimize"
             element={
               <ProtectedRoute>
-                <Rebalance />
+                <Optimize />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/results"
+            element={
+              <ProtectedRoute>
+                <Results />
               </ProtectedRoute>
             }
           />

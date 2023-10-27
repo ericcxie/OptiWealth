@@ -8,6 +8,7 @@ from threading import Thread
 
 from . import app, db, cache
 from .utils.app_functions import parse_image, clean_data, get_portfolio_data, get_stock_prices
+from .utils.rebalance import rebalance
 from .models import UserPortfolio
 from .config import ALLOWED_EXTENSIONS
 
@@ -191,3 +192,41 @@ def update_portfolio():
     db.session.commit()
 
     return jsonify({'message': 'Portfolio updated successfully'}), 200
+
+
+@app.route('/rebalance-portfolio', methods=['POST'])
+def rebalance_portfolio():
+    data = request.json
+
+    user_email = data.get('user_email')
+    target_model = data.get('target_model')
+    bonds_value = data.get('bonds')
+    cash_value = data.get('cash')
+
+    user_portfolio = get_portfolio_data(user_email)
+
+    if not user_portfolio:
+        return jsonify({
+            "status": "error",
+            "message": "No portfolio found for the given user email."
+        }), 404
+
+    target_model = {
+        "allocation": {
+            "Stocks": target_model.get('stocks'),
+            "Bonds": target_model.get('bonds'),
+            "Cash": target_model.get('cash')
+        }
+    }
+
+    user_portfolio = user_portfolio[0]
+
+    rebalancing_results = rebalance(
+        user_portfolio, target_model, bonds_value, cash_value)
+
+    return jsonify({
+        "status": "success",
+        "target_model": target_model,
+        "user_portfolio": user_portfolio,
+        "rebalancing_results": rebalancing_results
+    }), 200
