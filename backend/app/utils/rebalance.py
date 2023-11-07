@@ -85,6 +85,9 @@ def rebalance(user_portfolio, target_model, bonds_value, cash_value):
         "Cash": ((cash_value + instructions["Cash"]) / total_value) * 100
     }
 
+    instructions = {ticker: value for ticker,
+                    value in instructions.items() if value != 0}
+
     return {
         "initial_allocations": initial_allocations,
         "target_allocations": target_model["allocation"],

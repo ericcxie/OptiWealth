@@ -76,20 +76,24 @@ const Optimize: React.FC = () => {
     Aos.init({ duration: 800 });
   }, []);
 
+  if (loading) {
+    return (
+      <div
+        className="bg-background min-h-screen p-4"
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          height: "100vh",
+        }}
+      >
+        <BarLoader color="#FFFFFF" />
+      </div>
+    );
+  }
+
   return (
     <div className="bg-background min-h-screen p-4 text-inter">
-      {loading && (
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            height: "100vh",
-          }}
-        >
-          <BarLoader color="#FFFFFF" />
-        </div>
-      )}
       <div data-aos="fade-up" data-aos-once className="text-center mb-16 mt-14">
         <h1 className="text-4xl text-white font-bold mb-3 inline-flex items-center">
           {selectedModel ? "Your Current Holdings" : "Pick a Portfolio Model"}

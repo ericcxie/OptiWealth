@@ -75,8 +75,8 @@ const Account: React.FC = () => {
 
   return (
     <div className="bg-background">
-      {/* <SideBar /> */}
-      <div className="flex h-screen flex-1 flex-col justify-center px-6 py-12 lg:px-8">
+      <SideBar />
+      <div className="flex h-screen flex-1 flex-col justify-center pl-60">
         <div className="max-w-3xl mx-auto w-full flex space-x-8">
           {/* User Details Form */}
           <div className="w-1/2">
