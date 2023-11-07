@@ -24,6 +24,14 @@ def hello_world():
 
 @app.route('/upload', methods=['POST'])
 def upload_file():
+    """
+    This function handles file uploads to the server. It accepts POST requests with a file attached.
+    The file can be either an image (PNG, JPG, JPEG) or a CSV/XLSX file. The function will parse the file
+    and return the data in JSON format.
+
+    Returns:
+        JSON: The parsed data in JSON format.
+    """
     logging.info("Endpoint /upload hit with POST method.")
     if 'file' not in request.files:
         return jsonify({'error': 'No file part'}), 400
@@ -68,6 +76,14 @@ def upload_file():
 
 @app.route('/submit-portfolio', methods=['POST'])
 def submit_portfolio():
+    """
+    Endpoint to submit a user's portfolio data to the database.
+
+    Returns:
+        A JSON response with a success message and status code 200 if the portfolio was successfully submitted.
+        A JSON response with an error message and status code 400 if a portfolio for the user already exists.
+        A JSON response with an error message and status code 500 if an error occurred while saving to the database.
+    """
     logging.info("Endpoint /submit-portfolio hit with POST method.")
     logging.info("Received Data: %s", request.json)
     try:
@@ -119,6 +135,12 @@ def get_portfolio():
 
 @app.route('/get-portfolio-value', methods=['POST'])
 def get_portfolio_value():
+    """
+    Endpoint to get the portfolio value for a given user.
+
+    Returns:
+        A JSON object containing the portfolio value for the user.
+    """
     user_email = request.json.get('email')
     cache_key = f'portfolio_value_{user_email}'
 
@@ -152,6 +174,12 @@ def update_portfolio_cache(user_email, cache_key):
 
 @app.route('/get-user-stocks', methods=['POST'])
 def get_user_stocks():
+    """
+    Retrieves a user's stock portfolio data and attaches current stock prices to it.
+
+    Returns:
+        A JSON object containing the user's stock portfolio data with current stock prices attached.
+    """
     email = request.json.get('email')
     if not email:
         return jsonify({"error": "Email is required"}), 400
@@ -174,6 +202,16 @@ def get_user_stocks():
 
 @app.route('/update-portfolio', methods=['POST'])
 def update_portfolio():
+    """
+    Updates the portfolio data for a given user.
+
+    Args:
+        user_email (str): The email of the user whose portfolio is being updated.
+        portfolio_data (dict): The updated portfolio data.
+
+    Returns:
+        A JSON response indicating whether the update was successful or not.
+    """
     user_email = request.json.get('user_email')
     portfolio_data = request.json.get('portfolio_data')
 
@@ -196,6 +234,13 @@ def update_portfolio():
 
 @app.route('/rebalance-portfolio', methods=['POST'])
 def rebalance_portfolio():
+    """
+    Rebalances the user's portfolio based on the target allocation model.
+
+    Returns:
+        A JSON response containing the status of the request, the target allocation model,
+        and the results of the rebalancing process.
+    """
     data = request.json
 
     user_email = data.get('user_email')
@@ -227,6 +272,5 @@ def rebalance_portfolio():
     return jsonify({
         "status": "success",
         "target_model": target_model,
-        "user_portfolio": user_portfolio,
         "rebalancing_results": rebalancing_results
     }), 200

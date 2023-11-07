@@ -12,7 +12,14 @@ const Results: React.FC = () => {
   const data = location.state?.resultsData;
 
   if (!data) {
-    return <div>No results data available.</div>;
+    return (
+      <div className="bg-background min-h-screen">
+        <h1 className="p-4 text-white">No results data available.</h1>
+        <a href="/dashboard">
+          <p className="text-white pl-4 hover:text-indigo-500">Dashboard</p>
+        </a>
+      </div>
+    );
   }
 
   const instructions = Object.entries(
@@ -47,12 +54,13 @@ const Results: React.FC = () => {
       <div className="results-container max-w-2xl mx-auto">
         {" "}
         {/* Content wrapper */}
-        <div className="text-center mb-16 mt-14">
+        <div className="text-center mb-16">
           <h1 className="text-4xl text-white font-bold mb-3">
             Your Rebalancing Results
           </h1>
           <p className="text-gray-400 mb-2">
-            Here are the results based on your portfolio.
+            Here are the results based on your{" "}
+            <a href="/dashboard">portfolio</a>.
           </p>
         </div>
         <div className="mb-4">

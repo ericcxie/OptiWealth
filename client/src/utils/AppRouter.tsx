@@ -12,6 +12,7 @@ import ForgotPassword from "../pages/auth/resetPass";
 import ManagePortfolio from "../pages/managePortfolio";
 import Optimize from "../pages/optimize";
 import Results from "../pages/results";
+import Account from "../pages/account";
 
 const AppRouter: React.FC = () => {
   return (
@@ -59,6 +60,14 @@ const AppRouter: React.FC = () => {
             element={
               <ProtectedRoute>
                 <Results />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/account"
+            element={
+              <ProtectedRoute>
+                <Account />
               </ProtectedRoute>
             }
           />

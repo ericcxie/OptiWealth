@@ -1,14 +1,31 @@
 import yfinance as yf
+from app.utils.yfinance3 import YFinance
+
+
+# def fetch_price_and_pe(ticker):
+#     stock_info = yf.Ticker(ticker)
+#     current_price = stock_info.history(period="1d")["Close"].iloc[0]
+#     try:
+#         pe_ratio = stock_info.info["trailingPE"]
+#     except KeyError:
+#         pe_ratio = None
+
+#     return current_price, pe_ratio
+
+from app.utils.yfinance3 import YFinance
 
 
 def fetch_price_and_pe(ticker):
-    stock_info = yf.Ticker(ticker)
-    current_price = stock_info.history(period="1d")["Close"].iloc[0]
-    try:
-        pe_ratio = stock_info.info["trailingPE"]
-    except KeyError:
-        pe_ratio = None
+    stock_info = YFinance(ticker)
+    info = stock_info.info
+    current_price = info.get(
+        'currentPrice', info.get('regularMarketPreviousClose'))
 
+    if current_price is None:
+        raise ValueError(
+            f"Current price for ticker {ticker} could not be retrieved.")
+
+    pe_ratio = info.get("trailingPE")
     return current_price, pe_ratio
 
 
