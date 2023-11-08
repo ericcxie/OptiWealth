@@ -27,6 +27,10 @@ const Setup: React.FC = () => {
     }
   };
 
+  const handleAddNewRow = () => {
+    setData((prevData) => [...prevData, { Ticker: "", "Total Shares": "0" }]);
+  };
+
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files.length > 0) {
       setSelectedFile(e.target.files[0]);
@@ -167,6 +171,15 @@ const Setup: React.FC = () => {
             <p className="text-md mt-2 text-gray-400 mb-4 text-center">
               Once finished, press submit to save.
             </p>
+            <div className="flex justify-end">
+              <button
+                onClick={handleAddNewRow}
+                className="h-9 mb-3 px-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-600"
+              >
+                New Investment
+              </button>
+            </div>
+
             <UploadPortfolioTable data={data} onUpdate={handleTableUpdate} />
             <div className="mt-6">
               <button
