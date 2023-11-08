@@ -2,7 +2,7 @@ import React, { useRef, useState, useEffect } from "react";
 import axios from "axios";
 import { BarLoader } from "react-spinners";
 import { useNavigate } from "react-router-dom";
-import UploadPortfolioTable from "../components/UploadPortfolioTable";
+import UploadPortfolioTable from "../components/tables/UploadPortfolioTable";
 import { auth } from "../utils/firebase";
 import Aos from "aos";
 import "aos/dist/aos.css";

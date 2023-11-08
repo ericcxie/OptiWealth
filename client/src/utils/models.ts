@@ -31,6 +31,6 @@ export const portfolios: Portfolio[] = [
     bonds: 15,
     cash: 5,
     description:
-      "High growth potential with more market fluctuations. For risk-tolerant investors.",
+      "High growth potential with more market fluctuations. Advisable for risk-tolerant investors.",
   },
 ];

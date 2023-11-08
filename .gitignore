@@ -154,4 +154,5 @@ cython_debug/
 #.idea/
 
 git.sh
+start_server.sh
 .DS_Store

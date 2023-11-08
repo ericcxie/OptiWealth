@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { PulseLoader } from "react-spinners";
 import SideBar from "../components/sidebar";
-import UpdatePortfolioTable from "../components/UpdatePortfolioTable";
+import UpdatePortfolioTable from "../components/tables/UpdatePortfolioTable";
 import { auth } from "../utils/firebase";
+import Aos from "aos";
+import "aos/dist/aos.css";
 
 const ManagePortfolio: React.FC = () => {
   const [loading, setLoading] = useState(true);
@@ -96,11 +98,19 @@ const ManagePortfolio: React.FC = () => {
     ]);
   };
 
+  useEffect(() => {
+    Aos.init({ duration: 800 });
+  }, []);
+
   return (
     <div className="flex h-screen bg-background text-white font-inter">
       <SideBar />
 
-      <div className="flex-1 flex flex-col justify-start items-start pt-14 pl-80">
+      <div
+        data-aos="fade-up"
+        data-aos-once
+        className="flex-1 flex flex-col justify-start items-start pt-14 pl-80"
+      >
         <h2 className="mt-2 text-center text-4xl font-bold leading-9 tracking-tight text-white">
           Update Your{" "}
           <span className="bg-clip-text text-transparent bg-gradient-to-r from-blue-700 to-teal-500">

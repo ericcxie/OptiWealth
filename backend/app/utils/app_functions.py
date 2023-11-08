@@ -10,6 +10,9 @@ import requests
 from cachetools import cached, TTLCache
 from concurrent.futures import ThreadPoolExecutor
 
+from app.utils.yfinance3 import YFinance
+# from yfinance3 import YFinance
+
 EXCHANGE_RATE_CACHE = {}
 
 load_dotenv()
@@ -30,6 +33,15 @@ c = CurrencyRates()
 
 
 def parse_image(image_path):
+    """
+    Parses an image file and extracts data from a specific column.
+
+    Args:
+        image_path (str): The file path of the image to be parsed.
+
+    Returns:
+        list: A list of strings containing the data from the target column.
+    """
     image = Image.open(image_path)
     text = pytesseract.image_to_string(image)
 
@@ -50,6 +62,15 @@ def parse_image(image_path):
 
 
 def clean_data(target_data):
+    """
+    Cleans target data by extracting ticker symbols and their corresponding quantities.
+
+    Args:
+        target_data (list): A list of strings containing raw stock data.
+
+    Returns:
+        dict: A dictionary containing ticker symbols as keys and their corresponding quantities as values.
+    """
     stock_data = {}
 
     pattern = r'\b([A-Z]+)\s+(\d+\.\d+)\s+\d+\.\d+\s+\S+\s+\S+\b'
@@ -65,6 +86,15 @@ def clean_data(target_data):
 
 
 def get_portfolio_data(user_email):
+    """
+    Retrieves portfolio data for a given user from the database.
+
+    Args:
+        user_email (str): The email address of the user.
+
+    Returns:
+        tuple: A tuple containing the portfolio data for the user.
+    """
     connection = None
     cursor = None
     try:
@@ -116,16 +146,55 @@ def convert_usd_to_cad(amount):
         return amount
 
 
+# def get_stock_price(ticker):
+#     """
+#     Returns the current price of a stock given its ticker symbol.
+
+#     Args:
+#         ticker (str): The ticker symbol of the stock.
+
+#     Returns:
+#         tuple: A tuple containing the ticker symbol and the current price of the stock.
+#                If the stock price cannot be fetched, the price will be None.
+#     """
+#     try:
+#         data = yf.Ticker(ticker)
+#         stock_info = data.info
+#         stock_price = stock_info.get(
+#             'currentPrice', stock_info.get('regularMarketPreviousClose'))
+
+#         if 'currency' in stock_info:
+#             return (ticker, round(convert_usd_to_cad(stock_price), 2) if stock_info.get(
+#                 'currency') == 'USD' else stock_price)
+#         else:
+#             print(f"No currency info for {ticker}")
+#             return (ticker, None)
+#     except Exception as e:
+#         print(f"Error fetching price for {ticker}: {e}")
+#         return (ticker, None)
+
 def get_stock_price(ticker):
+    """
+    Returns the current price of a stock given its ticker symbol using the custom YFinance class.
+
+    Args:
+        ticker (str): The ticker symbol of the stock.
+
+    Returns:
+        tuple: A tuple containing the ticker symbol and the current price of the stock.
+               If the stock price cannot be fetched, the price will be None.
+    """
     try:
-        data = yf.Ticker(ticker)
-        stock_info = data.info
+        yf_custom = YFinance(ticker)
+        stock_info = yf_custom.info
+
         stock_price = stock_info.get(
             'currentPrice', stock_info.get('regularMarketPreviousClose'))
 
         if 'currency' in stock_info:
-            return (ticker, round(convert_usd_to_cad(stock_price), 2) if stock_info.get(
-                'currency') == 'USD' else stock_price)
+            converted_price = round(convert_usd_to_cad(stock_price), 2) if stock_info.get(
+                'currency') == 'USD' else stock_price
+            return (ticker, converted_price)
         else:
             print(f"No currency info for {ticker}")
             return (ticker, None)
@@ -143,7 +212,7 @@ def get_stock_prices(tickers):
 if __name__ == "__main__":
     # Test the database function
     # Replace with an actual email in your database
-    test_email = "nikita@gmail.com"
+    test_email = "ex.ericxie@gmail.com"  # Replace with a valid email
     portfolio_data = get_portfolio_data(test_email)
     print("Portfolio Data:", portfolio_data)
 
@@ -151,6 +220,6 @@ if __name__ == "__main__":
     tickers = [stock['Ticker'] for stock in portfolio_data[0]]
     print("Tickers:", tickers)
 
-    # Test the stock price function
-    prices = get_stock_prices(tickers)
-    print("Stock Prices:", prices)
+    # Fetch stock prices for each ticker
+    stock_prices = {ticker: get_stock_price(ticker)[1] for ticker in tickers}
+    print("Stock Prices:", stock_prices)

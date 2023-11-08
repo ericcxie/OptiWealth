@@ -77,7 +77,7 @@ export default function SideBar() {
             </li>
             <li>
               <Link
-                to="/rebalance"
+                to="/optimize"
                 className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
               >
                 <svg
@@ -95,7 +95,7 @@ export default function SideBar() {
                     d="M1 1v14h16M4 10l3-4 4 4 5-5m0 0h-3.207M16 5v3.207"
                   />
                 </svg>
-                <span className="flex-1 ml-3 whitespace-nowrap">Rebalance</span>
+                <span className="flex-1 ml-3 whitespace-nowrap">Optimize</span>
               </Link>
             </li>
             {/* <li>
@@ -141,7 +141,7 @@ export default function SideBar() {
             </li>
             <li>
               <a
-                href="#"
+                href="/account"
                 className="absolute bottom-24 flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
               >
                 <svg
