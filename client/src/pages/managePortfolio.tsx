@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { PulseLoader } from "react-spinners";
 import SideBar from "../components/sidebar";
-import UpdatePortfolioTable from "../components/UpdatePortfolioTable";
+import UpdatePortfolioTable from "../components/tables/UpdatePortfolioTable";
 import { auth } from "../utils/firebase";
 import Aos from "aos";
 import "aos/dist/aos.css";

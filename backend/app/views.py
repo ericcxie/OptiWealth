@@ -247,6 +247,7 @@ def rebalance_portfolio():
     target_model = data.get('target_model')
     bonds_value = data.get('bonds')
     cash_value = data.get('cash')
+    model_name = target_model.get('name')
 
     user_portfolio = get_portfolio_data(user_email)
 
@@ -272,5 +273,6 @@ def rebalance_portfolio():
     return jsonify({
         "status": "success",
         "target_model": target_model,
+        "model_name": model_name,
         "rebalancing_results": rebalancing_results
     }), 200

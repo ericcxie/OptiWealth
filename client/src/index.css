@@ -61,3 +61,17 @@
 .scrollbar-track-gray::-webkit-scrollbar-track {
   background: #2d3748;
 }
+
+body::-webkit-scrollbar {
+  width: 10px;
+}
+
+body::-webkit-scrollbar-track {
+  background: #2d3748;
+}
+
+body::-webkit-scrollbar-thumb {
+  background-color: #4a5568;
+  border-radius: 1rem;
+  border: 2px solid #2d3748;
+}

@@ -62,8 +62,9 @@ const Optimize: React.FC = () => {
       setLoading(false);
       console.log("Fetch operation complete");
       if (data) {
-        // Ensure data exists before navigating
-        navigate("/results", { state: { resultsData: data } });
+        navigate("/results", {
+          state: { resultsData: data },
+        });
       }
     }
   };
@@ -102,7 +103,7 @@ const Optimize: React.FC = () => {
             onClick={() => setIsModalOpen(true)}
           />
         </h1>
-        <p className="text-gray-400 mb-2 max-w-xl mx-auto">
+        <p className="text-gray-400 mb-2 max-w-lg mx-auto">
           {selectedModel
             ? "Enter the total amount of bonds and cash you currently hold in your portfolio."
             : "Select a target portfolio that most closely matches your desired investment style."}
