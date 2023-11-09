@@ -20,10 +20,11 @@ const UploadPortfolioTable: React.FC<PortfolioTableProps> = ({
   }, [editingRow]);
 
   const handleEdit = (index: number) => {
+    const editableRow = { ...data[index] };
+    editableRow["Total Shares"] = String(editableRow["Total Shares"]);
     setEditingRow(index);
-    setEditableData({ ...data[index] });
+    setEditableData(editableRow);
   };
-
   const handleAddRow = () => {
     const newRow = { Ticker: "", "Total Shares": 0 };
     onUpdate([...data, newRow]);
@@ -33,13 +34,11 @@ const UploadPortfolioTable: React.FC<PortfolioTableProps> = ({
 
   const handleSave = (index: number) => {
     if (editableData) {
-      if (Number(editableData["Total Shares"]) <= 0) {
-        editableData["Total Shares"] = "0";
-        console.log("Negative number detected during save, set to 0");
-      }
-
       const updatedData = [...data];
-      updatedData[index] = editableData;
+      updatedData[index] = {
+        ...editableData,
+        "Total Shares": Number(editableData["Total Shares"]),
+      };
       onUpdate(updatedData);
     }
     setEditingRow(null);
@@ -47,6 +46,8 @@ const UploadPortfolioTable: React.FC<PortfolioTableProps> = ({
   };
 
   const handleDelete = (index: number) => {
+    setEditingRow(null);
+    setEditableData(null);
     const updatedData = [...data];
     updatedData.splice(index, 1);
     onUpdate(updatedData);
@@ -58,8 +59,7 @@ const UploadPortfolioTable: React.FC<PortfolioTableProps> = ({
     index: number
   ) => {
     if (editingRow === index) {
-      const value =
-        key === "Total Shares" ? Number(e.target.value) : e.target.value;
+      const value = e.target.value;
       setEditableData({ ...editableData, [key]: value });
     }
   };
@@ -74,7 +74,7 @@ const UploadPortfolioTable: React.FC<PortfolioTableProps> = ({
   };
 
   return (
-    <div className="relative overflow-x-auto overflow-y-auto h-[30rem] shadow-md sm:rounded-lg">
+    <div className="relative overflow-x-auto overflow-y-auto h-[30rem] shadow-md sm:rounded-lg scrollbar-thin scrollbar-thumb-gray scrollbar-track-gray">
       <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
         <thead className="sticky top-0 text-md text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
           <tr>

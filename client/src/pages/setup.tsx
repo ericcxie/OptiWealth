@@ -2,10 +2,11 @@ import React, { useRef, useState, useEffect } from "react";
 import axios from "axios";
 import { BarLoader } from "react-spinners";
 import { useNavigate } from "react-router-dom";
-import UploadPortfolioTable from "../components/tables/UploadPortfolioTable";
 import { auth } from "../utils/firebase";
 import Aos from "aos";
 import "aos/dist/aos.css";
+
+import UploadPortfolioTable from "../components/tables/UploadPortfolioTable";
 
 const Setup: React.FC = () => {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
@@ -60,7 +61,6 @@ const Setup: React.FC = () => {
         );
         console.log("Received Data:", response.data);
 
-        // Check if received data is an object (from image)
         if (
           response.data &&
           typeof response.data === "object" &&
