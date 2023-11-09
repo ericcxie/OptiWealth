@@ -5,7 +5,7 @@ interface PortfolioTableProps {
   onUpdate: (updatedData: any[]) => void;
 }
 
-const UploadPortfolioTable: React.FC<PortfolioTableProps> = ({
+const UpdatePortfolioTable: React.FC<PortfolioTableProps> = ({
   data,
   onUpdate,
 }) => {
@@ -20,26 +20,26 @@ const UploadPortfolioTable: React.FC<PortfolioTableProps> = ({
   }, [editingRow]);
 
   const handleEdit = (index: number) => {
+    const editableRow = { ...data[index] };
+    editableRow["Total Shares"] = String(editableRow["Total Shares"]);
     setEditingRow(index);
-    setEditableData({ ...data[index] });
+    setEditableData(editableRow);
   };
 
-  const handleAddRow = () => {
-    const newRow = { Ticker: "", "Total Shares": 0 };
-    onUpdate([...data, newRow]);
-    setEditingRow(data.length); // Set the new row to be in edit mode
-    setEditableData(newRow);
-  };
+  // const handleAddRow = () => {
+  //   const newRow = { Ticker: "", "Total Shares": 0 };
+  //   onUpdate([...data, newRow]);
+  //   setEditingRow(data.length);
+  //   setEditableData(newRow);
+  // };
 
   const handleSave = (index: number) => {
     if (editableData) {
-      if (Number(editableData["Total Shares"]) <= 0) {
-        editableData["Total Shares"] = "0";
-        console.log("Negative number detected during save, set to 0");
-      }
-
       const updatedData = [...data];
-      updatedData[index] = editableData;
+      updatedData[index] = {
+        ...editableData,
+        "Total Shares": Number(editableData["Total Shares"]),
+      };
       onUpdate(updatedData);
     }
     setEditingRow(null);
@@ -47,6 +47,8 @@ const UploadPortfolioTable: React.FC<PortfolioTableProps> = ({
   };
 
   const handleDelete = (index: number) => {
+    setEditingRow(null);
+    setEditableData(null);
     const updatedData = [...data];
     updatedData.splice(index, 1);
     onUpdate(updatedData);
@@ -58,8 +60,7 @@ const UploadPortfolioTable: React.FC<PortfolioTableProps> = ({
     index: number
   ) => {
     if (editingRow === index) {
-      const value =
-        key === "Total Shares" ? Number(e.target.value) : e.target.value;
+      const value = e.target.value;
       setEditableData({ ...editableData, [key]: value });
     }
   };
@@ -172,4 +173,4 @@ const UploadPortfolioTable: React.FC<PortfolioTableProps> = ({
   );
 };
 
-export default UploadPortfolioTable;
+export default UpdatePortfolioTable;
