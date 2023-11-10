@@ -7,6 +7,7 @@
     <h3>An All-in-One Investment Management Platform</h3>
     <h4><i>Monitor, Analyze, and Rebalance Your Portfolio to Align with Your Financial Goals</i></h4>
     <br>
+    <img src="https://img.shields.io/badge/react-%2320232a.svg?style=for-the-badge&logo=react&logoColor=%2361DAFB"/>
     <img src="https://img.shields.io/badge/Typescript-%2320232a.svg?style=for-the-badge&logo=typescript&logoColor=blue"/>
     <img src="https://img.shields.io/badge/Flask-%23404d59.svg?style=for-the-badge&logo=flask&logoColor=white"/>
     <img src="https://img.shields.io/badge/PostgreSQL-336791?style=for-the-badge&logo=postgresql&logoColor=white"/>
