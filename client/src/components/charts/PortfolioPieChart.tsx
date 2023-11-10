@@ -1,9 +1,26 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import ReactApexChart from "react-apexcharts";
+import { PulseLoader } from "react-spinners";
 
-const PortfolioPieChart: React.FC = () => {
-  const series = [44, 55, 13, 33, 44, 55];
-  const labels = ["AAPL", "MSFT", "GOOGL", "VFV.TO", "TSLA", "AMZN"];
+interface Props {
+  portfolioAllocation: Array<{ Ticker: string; Percentage: number }>;
+}
+
+const PortfolioPieChart: React.FC<Props> = ({ portfolioAllocation }) => {
+  const [loading, setLoading] = useState(true);
+  const filteredAllocation = portfolioAllocation.filter(
+    (stock) => stock.Percentage > 2
+  );
+  const series = filteredAllocation.map((stock) => stock.Percentage);
+  const labels = filteredAllocation.map((stock) => stock.Ticker);
+
+  console.log("Portfolio allocation received:", portfolioAllocation);
+
+  useEffect(() => {
+    if (portfolioAllocation.length > 0) {
+      setLoading(false);
+    }
+  }, [portfolioAllocation]);
 
   const options: ApexCharts.ApexOptions | any = {
     chart: {
@@ -48,13 +65,17 @@ const PortfolioPieChart: React.FC = () => {
 
   return (
     <div className="w-full h-full flex justify-center items-center">
-      <ReactApexChart
-        options={options}
-        series={series}
-        type="pie"
-        width="100%"
-        height="300px"
-      />
+      {loading ? (
+        <PulseLoader color="#FFFFFF" loading={loading} />
+      ) : (
+        <ReactApexChart
+          options={options}
+          series={series}
+          type="pie"
+          width="100%"
+          height="300px"
+        />
+      )}
     </div>
   );
 };

@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { portfolios } from "../utils/models";
+import { portfolios } from "../utils/data/models";
 import { auth } from "../utils/firebase";
 import Aos from "aos";
 import "aos/dist/aos.css";

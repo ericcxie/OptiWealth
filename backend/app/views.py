@@ -276,3 +276,40 @@ def rebalance_portfolio():
         "model_name": model_name,
         "rebalancing_results": rebalancing_results
     }), 200
+
+
+@app.route('/get-portfolio-allocation', methods=['POST'])
+def get_portfolio_allocation():
+    """
+    Retrieves a user's stock portfolio data, attaches current stock prices to it,
+    and calculates the percentage of each stock in the portfolio.
+
+    Returns:
+        A JSON object containing the user's stock portfolio data with ticker and percentages attached.
+    """
+    email = request.json.get('email')
+    if not email:
+        return jsonify({"error": "Email is required"}), 400
+
+    portfolio_data = get_portfolio_data(email)
+    if not portfolio_data:
+        return jsonify({"error": "User not found"}), 404
+
+    tickers = [stock['Ticker'] for stock in portfolio_data[0]]
+    stock_prices = get_stock_prices(tickers)
+
+    total_portfolio_value = 0
+    for stock in portfolio_data[0]:
+        current_price = stock_prices.get(stock['Ticker'], None)
+        stock['Current Price'] = current_price
+        stock_value = current_price * stock['Total Shares']
+        total_portfolio_value += stock_value
+
+    portfolio_allocation = []
+    for stock in portfolio_data[0]:
+        stock_value = stock['Current Price'] * stock['Total Shares']
+        percentage = round((stock_value / total_portfolio_value) * 100, 2)
+        portfolio_allocation.append(
+            {'Ticker': stock['Ticker'], 'Percentage': percentage})
+
+    return jsonify(portfolio_allocation)

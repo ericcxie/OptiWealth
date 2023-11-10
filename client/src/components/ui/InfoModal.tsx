@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { LearnRebalance } from "../../utils/LearnRebalance";
+import { LearnRebalance } from "../../utils/data/LearnRebalance";
 
 interface ModalProps {
   show: boolean;
