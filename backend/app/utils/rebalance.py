@@ -117,26 +117,3 @@ aggressive_model = {
         "Cash": 5
     }
 }
-
-
-# result = rebalance_portfolio(
-#     current_user_portfolio, conservative_model, 5000, 1000)
-
-# print(result)
-
-# print("\nInitial Allocation:")
-# for category, percentage in result["initial_allocations"].items():
-#     print(f"{category}: {percentage:.2f}%")
-# print("\nTarget Allocation:")
-# for category, percentage in result["target_allocations"].items():
-#     print(f"{category}: {percentage}%")
-# print("\nUpdated Allocation (After Rebalancing):")
-# for category, percentage in result["updated_allocations"].items():
-#     print(f"{category}: {percentage:.2f}%")
-# print("\nBuy/Sell Instructions:")
-# for ticker, shares in result["instructions"].items():
-#     action = "Buy" if shares >= 0 else "Sell"
-#     if ticker in ["Cash", "Bonds"]:
-#         print(f"{ticker}: {action} ${abs(shares):.2f}")
-#     else:
-#         print(f"{ticker}: {action} {abs(shares):.2f} shares")

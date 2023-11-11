@@ -43,6 +43,24 @@ _(localhost:3000 by default)_
 1. `npm install`
 1. `npm start`
 
+### Setting up database
+
+_To get started, please create a new database in PostgreSQL and give it a name (eg. `OptiWealth`)_
+
+1. `cd backend`
+1. `touch .env`
+
+Add the following in the `.env` file and replace with your own db credentials
+
+```
+DATABASE_URI=postgresql://[YourUsername]:[YourPassword]@localhost/[YourDatabaseName]
+DATABASE_PASSWORD=[YourPassword]
+DATABASE_USER=[YourUsername]
+DATABASE_NAME=[YourDatabaseName]
+```
+
+To create the tables, run the `setup_db.py` file (located in `/backend` directory)
+
 ### Running unit tests
 
 1. `cd backend/tests`
@@ -61,4 +79,4 @@ _(As of Oct. 8, 2023)_
 
 ## Preview
 
-<img src="https://github.com/ericcxie/OptiWealth/assets/66566975/13b4ed97-6f30-493f-a135-a0d77cccf471" width="45%"></img> <img src="https://user-images.githubusercontent.com/66566975/277196573-704b74ee-6efe-4829-853b-d0e049e05b8e.png" width="45%"></img> <img src="https://user-images.githubusercontent.com/66566975/277196571-6fde1071-29f7-4bae-b08b-70ce1842556b.png" width="45%"></img> <img src="https://user-images.githubusercontent.com/66566975/277196598-2632333e-8763-4f89-b804-4a0cfe2a4c27.png" width="45%"></img> <img src="https://github.com/ericcxie/OptiWealth/assets/66566975/c561d146-8794-442b-b641-cde932e199a5" width="45%"></img> <img src="https://github.com/ericcxie/OptiWealth/assets/66566975/27b2e05c-6454-455c-8785-1a69b468090e" width="45%"></img> <img src="https://github.com/ericcxie/OptiWealth/assets/66566975/f19fcd3a-b3dc-4686-a1ca-ff6c9ca21a93" width="45%"></img> <img src="https://github.com/ericcxie/OptiWealth/assets/66566975/31516773-8dd9-4e3f-a98b-8f39431744a6" width="45%"></img> 
+<img src="https://github.com/ericcxie/OptiWealth/assets/66566975/13b4ed97-6f30-493f-a135-a0d77cccf471" width="45%"></img> <img src="https://user-images.githubusercontent.com/66566975/277196573-704b74ee-6efe-4829-853b-d0e049e05b8e.png" width="45%"></img> <img src="https://user-images.githubusercontent.com/66566975/277196571-6fde1071-29f7-4bae-b08b-70ce1842556b.png" width="45%"></img> <img src="https://user-images.githubusercontent.com/66566975/277196598-2632333e-8763-4f89-b804-4a0cfe2a4c27.png" width="45%"></img> <img src="https://github.com/ericcxie/OptiWealth/assets/66566975/c561d146-8794-442b-b641-cde932e199a5" width="45%"></img> <img src="https://github.com/ericcxie/OptiWealth/assets/66566975/27b2e05c-6454-455c-8785-1a69b468090e" width="45%"></img> <img src="https://github.com/ericcxie/OptiWealth/assets/66566975/f19fcd3a-b3dc-4686-a1ca-ff6c9ca21a93" width="45%"></img> <img src="https://github.com/ericcxie/OptiWealth/assets/66566975/31516773-8dd9-4e3f-a98b-8f39431744a6" width="45%"></img>
