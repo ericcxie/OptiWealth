@@ -14,8 +14,6 @@ const PortfolioPieChart: React.FC<Props> = ({ portfolioAllocation }) => {
   const series = filteredAllocation.map((stock) => stock.Percentage);
   const labels = filteredAllocation.map((stock) => stock.Ticker);
 
-  console.log("Portfolio allocation received:", portfolioAllocation);
-
   useEffect(() => {
     if (portfolioAllocation.length > 0) {
       setLoading(false);

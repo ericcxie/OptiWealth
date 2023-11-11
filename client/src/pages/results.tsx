@@ -145,7 +145,7 @@ const Results: React.FC = () => {
               <span className="text-green-600">green</span> = buy order.
             </p>
             <a
-              href="https://tinyurl.com/OptiWealthDocs"
+              href="http://bit.ly/OptiWealthDocs"
               target="_blank"
               rel="noopener noreferrer"
               className="text-blue-500 hover:underline cursor-pointer mb-2"

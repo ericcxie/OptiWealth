@@ -15,8 +15,7 @@ const Dashboard: React.FC = () => {
   const [portfolioValue, setPortfolioValue] = useState<number | null>(null);
   const [loading, setLoading] = useState(true);
   const [portfolioAllocation, setPortfolioAllocation] = useState([]);
-
-  console.log("Portfolio allocation:", portfolioAllocation);
+  const [portfolioHistory, setPortfolioHistory] = useState([]);
 
   const user = auth.currentUser;
   const userEmail = user ? user.email : null;
@@ -27,9 +26,13 @@ const Dashboard: React.FC = () => {
     const fetchPortfolioValue = async () => {
       console.log("Fetching portfolio value for:", userEmail);
       if (!userEmail) {
-        console.error("User email is not available.");
+        console.log(
+          "User email is not available. Not fetching portfolio value."
+        );
         return;
       }
+
+      // console.log("Fetching portfolio value for:", userEmail);
 
       try {
         const response = await fetch("/get-portfolio-value", {
@@ -82,6 +85,24 @@ const Dashboard: React.FC = () => {
   }, [userEmail]);
 
   useEffect(() => {
+    const fetchPortfolioHistory = async () => {
+      const response = await fetch("/get-portfolio-history", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email: userEmail }),
+      });
+
+      const data = await response.json();
+      setPortfolioHistory(data);
+      console.log("Portfolio history fetched!", data);
+    };
+
+    fetchPortfolioHistory();
+  }, [userEmail]);
+
+  useEffect(() => {
     Aos.init({ duration: 800 });
   }, []);
 
@@ -95,7 +116,7 @@ const Dashboard: React.FC = () => {
           loading={loading}
         />
         <div data-aos="fade-up" data-aos-once className="flex gap-10 w-full">
-          <PortfolioAreaChart />
+          <PortfolioAreaChart portfolioHistory={portfolioHistory} />
           <PortfolioPieChart portfolioAllocation={portfolioAllocation} />
         </div>
         <div data-aos="fade-up" data-aos-once className="mb-10 w-full">
