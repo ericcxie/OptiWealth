@@ -18,7 +18,7 @@ def create_tables():
     CREATE TABLE IF NOT EXISTS portfolio_history
     (
         id              SERIAL PRIMARY KEY,
-        user_email      VARCHAR(255) REFERENCES public.users_portfolio (user_email),
+        user_email      VARCHAR(255) REFERENCES users_portfolio (user_email),
         portfolio_value NUMERIC(10, 2),
         timestamp       TIMESTAMP DEFAULT (now() AT TIME ZONE 'utc')
     );
