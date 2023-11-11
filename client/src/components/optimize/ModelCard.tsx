@@ -1,5 +1,5 @@
 import React from "react";
-import { Portfolio } from "../../utils/models";
+import { Portfolio } from "../../utils/data/models";
 import { useNavigate } from "react-router-dom";
 
 interface Props {

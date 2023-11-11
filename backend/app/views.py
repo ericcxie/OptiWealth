@@ -7,7 +7,7 @@ import logging
 from threading import Thread
 
 from . import app, db, cache
-from .utils.app_functions import parse_image, clean_data, get_portfolio_data, get_stock_prices
+from .utils.app_functions import parse_image, clean_data, get_portfolio_data, get_stock_prices, insert_portfolio_value, get_portfolio_history_from_db
 from .utils.rebalance import rebalance
 from .models import UserPortfolio
 from .config import ALLOWED_EXTENSIONS
@@ -78,11 +78,6 @@ def upload_file():
 def submit_portfolio():
     """
     Endpoint to submit a user's portfolio data to the database.
-
-    Returns:
-        A JSON response with a success message and status code 200 if the portfolio was successfully submitted.
-        A JSON response with an error message and status code 400 if a portfolio for the user already exists.
-        A JSON response with an error message and status code 500 if an error occurred while saving to the database.
     """
     logging.info("Endpoint /submit-portfolio hit with POST method.")
     logging.info("Received Data: %s", request.json)
@@ -100,6 +95,8 @@ def submit_portfolio():
 
         db.session.add(new_entry)
         db.session.commit()
+
+        insert_portfolio_value(user_email, 0)
 
         logging.info(
             "Portfolio for user %s successfully submitted.", user_email)
@@ -144,16 +141,11 @@ def get_portfolio_value():
     user_email = request.json.get('email')
     cache_key = f'portfolio_value_{user_email}'
 
-    cached_value = cache.get(cache_key)
+    value = calculate_portfolio_value(user_email)
+    cache.set(cache_key, value)
+    insert_portfolio_value(user_email, value)
 
-    if cached_value:
-        Thread(target=update_portfolio_cache,
-               args=(user_email, cache_key)).start()
-        return jsonify({'portfolio_value': cached_value})
-    else:
-        value = calculate_portfolio_value(user_email)
-        cache.set(cache_key, value)
-        return jsonify({'portfolio_value': value})
+    return jsonify({'portfolio_value': value})
 
 
 def calculate_portfolio_value(user_email):
@@ -165,11 +157,6 @@ def calculate_portfolio_value(user_email):
     total_value = sum(stock_prices[ticker] *
                       portfolio_dict[ticker] for ticker in tickers)
     return total_value
-
-
-def update_portfolio_cache(user_email, cache_key):
-    value = calculate_portfolio_value(user_email)
-    cache.set(cache_key, value)
 
 
 @app.route('/get-user-stocks', methods=['POST'])
@@ -184,16 +171,13 @@ def get_user_stocks():
     if not email:
         return jsonify({"error": "Email is required"}), 400
 
-    # Fetch the user's stocks using the existing function
     portfolio_data = get_portfolio_data(email)
     if not portfolio_data:
         return jsonify({"error": "User not found"}), 404
 
-    # Extract tickers and fetch current stock prices using existing functions
     tickers = [stock['Ticker'] for stock in portfolio_data[0]]
     stock_prices = get_stock_prices(tickers)
 
-    # Attach the current prices to the portfolio data
     for stock in portfolio_data[0]:
         stock['Current Price'] = stock_prices.get(stock['Ticker'], None)
 
@@ -276,3 +260,47 @@ def rebalance_portfolio():
         "model_name": model_name,
         "rebalancing_results": rebalancing_results
     }), 200
+
+
+@app.route('/get-portfolio-allocation', methods=['POST'])
+def get_portfolio_allocation():
+    """
+    Retrieves a user's stock portfolio data, attaches current stock prices to it,
+    and calculates the percentage of each stock in the portfolio.
+
+    Returns:
+        A JSON object containing the user's stock portfolio data with ticker and percentages attached.
+    """
+    email = request.json.get('email')
+    if not email:
+        return jsonify({"error": "Email is required"}), 400
+
+    portfolio_data = get_portfolio_data(email)
+    if not portfolio_data:
+        return jsonify({"error": "User not found"}), 404
+
+    tickers = [stock['Ticker'] for stock in portfolio_data[0]]
+    stock_prices = get_stock_prices(tickers)
+
+    total_portfolio_value = 0
+    for stock in portfolio_data[0]:
+        current_price = stock_prices.get(stock['Ticker'], None)
+        stock['Current Price'] = current_price
+        stock_value = current_price * stock['Total Shares']
+        total_portfolio_value += stock_value
+
+    portfolio_allocation = []
+    for stock in portfolio_data[0]:
+        stock_value = stock['Current Price'] * stock['Total Shares']
+        percentage = round((stock_value / total_portfolio_value) * 100, 2)
+        portfolio_allocation.append(
+            {'Ticker': stock['Ticker'], 'Percentage': percentage})
+
+    return jsonify(portfolio_allocation)
+
+
+@app.route('/get-portfolio-history', methods=['POST'])
+def get_portfolio_history():
+    user_email = request.json.get('email')
+    history = get_portfolio_history_from_db(user_email)
+    return jsonify(history)
