@@ -14,6 +14,8 @@ const Dashboard: React.FC = () => {
   const navigate = useNavigate();
   const [portfolioValue, setPortfolioValue] = useState<number | null>(null);
   const [loading, setLoading] = useState(true);
+  const [portfolioAllocation, setPortfolioAllocation] = useState([]);
+  const [portfolioHistory, setPortfolioHistory] = useState([]);
 
   const user = auth.currentUser;
   const userEmail = user ? user.email : null;
@@ -24,9 +26,13 @@ const Dashboard: React.FC = () => {
     const fetchPortfolioValue = async () => {
       console.log("Fetching portfolio value for:", userEmail);
       if (!userEmail) {
-        console.error("User email is not available.");
+        console.log(
+          "User email is not available. Not fetching portfolio value."
+        );
         return;
       }
+
+      // console.log("Fetching portfolio value for:", userEmail);
 
       try {
         const response = await fetch("/get-portfolio-value", {
@@ -38,7 +44,7 @@ const Dashboard: React.FC = () => {
         });
 
         const data = await response.json();
-        console.log("Portfolio value fetched!", data.portfolio_value);
+        // console.log("Portfolio value fetched!", data.portfolio_value);
         setPortfolioValue(data.portfolio_value);
       } catch (error) {
         console.error("Error fetching portfolio value:", error);
@@ -48,6 +54,52 @@ const Dashboard: React.FC = () => {
     };
 
     fetchPortfolioValue();
+  }, [userEmail]);
+
+  useEffect(() => {
+    const fetchPortfolioAllocation = async () => {
+      console.log("Fetching portfolio allocation for:", userEmail);
+      if (!userEmail) {
+        console.error("User email is not available.");
+        return;
+      }
+
+      try {
+        const response = await fetch("/get-portfolio-allocation", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ email: userEmail }),
+        });
+
+        const data = await response.json();
+        // console.log("Portfolio allocation fetched!", data);
+        setPortfolioAllocation(data);
+      } catch (error) {
+        console.error("Error fetching portfolio allocation:", error);
+      }
+    };
+
+    fetchPortfolioAllocation();
+  }, [userEmail]);
+
+  useEffect(() => {
+    const fetchPortfolioHistory = async () => {
+      const response = await fetch("/get-portfolio-history", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email: userEmail }),
+      });
+
+      const data = await response.json();
+      setPortfolioHistory(data);
+      console.log("Portfolio history fetched!", data);
+    };
+
+    fetchPortfolioHistory();
   }, [userEmail]);
 
   useEffect(() => {
@@ -64,8 +116,8 @@ const Dashboard: React.FC = () => {
           loading={loading}
         />
         <div data-aos="fade-up" data-aos-once className="flex gap-10 w-full">
-          <PortfolioAreaChart />
-          <PortfolioPieChart />
+          <PortfolioAreaChart portfolioHistory={portfolioHistory} />
+          <PortfolioPieChart portfolioAllocation={portfolioAllocation} />
         </div>
         <div data-aos="fade-up" data-aos-once className="mb-10 w-full">
           {userEmail && <Portfolio userEmail={userEmail} />}

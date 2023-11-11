@@ -156,3 +156,4 @@ cython_debug/
 git.sh
 start_server.sh
 .DS_Store
+populate_db.py

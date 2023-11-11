@@ -1,17 +1,25 @@
 import React, { useRef, useEffect } from "react";
-import { createChart, IChartApi, ColorType } from "lightweight-charts";
+import {
+  createChart,
+  IChartApi,
+  ISeriesApi,
+  ColorType,
+} from "lightweight-charts";
 
 interface PortfolioAreaChartProps {
-  // Define any props you might want to pass in the future here
+  portfolioHistory: Array<{ time: string; value: number }>;
 }
 
-const PortfolioAreaChart: React.FC<PortfolioAreaChartProps> = () => {
+const PortfolioAreaChart: React.FC<PortfolioAreaChartProps> = ({
+  portfolioHistory,
+}) => {
   const chartContainerRef = useRef<HTMLDivElement>(null);
-  let chart: IChartApi | null = null;
+  const chartRef = useRef<IChartApi | null>(null);
+  const seriesRef = useRef<ISeriesApi<"Area"> | null>(null);
 
+  // Initialize the chart
   useEffect(() => {
-    // Ensure the ref is set and the chart isn't already instantiated
-    if (chartContainerRef.current && !chart) {
+    if (chartContainerRef.current && !chartRef.current) {
       const chartOptions = {
         layout: {
           textColor: "#D9D9D9",
@@ -32,50 +40,43 @@ const PortfolioAreaChart: React.FC<PortfolioAreaChartProps> = () => {
         height: 350,
         priceFormat: {
           type: "custom",
-          formatter: (price: number) => `$${price}`,
+          formatter: (price: number) => `$${price.toFixed(2)}`,
         },
       };
 
-      chart = createChart(chartContainerRef.current, chartOptions);
-      const areaSeries = chart.addAreaSeries({
+      chartRef.current = createChart(chartContainerRef.current, chartOptions);
+      seriesRef.current = chartRef.current.addAreaSeries({
         lineColor: "#758696",
         topColor: "rgba(117, 134, 150, 0.28)",
         bottomColor: "rgba(117, 134, 150, 0.05)",
         lineWidth: 2,
       });
-
-      // Dummy data with 'YYYY-MM-DD' format for the time property
-      const data = [
-        { value: 0, time: "2022-01-16" },
-        { value: 0, time: "2022-01-17" },
-        { value: 1000, time: "2022-01-18" },
-        { value: 5732.23, time: "2022-01-19" },
-        { value: 21246.3, time: "2022-01-20" },
-        { value: 19362.29, time: "2022-01-21" },
-        { value: 24834.98, time: "2022-01-22" },
-        { value: 38904.23, time: "2022-01-23" },
-        { value: 37126.34, time: "2022-01-24" },
-        { value: 45727.97, time: "2022-01-25" },
-      ];
-
-      areaSeries.setData(data);
-      chart.timeScale().fitContent();
     }
 
-    // Cleanup function to remove the chart when the component is unmounted
+    // Cleanup function
     return () => {
-      if (chart) {
-        chart.remove();
-        chart = null;
+      if (chartRef.current) {
+        chartRef.current.remove();
+        chartRef.current = null;
       }
     };
   }, []);
 
+  useEffect(() => {
+    if (portfolioHistory.length > 0 && seriesRef.current) {
+      const formattedData = portfolioHistory.map((item) => ({
+        time: item.time,
+        value: item.value,
+      }));
+      seriesRef.current.setData(formattedData);
+      chartRef.current?.timeScale().fitContent();
+    }
+  }, [portfolioHistory]);
+
   return (
-    <div
-      ref={chartContainerRef}
-      className="w-full h-full flex items-center justify-center"
-    ></div>
+    <div className="w-full h-full flex items-center justify-center">
+      <div ref={chartContainerRef}></div>
+    </div>
   );
 };
 
