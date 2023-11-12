@@ -2,19 +2,6 @@ import yfinance as yf
 from app.utils.yfinance3 import YFinance
 
 
-# def fetch_price_and_pe(ticker):
-#     stock_info = yf.Ticker(ticker)
-#     current_price = stock_info.history(period="1d")["Close"].iloc[0]
-#     try:
-#         pe_ratio = stock_info.info["trailingPE"]
-#     except KeyError:
-#         pe_ratio = None
-
-#     return current_price, pe_ratio
-
-from app.utils.yfinance3 import YFinance
-
-
 def fetch_price_and_pe(ticker):
     stock_info = YFinance(ticker)
     info = stock_info.info
@@ -33,7 +20,6 @@ def rebalance(user_portfolio, target_model, bonds_value, cash_value):
     total_value = bonds_value + cash_value
     asset_values = {}
 
-    # Fetch price and P/E ratio once and store in a dictionary.
     price_pe_dict = {}
     for asset in user_portfolio:
         ticker = asset["Ticker"]
@@ -94,26 +80,3 @@ def rebalance(user_portfolio, target_model, bonds_value, cash_value):
         "updated_allocations": updated_allocations,
         "instructions": instructions
     }
-
-
-# Test case with formatting for readability
-current_user_portfolio = [
-    {"Ticker": "AAPL", "Total Shares": 4},
-    {"Ticker": "META", "Total Shares": 50},
-    {"Ticker": "TSLA", "Total Shares": 10.5}
-]
-
-conservative_model = {
-    "allocation": {
-        "Stocks": 30,
-        "Bonds": 50,
-        "Cash": 20
-    }
-}
-aggressive_model = {
-    "allocation": {
-        "Stocks": 80,
-        "Bonds": 15,
-        "Cash": 5
-    }
-}
