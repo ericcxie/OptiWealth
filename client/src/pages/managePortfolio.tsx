@@ -1,7 +1,8 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { PulseLoader } from "react-spinners";
 import SideBar from "../components/sidebar";
 import { auth } from "../utils/firebase";
+import axios from "axios";
 import Aos from "aos";
 import "aos/dist/aos.css";
 
@@ -11,6 +12,7 @@ const ManagePortfolio: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [portfolioData, setPortfolioData] = useState<any[]>([]);
   const [message, setMessage] = useState<string | null>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const user = auth.currentUser;
   const userEmail = user ? user.email : null;
@@ -59,6 +61,61 @@ const ManagePortfolio: React.FC = () => {
 
   const handleUpdate = (updatedData: any[]) => {
     setPortfolioData(updatedData);
+  };
+
+  const triggerFileInput = () => {
+    fileInputRef.current?.click();
+  };
+
+  const handleFileChange = async (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      await handleUpload(file);
+    }
+  };
+
+  const handleUpload = async (file: File) => {
+    if (file) {
+      console.log(file, "Received");
+      setLoading(true);
+      const formData = new FormData();
+      formData.append("file", file);
+      try {
+        const response = await axios.post(
+          "http://127.0.0.1:5000/upload",
+          formData,
+          {
+            headers: {
+              "Content-Type": "multipart/form-data",
+            },
+          }
+        );
+        console.log("Received Data:", response.data);
+        await new Promise((resolve) => setTimeout(resolve, 2000));
+
+        if (
+          response.data &&
+          typeof response.data === "object" &&
+          !Array.isArray(response.data)
+        ) {
+          const dataArray = Object.entries(response.data).map(
+            ([Ticker, TotalShares]) => ({ Ticker, "Total Shares": TotalShares })
+          );
+          setPortfolioData(dataArray);
+          setMessageWithTimeout("Portfolio uploaded successfully!", 3000);
+        } else {
+          setPortfolioData(response.data);
+          setMessageWithTimeout("Portfolio uploaded successfully!", 3000);
+        }
+      } catch (error) {
+        console.error("Error uploading file:", error);
+        setMessageWithTimeout("Error uploading portfolio!", 3000);
+      } finally {
+        setTimeout(() => setLoading(false), 1500);
+      }
+    }
   };
 
   const handleSubmit = async () => {
@@ -128,12 +185,20 @@ const ManagePortfolio: React.FC = () => {
               <div className="text-xl text-gray-100 font-semibold">
                 {firstName}'s Portfolio
               </div>
-              <button
-                onClick={handleAddNewRow}
-                className="h-9 mb-3 px-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-600"
-              >
-                New Investment
-              </button>
+              <div className="flex">
+                <button
+                  onClick={triggerFileInput}
+                  className="h-9 mb-3 mx-1 px-5 bg-indigo-600 text-white rounded-lg hover:bg-indigo-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-600"
+                >
+                  Upload
+                </button>
+                <button
+                  onClick={handleAddNewRow}
+                  className="h-9 mb-3 mx-1 px-4 bg-indigo-600 text-white rounded-lg hover:bg-indigo-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-600"
+                >
+                  New Investment
+                </button>
+              </div>
             </div>
             <UpdatePortfolioTable
               data={portfolioData}
@@ -144,7 +209,7 @@ const ManagePortfolio: React.FC = () => {
             <button
               disabled={loading}
               type="button"
-              className="h-12 w-full mb-3 px-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-600"
+              className="h-12 w-full mb-3 px-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-600"
               onClick={handleSubmit}
             >
               {loading && (
@@ -174,6 +239,13 @@ const ManagePortfolio: React.FC = () => {
           </div>
         </div>
       </div>
+      <input
+        type="file"
+        ref={fileInputRef}
+        onChange={handleFileChange}
+        style={{ display: "none" }}
+        accept=".png,.jpg,.jpeg,.csv,.xlsx"
+      />
     </div>
   );
 };

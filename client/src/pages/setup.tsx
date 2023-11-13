@@ -127,11 +127,6 @@ const Setup: React.FC = () => {
 
       console.log("Payload:", payload);
 
-      // const response = await axios.post(
-      //   "http://127.0.0.1:5000/submit-portfolio",
-      //   payload
-      // );
-
       // Handle the response as needed, e.g., by showing a success message or by redirecting the user.
       console.log("Response from server:", response.data);
       setIsLoading(false);
@@ -255,14 +250,6 @@ const Setup: React.FC = () => {
                   />
                 </label>
               </div>
-              {/* <div className="mt-6">
-              <button
-                onClick={handleUpload}
-                className="w-full h-12 bg-indigo-600 text-white rounded-md hover:bg-indigo-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-600"
-              >
-                Upload
-              </button>
-            </div> */}
               <div className="mt-6 text-center">
                 <span className="text-sm text-gray-400 italic">
                   Image upload is a beta feature and may not work perfectly.
