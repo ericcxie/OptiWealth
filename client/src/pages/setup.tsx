@@ -106,35 +106,6 @@ const Setup: React.FC = () => {
     const threeSecondsPromise = new Promise((resolve) =>
       setTimeout(resolve, 3000)
     );
-
-    console.log("User Email:", userEmail);
-    console.log("User UID:", userUID);
-    // TODO: Handle the submission logic here. E.g. send data to an API endpoint.
-    console.log("Portfolio Submitted:", data);
-    try {
-      // Construct the payload object.
-      const payload = {
-        user_email: userEmail,
-        user_uid: userUID,
-        portfolio_data: data,
-      };
-
-      const apiCall = axios.post(
-        "http://127.0.0.1:5000/submit-portfolio",
-        payload
-      );
-      const [response] = await Promise.all([apiCall, threeSecondsPromise]);
-
-      console.log("Payload:", payload);
-
-      // Handle the response as needed, e.g., by showing a success message or by redirecting the user.
-      console.log("Response from server:", response.data);
-      setIsLoading(false);
-      navigate("/dashboard");
-    } catch (error) {
-      console.error("Error submitting portfolio:", error);
-      setIsLoading(false);
-    }
   };
 
   useEffect(() => {
@@ -169,7 +140,7 @@ const Setup: React.FC = () => {
             <div className="flex justify-end">
               <button
                 onClick={handleAddNewRow}
-                className="h-9 mb-3 px-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-600"
+                className="h-9 mb-3 px-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-600"
               >
                 New Investment
               </button>
@@ -179,7 +150,7 @@ const Setup: React.FC = () => {
             <div className="mt-6">
               <button
                 onClick={handleSubmit}
-                className="w-full h-12 bg-indigo-600 text-white rounded-md hover:bg-indigo-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-600"
+                className="w-full h-12 bg-indigo-600 text-white rounded-lg hover:bg-indigo-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-600"
               >
                 Submit
               </button>

@@ -3,11 +3,13 @@ import React, { useState, useEffect, useRef } from "react";
 interface PortfolioTableProps {
   data: any[];
   onUpdate: (updatedData: any[]) => void;
+  invalidTickers: string[];
 }
 
 const UpdatePortfolioTable: React.FC<PortfolioTableProps> = ({
   data,
   onUpdate,
+  invalidTickers,
 }) => {
   const [editingRow, setEditingRow] = useState<number | null>(null);
   const [editableData, setEditableData] = useState<any | null>(null);
@@ -110,7 +112,21 @@ const UpdatePortfolioTable: React.FC<PortfolioTableProps> = ({
                     className="px-2 py-1 rounded-md bg-gray-200 dark:bg-gray-700 dark:text-white"
                   />
                 ) : (
-                  row.Ticker
+                  <>
+                    {row.Ticker}
+                    {invalidTickers.includes(row.Ticker) && (
+                      <span className="text-red-500 ml-2 cursor-pointer relative">
+                        <a
+                          href="https://bit.ly/OptiWealthDocsError"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          title="Why Am I Seeing This Error?"
+                        >
+                          ⚠️
+                        </a>
+                      </span>
+                    )}
+                  </>
                 )}
               </th>
               <td className="px-6 py-4">

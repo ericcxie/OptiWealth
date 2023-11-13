@@ -13,6 +13,7 @@ const ManagePortfolio: React.FC = () => {
   const [portfolioData, setPortfolioData] = useState<any[]>([]);
   const [message, setMessage] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const [invalidTickers, setInvalidTickers] = useState<string[]>([]);
 
   const user = auth.currentUser;
   const userEmail = user ? user.email : null;
@@ -109,6 +110,7 @@ const ManagePortfolio: React.FC = () => {
           setPortfolioData(response.data);
           setMessageWithTimeout("Portfolio uploaded successfully!", 3000);
         }
+        window.location.reload();
       } catch (error) {
         console.error("Error uploading file:", error);
         setMessageWithTimeout("Error uploading portfolio!", 3000);
@@ -138,11 +140,24 @@ const ManagePortfolio: React.FC = () => {
         }),
       });
 
-      await new Promise((resolve) => setTimeout(resolve, 2000));
-
-      const data = await response.json();
-      console.log("Portfolio data updated!", data);
-      setMessageWithTimeout("Portfolio updated successfully!", 3000);
+      if (!response.ok) {
+        const data = await response.json();
+        if (data.invalid_tickers) {
+          console.error("Invalid tickers:", data.invalid_tickers);
+          setInvalidTickers(data.invalid_tickers);
+          setMessageWithTimeout(
+            `Error due to invalid tickers.<br/>Please fix the invalid tickers and try again.`,
+            60000
+          );
+        } else {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+      } else {
+        await new Promise((resolve) => setTimeout(resolve, 2000));
+        const data = await response.json();
+        console.log("Portfolio data updated!", data);
+        setMessageWithTimeout("Portfolio updated successfully!", 3000);
+      }
     } catch (error) {
       console.error("Error updating portfolio data:", error);
       setMessageWithTimeout("Error updating portfolio data!", 3000);
@@ -203,6 +218,7 @@ const ManagePortfolio: React.FC = () => {
             <UpdatePortfolioTable
               data={portfolioData}
               onUpdate={handleUpdate}
+              invalidTickers={invalidTickers}
             />
           </div>
           <div className="mt-6">
@@ -234,9 +250,10 @@ const ManagePortfolio: React.FC = () => {
               {loading ? "Loading..." : "Save Changes"}
             </button>
           </div>
-          <div className="flex justify-center items-center text-gray-200">
-            {message}
-          </div>
+          <div
+            className="flex justify-center text-center items-center text-gray-200"
+            dangerouslySetInnerHTML={{ __html: message || "" }}
+          />
         </div>
       </div>
       <input
