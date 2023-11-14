@@ -75,6 +75,8 @@ const ManagePortfolio: React.FC = () => {
     if (file) {
       await handleUpload(file);
     }
+    event.target.value = "";
+    setInvalidTickers([]);
   };
 
   const handleUpload = async (file: File) => {
@@ -110,7 +112,6 @@ const ManagePortfolio: React.FC = () => {
           setPortfolioData(response.data);
           setMessageWithTimeout("Portfolio uploaded successfully!", 3000);
         }
-        window.location.reload();
       } catch (error) {
         console.error("Error uploading file:", error);
         setMessageWithTimeout("Error uploading portfolio!", 3000);
