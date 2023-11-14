@@ -5,9 +5,10 @@ import pandas as pd
 from sqlalchemy.exc import IntegrityError
 import logging
 from threading import Thread
+from concurrent.futures import ThreadPoolExecutor
 
 from . import app, db, cache
-from .utils.app_functions import parse_image, clean_data, get_portfolio_data, get_stock_prices, insert_portfolio_value, get_portfolio_history_from_db
+from .utils.app_functions import parse_image, clean_data, get_portfolio_data, get_stock_prices, insert_portfolio_value, get_portfolio_history_from_db, is_valid_ticker
 from .utils.rebalance import rebalance
 from .models import UserPortfolio
 from .config import ALLOWED_EXTENSIONS
@@ -65,6 +66,7 @@ def upload_file():
                 df = pd.read_excel(filepath) if filepath.endswith(
                     '.xlsx') else pd.read_csv(filepath)
                 data = df[['Ticker', 'Total Shares']].to_dict(orient='records')
+
                 os.remove(filepath)  # Deleting the file after processing
                 return jsonify(data)
 
@@ -86,6 +88,14 @@ def submit_portfolio():
         user_email = payload.get('user_email')
         user_uid = payload.get('user_uid')
         portfolio_data = payload.get('portfolio_data')
+
+        invalid_tickers = []
+        with ThreadPoolExecutor() as executor:
+            invalid_tickers = list(
+                filter(None, executor.map(check_ticker, portfolio_data)))
+
+        if invalid_tickers:
+            return jsonify({'error': 'Invalid stocks found', 'invalid_tickers': invalid_tickers}), 400
 
         new_entry = UserPortfolio(
             user_email=user_email,
@@ -184,6 +194,13 @@ def get_user_stocks():
     return jsonify(portfolio_data[0])
 
 
+def check_ticker(stock):
+    ticker = stock['Ticker']
+    if not is_valid_ticker(ticker):
+        return ticker
+    return None
+
+
 @app.route('/update-portfolio', methods=['POST'])
 def update_portfolio():
     """
@@ -204,6 +221,15 @@ def update_portfolio():
 
     if not portfolio_data:
         return jsonify({'error': 'Portfolio data is required'}), 400
+
+    invalid_tickers = []
+
+    with ThreadPoolExecutor() as executor:
+        invalid_tickers = list(
+            filter(None, executor.map(check_ticker, portfolio_data)))
+
+    if invalid_tickers:
+        return jsonify({'error': 'Invalid stocks found', 'invalid_tickers': invalid_tickers}), 400
 
     user_portfolio = UserPortfolio.query.filter_by(
         user_email=user_email).first()
