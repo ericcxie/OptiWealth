@@ -3,11 +3,13 @@ import React, { useState, useEffect, useRef } from "react";
 interface PortfolioTableProps {
   data: any[];
   onUpdate: (updatedData: any[]) => void;
+  invalidTickers: string[];
 }
 
 const UpdatePortfolioTable: React.FC<PortfolioTableProps> = ({
   data,
   onUpdate,
+  invalidTickers,
 }) => {
   const [editingRow, setEditingRow] = useState<number | null>(null);
   const [editableData, setEditableData] = useState<any | null>(null);
@@ -75,7 +77,7 @@ const UpdatePortfolioTable: React.FC<PortfolioTableProps> = ({
   };
 
   return (
-    <div className="relative overflow-y-auto h-96 mt-2 shadow-md sm:rounded-lg scrollbar-thin scrollbar-thumb-gray scrollbar-track-gray">
+    <div className="relative overflow-y-auto max-h-96 mt-2 shadow-md sm:rounded-lg scrollbar-thin scrollbar-thumb-gray scrollbar-track-gray">
       <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
         <thead className="sticky uppercase top-0 bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
           <tr>
@@ -110,7 +112,21 @@ const UpdatePortfolioTable: React.FC<PortfolioTableProps> = ({
                     className="px-2 py-1 rounded-md bg-gray-200 dark:bg-gray-700 dark:text-white"
                   />
                 ) : (
-                  row.Ticker
+                  <>
+                    {row.Ticker}
+                    {invalidTickers.includes(row.Ticker) && (
+                      <span className="text-red-500 ml-2 cursor-pointer relative">
+                        <a
+                          href="https://bit.ly/OptiWealthDocsError"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          title="Why Am I Seeing This Error?"
+                        >
+                          ⚠️
+                        </a>
+                      </span>
+                    )}
+                  </>
                 )}
               </th>
               <td className="px-6 py-4">

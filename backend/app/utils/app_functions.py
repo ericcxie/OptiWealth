@@ -87,6 +87,25 @@ def clean_data(target_data):
     return stock_data
 
 
+def is_valid_ticker(ticker):
+    """
+    Checks if a given ticker symbol is valid.
+
+    Args:
+        ticker (str): The ticker symbol to be checked.
+
+    Returns:
+        bool: True if the ticker symbol is valid, False otherwise.
+    """
+    yf_custom = YFinance(ticker)
+    try:
+        stock_info = yf_custom.info
+        # If the ticker is valid, the following line will not raise an exception
+        return 'currency' in stock_info
+    except Exception:
+        return False
+
+
 def get_portfolio_data(user_email):
     """
     Retrieves portfolio data for a given user from the database.
@@ -238,12 +257,13 @@ def get_portfolio_history_from_db(user_email):
 
 
 if __name__ == "__main__":
-    test_email = "ex.ericxie@gmail.com"
-    portfolio_data = get_portfolio_data(test_email)
-    print("Portfolio Data:", portfolio_data)
+    # test_email = "ex.ericxie@gmail.com"
+    # portfolio_data = get_portfolio_data(test_email)
+    # print("Portfolio Data:", portfolio_data)
 
-    tickers = [stock['Ticker'] for stock in portfolio_data[0]]
-    print("Tickers:", tickers)
+    # tickers = [stock['Ticker'] for stock in portfolio_data[0]]
+    # print("Tickers:", tickers)
 
-    stock_prices = {ticker: get_stock_price(ticker)[1] for ticker in tickers}
-    print("Stock Prices:", stock_prices)
+    # stock_prices = {ticker: get_stock_price(ticker)[1] for ticker in tickers}
+    # print("Stock Prices:", stock_prices)
+    print(is_valid_ticker("VFV.TO"))
