@@ -211,7 +211,7 @@ const ManagePortfolio: React.FC = () => {
                   onClick={handleAddNewRow}
                   className="h-9 mb-3 mx-1 px-4 bg-indigo-600 text-white rounded-lg hover:bg-indigo-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-600"
                 >
-                  New Investment
+                  Add Investment
                 </button>
               </div>
             </div>

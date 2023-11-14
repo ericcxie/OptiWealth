@@ -6,13 +6,21 @@ import { auth } from "../utils/firebase";
 import Aos from "aos";
 import "aos/dist/aos.css";
 
+import BackButton from "../components/ui/BackButton";
 import UploadPortfolioTable from "../components/tables/UploadPortfolioTable";
+import { setIn } from "formik";
 
 const Setup: React.FC = () => {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [data, setData] = useState<any[]>([]);
+  const [message, setMessage] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const [invalidTickers, setInvalidTickers] = useState<string[]>([]);
+
+  const user = auth.currentUser;
+  const displayName = user ? user.displayName : "User";
+  const firstName = displayName ? displayName.split(" ")[0] : "User";
 
   const navigate = useNavigate();
 
@@ -88,6 +96,8 @@ const Setup: React.FC = () => {
     if (fileInputRef.current) {
       fileInputRef.current.value = "";
     }
+    setMessage(null);
+    setInvalidTickers([]);
     setSelectedFile(null);
   };
 
@@ -106,6 +116,33 @@ const Setup: React.FC = () => {
     const threeSecondsPromise = new Promise((resolve) =>
       setTimeout(resolve, 3000)
     );
+
+    try {
+      const payload = {
+        user_email: userEmail,
+        user_uid: userUID,
+        portfolio_data: data,
+      };
+
+      const apiCall = axios.post(
+        "http://127.0.0.1:5000/submit-portfolio",
+        payload
+      );
+      const [response] = await Promise.all([apiCall, threeSecondsPromise]);
+
+      setMessage("Portfolio updated successfully!");
+      navigate("/dashboard");
+    } catch (error) {
+      console.error("Error submitting portfolio:", error);
+      if (axios.isAxiosError(error) && error.response) {
+        console.error("Invalid tickers:", error.response.data.invalid_tickers);
+        setInvalidTickers(error.response.data.invalid_tickers);
+        setMessage(`Error due to invalid tickers`);
+      } else {
+        setMessage("Error submitting portfolio!");
+      }
+      setIsLoading(false);
+    }
   };
 
   useEffect(() => {
@@ -128,39 +165,45 @@ const Setup: React.FC = () => {
           </div>
         ) : data.length > 0 ? (
           <div>
-            <h2 className="mt-4 text-center text-4xl font-bold leading-9 tracking-tight text-white">
-              Modify Your{" "}
-              <span className="bg-clip-text text-transparent bg-gradient-to-r from-blue-700 to-teal-500">
-                Portfolio
-              </span>
-            </h2>
-            <p className="text-md mt-2 text-gray-400 mb-4 text-center">
-              Once finished, press submit to save.
-            </p>
-            <div className="flex justify-end">
+            <div className="mb-6">
+              <h2 className="mt-4 text-center text-4xl font-bold leading-9 tracking-tight text-white">
+                Modify Your{" "}
+                <span className="bg-clip-text text-transparent bg-gradient-to-r from-blue-700 to-teal-500">
+                  Portfolio
+                </span>
+              </h2>
+              <p className="text-md mt-2 text-gray-400 mb-4 text-center">
+                Once finished, press submit to save.
+              </p>
+            </div>
+            <div className="flex justify-between">
+              <div className="text-xl text-gray-100 font-semibold">
+                {firstName}'s Portfolio
+              </div>
               <button
                 onClick={handleAddNewRow}
-                className="h-9 mb-3 px-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-600"
+                className="h-9 mb-3 px-4 bg-indigo-600 text-white rounded-lg hover:bg-indigo-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-600"
               >
-                New Investment
+                Add Investment
               </button>
             </div>
-
-            <UploadPortfolioTable data={data} onUpdate={handleTableUpdate} />
-            <div className="mt-6">
+            <UploadPortfolioTable
+              data={data}
+              onUpdate={handleTableUpdate}
+              invalidTickers={invalidTickers}
+            />
+            <div className="mt-3">
               <button
                 onClick={handleSubmit}
                 className="w-full h-12 bg-indigo-600 text-white rounded-lg hover:bg-indigo-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-600"
               >
                 Submit
               </button>
-              <p className="mt-5 text-center text-sm text-gray-500">
-                <button
-                  onClick={handleBack}
-                  className="font-semibold leading-6 text-indigo-600 hover:text-indigo-500"
-                >
-                  Back
-                </button>
+              <BackButton onClick={handleBack} />
+            </div>
+            <div className="mt-1 flex justify-center text-center items-center text-red-500 h-6">
+              <p className={message ? "opacity-100" : "opacity-0"}>
+                {message || " "}
               </p>
             </div>
           </div>
