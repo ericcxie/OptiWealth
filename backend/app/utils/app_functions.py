@@ -140,6 +140,74 @@ def get_portfolio_data(user_email):
             connection.close()
 
 
+def delete_account_from_db(user_email):
+    """
+    Deletes a user's account from the database.
+
+    Args:
+        user_email (str): The email address of the user.
+    """
+    connection = None
+    cursor = None
+    try:
+        connection = psycopg2.connect(**DATABASE_CONFIG)
+        cursor = connection.cursor()
+
+        query = """
+            DELETE FROM users_portfolio
+            WHERE user_email = %s
+        """
+        cursor.execute(query, (user_email,))
+        connection.commit()
+
+    except Exception as error:
+        print(f"Error deleting account from database: {error}")
+    finally:
+        if cursor:
+            cursor.close()
+        if connection:
+            connection.close()
+
+
+def upsert_user_email_in_db(old_email, new_email):
+    """
+    Edits a user's email address in the database.
+
+    Args:
+        old_email (str): The old email address of the user.
+        new_email (str): The new email address of the user.
+    """
+    connection = None
+    cursor = None
+    try:
+        connection = psycopg2.connect(**DATABASE_CONFIG)
+        cursor = connection.cursor()
+
+        query1 = """
+            UPDATE users_portfolio
+            SET user_email = %s
+            WHERE user_email = %s
+        """
+        cursor.execute(query1, (new_email, old_email))
+
+        query2 = """
+            UPDATE portfolio_history
+            SET user_email = %s
+            WHERE user_email = %s
+        """
+        cursor.execute(query2, (new_email, old_email))
+
+        connection.commit()
+
+    except Exception as error:
+        print(f"Error editing email in database: {error}")
+    finally:
+        if cursor:
+            cursor.close()
+        if connection:
+            connection.close()
+
+
 def insert_portfolio_value(user_email, value):
     """
     Logs the portfolio value for a given user in the database.

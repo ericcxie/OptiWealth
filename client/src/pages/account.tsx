@@ -8,6 +8,8 @@ import {
   updatePassword,
 } from "firebase/auth";
 
+import DeleteConfirmationModal from "../components/ui/ConfirmDeleteModal";
+
 interface UserData {
   name: string;
   email: string;
@@ -20,6 +22,7 @@ interface PasswordData {
 
 const Account: React.FC = () => {
   const [userData, setUserData] = useState<UserData>({ name: "", email: "" });
+  const [deleteConfirmation, setDeleteConfirmation] = useState("");
   const [passwordData, setPasswordData] = useState<PasswordData>({
     currentPassword: "",
     newPassword: "",
@@ -28,6 +31,7 @@ const Account: React.FC = () => {
   const user = auth.currentUser;
   const userEmail = user ? user.email : null;
   const displayName = user ? user.displayName : "User";
+  const [showModal, setShowModal] = useState<boolean>(false);
 
   useEffect(() => {
     console.log("Fetching user data for:", userEmail);
@@ -70,6 +74,19 @@ const Account: React.FC = () => {
       } catch (error) {
         console.error(error);
       }
+    }
+  };
+
+  const handleDeleteAccount = () => {
+    setShowModal(true);
+  };
+
+  const handleConfirmDelete = async () => {
+    try {
+      console.log("Delete account logic goes here");
+      setShowModal(false);
+    } catch (error) {
+      console.error(error);
     }
   };
 
@@ -186,6 +203,14 @@ const Account: React.FC = () => {
             </form>
           </div>
         </div>
+        <div className="mt-4 flex justify-center items-center w-full">
+          <button
+            onClick={handleDeleteAccount}
+            className="flex w-72 mt-2 justify-center rounded-md bg-red-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-red-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-600"
+          >
+            Delete Account
+          </button>
+        </div>
 
         {isSaved && (
           <div className="mt-4 flex justify-center items-center">
@@ -194,6 +219,11 @@ const Account: React.FC = () => {
             </div>
           </div>
         )}
+        <DeleteConfirmationModal
+          showModal={showModal}
+          handleConfirmDelete={handleConfirmDelete}
+          handleCloseModal={() => setShowModal(false)}
+        />
       </div>
     </div>
   );

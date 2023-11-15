@@ -8,7 +8,17 @@ from threading import Thread
 from concurrent.futures import ThreadPoolExecutor
 
 from . import app, db, cache
-from .utils.app_functions import parse_image, clean_data, get_portfolio_data, get_stock_prices, insert_portfolio_value, get_portfolio_history_from_db, is_valid_ticker
+from .utils.app_functions import (
+    parse_image,
+    clean_data,
+    get_portfolio_data,
+    get_stock_prices,
+    insert_portfolio_value,
+    get_portfolio_history_from_db,
+    is_valid_ticker,
+    delete_account_from_db,
+    upsert_user_email_in_db
+)
 from .utils.rebalance import rebalance
 from .models import UserPortfolio
 from .config import ALLOWED_EXTENSIONS
@@ -330,3 +340,18 @@ def get_portfolio_history():
     user_email = request.json.get('email')
     history = get_portfolio_history_from_db(user_email)
     return jsonify(history)
+
+
+@app.route('/delete-account', methods=['POST'])
+def delete_account():
+    user_email = request.json.get('email')
+    delete_account_from_db(user_email)
+    return jsonify({'message': 'Account deleted successfully'})
+
+
+@app.route('/update-user-email', methods=['POST'])
+def edit_user_email():
+    old_email = request.json.get('email')
+    new_email = request.json.get('new_email')
+    upsert_user_email_in_db(old_email, new_email)
+    return jsonify({'message': 'Email updated successfully'})
