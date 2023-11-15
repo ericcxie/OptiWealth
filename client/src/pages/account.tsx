@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import SideBar from "../components/sidebar";
 import { auth } from "../utils/firebase";
 import {
@@ -6,6 +7,7 @@ import {
   updateEmail,
   updateProfile,
   updatePassword,
+  deleteUser,
 } from "firebase/auth";
 
 import DeleteConfirmationModal from "../components/ui/ConfirmDeleteModal";
@@ -32,6 +34,8 @@ const Account: React.FC = () => {
   const userEmail = user ? user.email : null;
   const displayName = user ? user.displayName : "User";
   const [showModal, setShowModal] = useState<boolean>(false);
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     console.log("Fetching user data for:", userEmail);
@@ -82,11 +86,29 @@ const Account: React.FC = () => {
   };
 
   const handleConfirmDelete = async () => {
-    try {
-      console.log("Delete account logic goes here");
-      setShowModal(false);
-    } catch (error) {
-      console.error(error);
+    if (user) {
+      try {
+        // Delete the user from Firebase
+        await deleteUser(user);
+
+        // Call the delete-account endpoint
+        const response = await fetch("/delete-account", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ email: userEmail }),
+        });
+
+        if (!response.ok) {
+          throw new Error("Failed to delete account");
+        }
+
+        setShowModal(false);
+        navigate("/");
+      } catch (error) {
+        console.error(error);
+      }
     }
   };
 

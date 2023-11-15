@@ -142,7 +142,7 @@ def get_portfolio_data(user_email):
 
 def delete_account_from_db(user_email):
     """
-    Deletes a user's account from the database.
+    Deletes a user's account and all associated portfolio history from the database.
 
     Args:
         user_email (str): The email address of the user.
@@ -153,15 +153,23 @@ def delete_account_from_db(user_email):
         connection = psycopg2.connect(**DATABASE_CONFIG)
         cursor = connection.cursor()
 
-        query = """
+        portfolio_history_query = """
+            DELETE FROM portfolio_history
+            WHERE user_email = %s
+        """
+        cursor.execute(portfolio_history_query, (user_email,))
+
+        users_portfolio_query = """
             DELETE FROM users_portfolio
             WHERE user_email = %s
         """
-        cursor.execute(query, (user_email,))
+        cursor.execute(users_portfolio_query, (user_email,))
+
         connection.commit()
 
     except Exception as error:
-        print(f"Error deleting account from database: {error}")
+        print(
+            f"Error deleting account and portfolio history from database: {error}")
     finally:
         if cursor:
             cursor.close()
@@ -183,19 +191,19 @@ def upsert_user_email_in_db(old_email, new_email):
         connection = psycopg2.connect(**DATABASE_CONFIG)
         cursor = connection.cursor()
 
-        query1 = """
+        users_portfolio_query = """
             UPDATE users_portfolio
             SET user_email = %s
             WHERE user_email = %s
         """
-        cursor.execute(query1, (new_email, old_email))
+        cursor.execute(users_portfolio_query, (new_email, old_email))
 
-        query2 = """
+        portfolio_history_query = """
             UPDATE portfolio_history
             SET user_email = %s
             WHERE user_email = %s
         """
-        cursor.execute(query2, (new_email, old_email))
+        cursor.execute(portfolio_history_query, (new_email, old_email))
 
         connection.commit()
 
