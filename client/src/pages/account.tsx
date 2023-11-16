@@ -8,6 +8,7 @@ import {
   updateProfile,
   updatePassword,
   deleteUser,
+  reauthenticateWithCredential,
 } from "firebase/auth";
 
 import DeleteConfirmationModal from "../components/ui/ConfirmDeleteModal";
@@ -33,6 +34,9 @@ const Account: React.FC = () => {
   const user = auth.currentUser;
   const userEmail = user ? user.email : null;
   const displayName = user ? user.displayName : "User";
+  const firstName = displayName
+    ? displayName.split(" ")[0].toLowerCase()
+    : "User";
   const [showModal, setShowModal] = useState<boolean>(false);
 
   const navigate = useNavigate();
@@ -41,6 +45,8 @@ const Account: React.FC = () => {
     console.log("Fetching user data for:", userEmail);
     console.log("User display name:", displayName);
   }, [userEmail]);
+
+  console.log("User data:", userData.email);
 
   const handleUserDataChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -56,10 +62,36 @@ const Account: React.FC = () => {
     e.preventDefault();
     if (user) {
       try {
-        await updateProfile(user, {
-          displayName: userData.name,
-        });
-        await updateEmail(user, userData.email);
+        // Update the user's name and email in Firebase
+        if (userData.name) {
+          await updateProfile(user, { displayName: userData.name });
+        }
+        if (userData.email) {
+          await updateEmail(user, userData.email);
+
+          const response = await fetch("/update-user-email", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              email: userEmail,
+              new_email: userData.email,
+            }),
+          });
+
+          if (!response.ok) {
+            throw new Error("Failed to update email");
+          }
+        }
+
+        // Update the user's name and email in the local state
+        setUserData((prev) => ({
+          ...prev,
+          name: userData.name || prev.name,
+          email: userData.email || prev.email,
+        }));
+
         setIsSaved(true);
         setTimeout(() => setIsSaved(false), 2000);
       } catch (error) {
@@ -85,13 +117,12 @@ const Account: React.FC = () => {
     setShowModal(true);
   };
 
-  const handleConfirmDelete = async () => {
-    if (user) {
+  const handleConfirmDelete = async (inputValue: string) => {
+    console.log("Input value:", inputValue);
+    if (user && inputValue === `${firstName}/confirm-delete`) {
       try {
-        // Delete the user from Firebase
         await deleteUser(user);
 
-        // Call the delete-account endpoint
         const response = await fetch("/delete-account", {
           method: "POST",
           headers: {
@@ -109,6 +140,9 @@ const Account: React.FC = () => {
       } catch (error) {
         console.error(error);
       }
+    } else {
+      // Show an error message
+      console.error("Failed to confirm deletion");
     }
   };
 
@@ -138,7 +172,6 @@ const Account: React.FC = () => {
                   onChange={handleUserDataChange}
                   placeholder={displayName ?? ""}
                   className="pl-2 block w-full rounded-md border-0 py-1.5 bg-[#212834] text-white shadow-sm ring-1 ring-inset ring-gray-600 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                  required
                 />
               </div>
 
@@ -157,14 +190,14 @@ const Account: React.FC = () => {
                   onChange={handleUserDataChange}
                   placeholder={userEmail ?? ""}
                   className="pl-2 block w-full rounded-md border-0 py-1.5 bg-[#212834] text-white shadow-sm ring-1 ring-inset ring-gray-600 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                  required
                 />
               </div>
 
               <div>
                 <button
                   type="submit"
-                  className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                  disabled={!userData.name && !userData.email}
+                  className="flex w-full justify-center rounded-md bg-indigo-600 disabled:cursor-not-allowed disabled:brightness-50 disabled:bg-indigo-700 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
                 >
                   Update
                 </button>
@@ -245,6 +278,7 @@ const Account: React.FC = () => {
           showModal={showModal}
           handleConfirmDelete={handleConfirmDelete}
           handleCloseModal={() => setShowModal(false)}
+          firstName={firstName}
         />
       </div>
     </div>
