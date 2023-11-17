@@ -353,5 +353,6 @@ def delete_account():
 def edit_user_email():
     old_email = request.json.get('email')
     new_email = request.json.get('new_email')
+    print(f"Updating email from {old_email} to {new_email}")
     upsert_user_email_in_db(old_email, new_email)
     return jsonify({'message': 'Email updated successfully'})

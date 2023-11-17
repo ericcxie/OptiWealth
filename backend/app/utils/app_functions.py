@@ -185,35 +185,40 @@ def upsert_user_email_in_db(old_email, new_email):
         old_email (str): The old email address of the user.
         new_email (str): The new email address of the user.
     """
-    connection = None
-    cursor = None
     try:
-        connection = psycopg2.connect(**DATABASE_CONFIG)
-        cursor = connection.cursor()
+        with psycopg2.connect(**DATABASE_CONFIG) as conn:
+            with conn.cursor() as cursor:
+                # Step 1: Drop the foreign key constraint
+                cursor.execute("""
+                    ALTER TABLE portfolio_history DROP CONSTRAINT IF EXISTS portfolio_history_user_email_fkey;
+                """)
 
-        users_portfolio_query = """
-            UPDATE users_portfolio
-            SET user_email = %s
-            WHERE user_email = %s
-        """
-        cursor.execute(users_portfolio_query, (new_email, old_email))
+                # Step 2: Update emails in users_portfolio
+                cursor.execute("""
+                    UPDATE users_portfolio
+                    SET user_email = %s
+                    WHERE user_email = %s
+                """, (new_email, old_email))
 
-        portfolio_history_query = """
-            UPDATE portfolio_history
-            SET user_email = %s
-            WHERE user_email = %s
-        """
-        cursor.execute(portfolio_history_query, (new_email, old_email))
+                # Step 3: Update emails in portfolio_history
+                cursor.execute("""
+                    UPDATE portfolio_history
+                    SET user_email = %s
+                    WHERE user_email = %s
+                """, (new_email, old_email))
 
-        connection.commit()
+                # Step 4: Re-add the foreign key constraint
+                cursor.execute("""
+                    ALTER TABLE portfolio_history
+                    ADD CONSTRAINT portfolio_history_user_email_fkey FOREIGN KEY (user_email)
+                    REFERENCES users_portfolio (user_email);
+                """)
+
+                conn.commit()
+                print("Email updated successfully.")
 
     except Exception as error:
-        print(f"Error editing email in database: {error}")
-    finally:
-        if cursor:
-            cursor.close()
-        if connection:
-            connection.close()
+        print(f"Error updating email with foreign key drop/add: {error}")
 
 
 def insert_portfolio_value(user_email, value):

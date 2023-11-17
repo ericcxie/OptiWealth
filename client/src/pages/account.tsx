@@ -3,15 +3,17 @@ import { useNavigate } from "react-router-dom";
 import SideBar from "../components/sidebar";
 import { auth } from "../utils/firebase";
 import {
-  getAuth,
-  updateEmail,
+  verifyBeforeUpdateEmail,
   updateProfile,
   updatePassword,
   deleteUser,
   reauthenticateWithCredential,
+  EmailAuthProvider,
+  User,
 } from "firebase/auth";
 
-import DeleteConfirmationModal from "../components/ui/ConfirmDeleteModal";
+import DeleteConfirmationModal from "../components/ui/modal/ConfirmDeleteModal";
+import PromptPasswordModal from "../components/ui/modal/PromptPasswordModal";
 
 interface UserData {
   name: string;
@@ -24,101 +26,78 @@ interface PasswordData {
 }
 
 const Account: React.FC = () => {
+  // State declarations
   const [userData, setUserData] = useState<UserData>({ name: "", email: "" });
-  const [deleteConfirmation, setDeleteConfirmation] = useState("");
   const [passwordData, setPasswordData] = useState<PasswordData>({
     currentPassword: "",
     newPassword: "",
   });
+  const [message, setMessage] = useState<string>("");
   const [isSaved, setIsSaved] = useState<boolean>(false);
+  const [showModal, setShowModal] = useState<boolean>(false);
+  const [showPasswordModal, setShowPasswordModal] = useState<boolean>(false);
+
+  // Firebase related variables
   const user = auth.currentUser;
   const userEmail = user ? user.email : null;
   const displayName = user ? user.displayName : "User";
   const firstName = displayName
     ? displayName.split(" ")[0].toLowerCase()
     : "User";
-  const [showModal, setShowModal] = useState<boolean>(false);
 
+  // Navigation hook
   const navigate = useNavigate();
 
-  useEffect(() => {
-    console.log("Fetching user data for:", userEmail);
-    console.log("User display name:", displayName);
-  }, [userEmail]);
-
-  console.log("User data:", userData.email);
-
+  // Event handlers
   const handleUserDataChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setUserData((prev) => ({ ...prev, [name]: value }));
   };
-
   const handlePasswordDataChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setPasswordData((prev) => ({ ...prev, [name]: value }));
   };
-
-  const handleUserDataSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (user) {
-      try {
-        // Update the user's name and email in Firebase
-        if (userData.name) {
-          await updateProfile(user, { displayName: userData.name });
-        }
-        if (userData.email) {
-          await updateEmail(user, userData.email);
-
-          const response = await fetch("/update-user-email", {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-              email: userEmail,
-              new_email: userData.email,
-            }),
-          });
-
-          if (!response.ok) {
-            throw new Error("Failed to update email");
-          }
-        }
-
-        // Update the user's name and email in the local state
-        setUserData((prev) => ({
-          ...prev,
-          name: userData.name || prev.name,
-          email: userData.email || prev.email,
-        }));
-
-        setIsSaved(true);
-        setTimeout(() => setIsSaved(false), 2000);
-      } catch (error) {
-        console.error(error);
-      }
-    }
+  const promptPassword = () => {
+    setShowPasswordModal(true);
   };
-
+  const handleAccountDetailsSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setShowPasswordModal(true);
+  };
   const handlePasswordDataSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (user) {
+    if (user && user.email) {
       try {
+        const credential = EmailAuthProvider.credential(
+          user.email,
+          passwordData.currentPassword
+        );
+        await reauthenticateWithCredential(user, credential);
         await updatePassword(user, passwordData.newPassword);
+        setMessage("Password updated successfully!");
         setIsSaved(true);
-        setTimeout(() => setIsSaved(false), 2000);
-      } catch (error) {
-        console.error(error);
+        setTimeout(() => setIsSaved(false), 10000);
+      } catch (error: any) {
+        if (error.code == "auth/wrong-password") {
+          setMessage("Incorrect password. Please try again");
+          setIsSaved(true);
+          setTimeout(() => setIsSaved(false), 10000);
+          return;
+        }
+
+        if (error.code == "auth/weak-password") {
+          setMessage("Password should be at least 6 characters");
+          setIsSaved(true);
+          setTimeout(() => setIsSaved(false), 10000);
+          return;
+        }
       }
     }
   };
-
   const handleDeleteAccount = () => {
     setShowModal(true);
   };
-
   const handleConfirmDelete = async (inputValue: string) => {
-    console.log("Input value:", inputValue);
     if (user && inputValue === `${firstName}/confirm-delete`) {
       try {
         await deleteUser(user);
@@ -145,6 +124,77 @@ const Account: React.FC = () => {
       console.error("Failed to confirm deletion");
     }
   };
+  const handleNameUpdate = async (user: User, name: string) => {
+    await updateProfile(user, { displayName: name });
+    setMessage("Name updated successfully!");
+    setUserData((prev) => ({ ...prev, name: "" }));
+    setIsSaved(true);
+    setTimeout(() => setIsSaved(false), 10000);
+  };
+  const handleEmailUpdate = async (user: User, email: string) => {
+    await verifyBeforeUpdateEmail(user, email);
+    setMessage("Verification email sent. Please verify your new email");
+    setIsSaved(true);
+    setTimeout(() => setIsSaved(false), 10000);
+
+    await user.reload();
+    // Only update email in db if user has verified their new email
+    if (user.emailVerified) {
+      const response = await fetch("/update-user-email", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          email: user.email,
+          new_email: email,
+        }),
+      });
+      if (!response.ok) {
+        throw new Error("Failed to update email");
+      }
+      setMessage("Email updated successfully!");
+      setIsSaved(true);
+      setTimeout(() => setIsSaved(false), 10000);
+    }
+  };
+  const handleConfirmUpdate = async (password: string) => {
+    setShowPasswordModal(false);
+    if (user && user.email && password) {
+      try {
+        // Reauthenticate user with provided password
+        const credential = EmailAuthProvider.credential(user.email, password);
+        await reauthenticateWithCredential(user, credential);
+        // If name change, update name in firebase
+        if (userData.name) {
+          await handleNameUpdate(user, userData.name);
+        }
+        // If email change, update email in firebase & db
+        if (userData.email && userData.email !== user.email) {
+          try {
+            await handleEmailUpdate(user, userData.email);
+          } catch (error: unknown) {
+            if (
+              typeof error === "object" &&
+              error !== null &&
+              "code" in error
+            ) {
+              if (error.code === "auth/requires-recent-login") {
+                promptPassword();
+                return;
+              }
+            } else {
+              console.error(error);
+            }
+          }
+        }
+      } catch (error: any) {
+        setMessage("Incorrect password. Please try again");
+        setIsSaved(true);
+        setTimeout(() => setIsSaved(false), 10000);
+      }
+    }
+  };
 
   return (
     <div className="bg-background">
@@ -156,7 +206,7 @@ const Account: React.FC = () => {
             <h1 className="font-inter mt-4 text-center text-2xl font-bold leading-9 tracking-tight text-white mb-6">
               Update Account Details
             </h1>
-            <form onSubmit={handleUserDataSubmit} className="space-y-6">
+            <form onSubmit={handleAccountDetailsSubmit} className="space-y-6">
               <div className="space-y-2">
                 <label
                   className="block text-sm font-medium leading-6 text-white"
@@ -196,6 +246,7 @@ const Account: React.FC = () => {
               <div>
                 <button
                   type="submit"
+                  onClick={promptPassword}
                   disabled={!userData.name && !userData.email}
                   className="flex w-full justify-center rounded-md bg-indigo-600 disabled:cursor-not-allowed disabled:brightness-50 disabled:bg-indigo-700 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
                 >
@@ -250,7 +301,11 @@ const Account: React.FC = () => {
               <div>
                 <button
                   type="submit"
-                  className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                  disabled={
+                    passwordData.currentPassword === "" ||
+                    passwordData.newPassword === ""
+                  }
+                  className="flex w-full justify-center rounded-md bg-indigo-600 disabled:cursor-not-allowed disabled:brightness-50 disabled:bg-indigo-700 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
                 >
                   Confirm
                 </button>
@@ -269,8 +324,10 @@ const Account: React.FC = () => {
 
         {isSaved && (
           <div className="mt-4 flex justify-center items-center">
-            <div className="bg-green-400 p-4 rounded-lg text-white">
-              Changes Saved Successfully!
+            <div
+              className={`mt-4 flex justify-center items-center bg-gray-500 px-4 py-2 rounded-lg text-white`}
+            >
+              {message}
             </div>
           </div>
         )}
@@ -279,6 +336,11 @@ const Account: React.FC = () => {
           handleConfirmDelete={handleConfirmDelete}
           handleCloseModal={() => setShowModal(false)}
           firstName={firstName}
+        />
+        <PromptPasswordModal
+          showModal={showPasswordModal}
+          handleConfirmUpdate={handleConfirmUpdate}
+          handleCloseModal={() => setShowPasswordModal(false)}
         />
       </div>
     </div>
