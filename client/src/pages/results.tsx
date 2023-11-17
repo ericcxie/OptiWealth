@@ -1,8 +1,7 @@
-import React, { useEffect } from "react";
-import { useLocation } from "react-router-dom";
-import { Link } from "react-router-dom";
-import Aos, { init } from "aos";
+import Aos from "aos";
 import "aos/dist/aos.css";
+import React, { useEffect } from "react";
+import { Link, useLocation } from "react-router-dom";
 
 import AllocationPieChart from "../components/charts/AllocationPieChart";
 import InstructionsTable from "../components/tables/InstructionsTable";
