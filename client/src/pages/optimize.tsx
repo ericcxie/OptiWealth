@@ -1,15 +1,15 @@
-import React, { useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import { portfolios } from "../utils/data/models";
-import { auth } from "../utils/firebase";
 import Aos from "aos";
 import "aos/dist/aos.css";
+import React, { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { portfolios } from "../utils/data/models";
+import { auth } from "../utils/firebase";
 
-import ModelCard from "../components/optimize/ModelCard";
-import InvestmentInput from "../components/optimize/InvestmentInput";
-import { BarLoader } from "react-spinners";
-import BackButton from "../components/ui/BackButton";
 import { FiInfo } from "react-icons/fi";
+import { BarLoader } from "react-spinners";
+import InvestmentInput from "../components/optimize/InvestmentInput";
+import ModelCard from "../components/optimize/ModelCard";
+import BackButton from "../components/ui/BackButton";
 import InfoModal from "../components/ui/modal/InfoModal";
 
 const Optimize: React.FC = () => {
@@ -22,13 +22,6 @@ const Optimize: React.FC = () => {
   const userEmail = user ? user.email : null;
   const targetModel = portfolios.find((p) => p.name === selectedModel);
 
-  // Show the users selected model in the console
-  useEffect(() => {
-    console.log("User email:", userEmail);
-    console.log("Selected model:", selectedModel);
-    console.log(targetModel);
-  }, [selectedModel]);
-
   const handleSubmit = async (bonds: number, cash: number) => {
     setLoading(true);
 
@@ -39,7 +32,7 @@ const Optimize: React.FC = () => {
       target_model: targetModel,
     };
 
-    let data; // Declare data here
+    let data;
 
     try {
       const response = await fetch("/rebalance-portfolio", {
@@ -54,13 +47,11 @@ const Optimize: React.FC = () => {
         throw new Error("Network response was not ok");
       }
 
-      data = await response.json(); // Assign to the declared variable
-      console.log(data);
+      data = await response.json();
     } catch (error) {
       console.error("There was a problem with the fetch operation:", error);
     } finally {
       setLoading(false);
-      console.log("Fetch operation complete");
       if (data) {
         navigate("/results", {
           state: { resultsData: data },

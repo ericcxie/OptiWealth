@@ -8,7 +8,7 @@ interface Props {
 }
 
 const ProtectedRoute: React.FC<Props> = ({ children }) => {
-  const { currentUser, loading } = useAuth(); // <-- Make sure to destructure 'loading'
+  const { currentUser, loading } = useAuth();
 
   if (loading) {
     return (
@@ -20,7 +20,6 @@ const ProtectedRoute: React.FC<Props> = ({ children }) => {
 
   // If no currentUser and not loading, redirect to login.
   if (!currentUser) {
-    console.log(currentUser);
     return <Navigate to="/login" />;
   }
 

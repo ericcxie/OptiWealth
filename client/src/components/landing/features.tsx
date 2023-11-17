@@ -1,11 +1,5 @@
-import {
-  FaChartLine,
-  FaCoins,
-  FaHandHoldingUsd,
-  FaRegChartBar,
-} from "react-icons/fa";
-import { useEffect } from "react";
 import Aos from "aos";
+import { useEffect } from "react";
 
 export default function FeaturesBlocks() {
   useEffect(() => {

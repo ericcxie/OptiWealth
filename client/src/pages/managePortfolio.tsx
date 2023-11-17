@@ -1,10 +1,9 @@
-import React, { useState, useEffect, useRef } from "react";
-import { PulseLoader } from "react-spinners";
-import SideBar from "../components/sidebar";
-import { auth } from "../utils/firebase";
-import axios from "axios";
 import Aos from "aos";
 import "aos/dist/aos.css";
+import axios from "axios";
+import React, { useEffect, useRef, useState } from "react";
+import SideBar from "../components/sidebar";
+import { auth } from "../utils/firebase";
 
 import UpdatePortfolioTable from "../components/tables/UpdatePortfolioTable";
 
@@ -27,11 +26,8 @@ const ManagePortfolio: React.FC = () => {
     }, timeout);
   };
 
-  console.log("Current portfolio", portfolioData);
-
   useEffect(() => {
     const fetchPortfolioData = async () => {
-      console.log("Fetching portfolio data for:", userEmail);
       if (!userEmail) {
         console.error("User email is not available.");
         return;
@@ -49,7 +45,6 @@ const ManagePortfolio: React.FC = () => {
         const data = await response.json();
         setPortfolioData(data);
         localStorage.setItem("portfolioData", JSON.stringify(data));
-        console.log("Portfolio data fetched!", data);
       } catch (error) {
         console.error("Error fetching portfolio data:", error);
       } finally {
@@ -81,7 +76,6 @@ const ManagePortfolio: React.FC = () => {
 
   const handleUpload = async (file: File) => {
     if (file) {
-      console.log(file, "Received");
       setLoading(true);
       const formData = new FormData();
       formData.append("file", file);
@@ -95,7 +89,6 @@ const ManagePortfolio: React.FC = () => {
             },
           }
         );
-        console.log("Received Data:", response.data);
         await new Promise((resolve) => setTimeout(resolve, 2000));
 
         if (
@@ -156,7 +149,6 @@ const ManagePortfolio: React.FC = () => {
       } else {
         await new Promise((resolve) => setTimeout(resolve, 2000));
         const data = await response.json();
-        console.log("Portfolio data updated!", data);
         setMessageWithTimeout("Portfolio updated successfully!", 3000);
       }
     } catch (error) {

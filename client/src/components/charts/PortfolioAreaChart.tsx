@@ -1,10 +1,10 @@
-import React, { useRef, useEffect } from "react";
 import {
-  createChart,
+  ColorType,
   IChartApi,
   ISeriesApi,
-  ColorType,
+  createChart,
 } from "lightweight-charts";
+import React, { useEffect, useRef } from "react";
 
 interface PortfolioAreaChartProps {
   portfolioHistory: Array<{ time: string; value: number }>;

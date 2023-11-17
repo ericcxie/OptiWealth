@@ -1,16 +1,14 @@
-import React, { useState, useEffect } from "react";
-import Logo from "../../components/ui/logo";
-import { Link } from "react-router-dom";
-import { auth } from "../../utils/firebase";
-import {
-  signInWithEmailAndPassword,
-  GoogleAuthProvider,
-  signInWithPopup,
-  AuthErrorCodes,
-} from "firebase/auth";
-import { useNavigate } from "react-router-dom";
 import Aos from "aos";
 import "aos/dist/aos.css";
+import {
+  GoogleAuthProvider,
+  signInWithEmailAndPassword,
+  signInWithPopup,
+} from "firebase/auth";
+import React, { useEffect, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import Logo from "../../components/ui/logo";
+import { auth } from "../../utils/firebase";
 
 const Login: React.FC = () => {
   const [email, setEmail] = useState<string>("");
@@ -20,12 +18,9 @@ const Login: React.FC = () => {
   const navigate = useNavigate();
 
   const SignIn = async (e: React.FormEvent<HTMLFormElement>) => {
-    // TODO: Sign in
     e.preventDefault();
     signInWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
-        console.log("Successfully signed in:", userCredential.user.email);
-        console.log(userCredential);
         navigate("/dashboard");
       })
       .catch((error) => {
@@ -43,8 +38,6 @@ const Login: React.FC = () => {
   const GoogleLogin = async () => {
     try {
       const result = await signInWithPopup(auth, googleProvider);
-      console.log("User signed in with Google");
-      console.log(result.user);
       navigate("/dashboard");
     } catch (error) {
       console.log(error);

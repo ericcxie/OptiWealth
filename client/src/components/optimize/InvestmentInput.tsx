@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from "react";
 import Aos from "aos";
 import "aos/dist/aos.css";
+import React, { useEffect, useState } from "react";
 
 interface Props {
   onInputSubmit: (bonds: number, cash: number) => void;
