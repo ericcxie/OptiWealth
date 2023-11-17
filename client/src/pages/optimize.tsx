@@ -10,7 +10,7 @@ import InvestmentInput from "../components/optimize/InvestmentInput";
 import { BarLoader } from "react-spinners";
 import BackButton from "../components/ui/BackButton";
 import { FiInfo } from "react-icons/fi";
-import InfoModal from "../components/ui/InfoModal";
+import InfoModal from "../components/ui/modal/InfoModal";
 
 const Optimize: React.FC = () => {
   const [selectedModel, setSelectedModel] = React.useState<string | null>(null);

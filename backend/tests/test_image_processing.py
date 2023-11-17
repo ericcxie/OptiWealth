@@ -6,7 +6,7 @@ from app.utils.app_functions import parse_image, clean_data
 
 # Define the path to the test image
 TEST_IMAGE_PATH = os.path.join(os.path.dirname(
-    __file__), '..', '..', 'data', 'uploads', 'test_image.jpg')
+    __file__), '..', 'data', 'uploads', 'test_image.jpg')
 
 # Define expected results for testing
 EXPECTED_TEXT = ['Shares Shares Price ($) Value ($)', 'XGRO 2.0000 2.0000 $24.96 CAD $49.92', 'VEQT 2.0000 2.0000 $35.31 CAD $70.62', 'VGRO 3.0000 3.0000 $31.12 CAD $93.36', 'VFV 4.0000 4.0000 $100.50 CAD $402.00',

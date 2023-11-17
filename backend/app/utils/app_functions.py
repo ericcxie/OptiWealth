@@ -140,6 +140,87 @@ def get_portfolio_data(user_email):
             connection.close()
 
 
+def delete_account_from_db(user_email):
+    """
+    Deletes a user's account and all associated portfolio history from the database.
+
+    Args:
+        user_email (str): The email address of the user.
+    """
+    connection = None
+    cursor = None
+    try:
+        connection = psycopg2.connect(**DATABASE_CONFIG)
+        cursor = connection.cursor()
+
+        portfolio_history_query = """
+            DELETE FROM portfolio_history
+            WHERE user_email = %s
+        """
+        cursor.execute(portfolio_history_query, (user_email,))
+
+        users_portfolio_query = """
+            DELETE FROM users_portfolio
+            WHERE user_email = %s
+        """
+        cursor.execute(users_portfolio_query, (user_email,))
+
+        connection.commit()
+
+    except Exception as error:
+        print(
+            f"Error deleting account and portfolio history from database: {error}")
+    finally:
+        if cursor:
+            cursor.close()
+        if connection:
+            connection.close()
+
+
+def upsert_user_email_in_db(old_email, new_email):
+    """
+    Edits a user's email address in the database.
+
+    Args:
+        old_email (str): The old email address of the user.
+        new_email (str): The new email address of the user.
+    """
+    try:
+        with psycopg2.connect(**DATABASE_CONFIG) as conn:
+            with conn.cursor() as cursor:
+                # Step 1: Drop the foreign key constraint
+                cursor.execute("""
+                    ALTER TABLE portfolio_history DROP CONSTRAINT IF EXISTS portfolio_history_user_email_fkey;
+                """)
+
+                # Step 2: Update emails in users_portfolio
+                cursor.execute("""
+                    UPDATE users_portfolio
+                    SET user_email = %s
+                    WHERE user_email = %s
+                """, (new_email, old_email))
+
+                # Step 3: Update emails in portfolio_history
+                cursor.execute("""
+                    UPDATE portfolio_history
+                    SET user_email = %s
+                    WHERE user_email = %s
+                """, (new_email, old_email))
+
+                # Step 4: Re-add the foreign key constraint
+                cursor.execute("""
+                    ALTER TABLE portfolio_history
+                    ADD CONSTRAINT portfolio_history_user_email_fkey FOREIGN KEY (user_email)
+                    REFERENCES users_portfolio (user_email);
+                """)
+
+                conn.commit()
+                print("Email updated successfully.")
+
+    except Exception as error:
+        print(f"Error updating email with foreign key drop/add: {error}")
+
+
 def insert_portfolio_value(user_email, value):
     """
     Logs the portfolio value for a given user in the database.
