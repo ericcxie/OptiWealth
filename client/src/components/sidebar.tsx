@@ -10,11 +10,10 @@ export default function SideBar() {
   const handleLogout = () => {
     signOut(auth)
       .then(() => {
-        console.log("User signed out");
-        navigate("/login"); // Redirect to login after successful logout.
+        navigate("/login");
       })
       .catch((error) => {
-        console.error("Error signing out:", error); // Handle errors here.
+        console.error("Error signing out:", error);
       });
   };
   return (

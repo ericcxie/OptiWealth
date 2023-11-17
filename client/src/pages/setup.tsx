@@ -1,14 +1,13 @@
-import React, { useRef, useState, useEffect } from "react";
-import axios from "axios";
-import { BarLoader } from "react-spinners";
-import { useNavigate } from "react-router-dom";
-import { auth } from "../utils/firebase";
 import Aos from "aos";
 import "aos/dist/aos.css";
+import axios from "axios";
+import React, { useEffect, useRef, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { BarLoader } from "react-spinners";
+import { auth } from "../utils/firebase";
 
-import BackButton from "../components/ui/BackButton";
 import UploadPortfolioTable from "../components/tables/UploadPortfolioTable";
-import { setIn } from "formik";
+import BackButton from "../components/ui/BackButton";
 
 const Setup: React.FC = () => {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
@@ -53,7 +52,6 @@ const Setup: React.FC = () => {
 
   const handleUpload = async (file: File) => {
     if (file) {
-      console.log(file, "Received");
       setIsLoading(true);
       const formData = new FormData();
       formData.append("file", file);
@@ -67,7 +65,6 @@ const Setup: React.FC = () => {
             },
           }
         );
-        console.log("Received Data:", response.data);
 
         if (
           response.data &&

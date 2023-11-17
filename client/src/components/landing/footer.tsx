@@ -1,9 +1,7 @@
 export default function Footer() {
   return (
-    // {/* footer */}
     <section>
       <div className="px-14 md:flex md:items-center md:justify-between py-4 md:py-8 border-t border-gray-600">
-        {/* Social as */}
         <ul className="flex mb-4 md:order-1 md:ml-4 md:mb-0">
           <li>
             <a

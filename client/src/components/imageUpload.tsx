@@ -1,5 +1,5 @@
-import React, { Component, ChangeEvent } from "react";
 import axios from "axios";
+import { ChangeEvent, Component } from "react";
 
 interface State {
   imageFile: File | null;

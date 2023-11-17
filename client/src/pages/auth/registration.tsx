@@ -1,16 +1,15 @@
-import React, { useState, useEffect } from "react";
-import {
-  GoogleAuthProvider,
-  signInWithPopup,
-  createUserWithEmailAndPassword,
-  AuthErrorCodes,
-  updateProfile,
-} from "firebase/auth";
-import Logo from "../../components/ui/logo";
-import { auth } from "../../utils/firebase";
-import { Link, useNavigate } from "react-router-dom";
 import Aos from "aos";
 import "aos/dist/aos.css";
+import {
+  GoogleAuthProvider,
+  createUserWithEmailAndPassword,
+  signInWithPopup,
+  updateProfile,
+} from "firebase/auth";
+import React, { useEffect, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import Logo from "../../components/ui/logo";
+import { auth } from "../../utils/firebase";
 
 const Registration: React.FC = () => {
   const [name, setName] = useState("");
@@ -27,7 +26,6 @@ const Registration: React.FC = () => {
     try {
       const result = await signInWithPopup(auth, googleProvider);
       console.log(result.user);
-      console.log("User signed up with Google");
       navigate("/setup");
     } catch (error) {
       console.log(error);
@@ -55,8 +53,6 @@ const Registration: React.FC = () => {
         throw new Error("User registration failed");
       })
       .then(() => {
-        console.log("Display name updated successfully");
-        console.log("User registered:", auth.currentUser);
         navigate("/setup");
       })
       .catch((error) => {

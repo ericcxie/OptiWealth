@@ -1,16 +1,16 @@
-import React, { useState, useEffect } from "react";
+import {
+  EmailAuthProvider,
+  User,
+  deleteUser,
+  reauthenticateWithCredential,
+  updatePassword,
+  updateProfile,
+  verifyBeforeUpdateEmail,
+} from "firebase/auth";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import SideBar from "../components/sidebar";
 import { auth } from "../utils/firebase";
-import {
-  verifyBeforeUpdateEmail,
-  updateProfile,
-  updatePassword,
-  deleteUser,
-  reauthenticateWithCredential,
-  EmailAuthProvider,
-  User,
-} from "firebase/auth";
 
 import DeleteConfirmationModal from "../components/ui/modal/ConfirmDeleteModal";
 import PromptPasswordModal from "../components/ui/modal/PromptPasswordModal";
@@ -87,14 +87,14 @@ const Account: React.FC = () => {
           newPassword: "",
         }));
       } catch (error: any) {
-        if (error.code == "auth/wrong-password") {
+        if (error.code === "auth/wrong-password") {
           setMessage("Incorrect password. Please try again");
           setIsSaved(true);
           setTimeout(() => setIsSaved(false), 10000);
           return;
         }
 
-        if (error.code == "auth/weak-password") {
+        if (error.code === "auth/weak-password") {
           setMessage("Password should be at least 6 characters");
           setIsSaved(true);
           setTimeout(() => setIsSaved(false), 10000);

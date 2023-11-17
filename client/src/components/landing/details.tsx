@@ -1,6 +1,6 @@
-import React, { useEffect } from "react";
-import { FaCloudUploadAlt, FaChartBar, FaRocket } from "react-icons/fa";
 import Aos from "aos";
+import { useEffect } from "react";
+import { FaChartBar, FaCloudUploadAlt, FaRocket } from "react-icons/fa";
 
 export default function Details() {
   useEffect(() => {

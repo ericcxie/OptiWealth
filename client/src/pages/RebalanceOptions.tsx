@@ -1,5 +1,3 @@
-// Filename: PortfolioOptions.tsx
-
 import React from "react";
 import { FaInfoCircle } from "react-icons/fa";
 import { AiOutlineLineChart, AiOutlinePieChart } from "react-icons/ai";
