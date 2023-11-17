@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { LearnRebalance } from "../../utils/data/LearnRebalance";
+import { LearnRebalance } from "../../../utils/data/LearnRebalance";
 
 interface ModalProps {
   show: boolean;
@@ -46,7 +46,7 @@ const InfoModal: React.FC<ModalProps> = ({ show, onClose }) => {
         </div>
         <div className="p-4 text-white">
           <h2 className="text-2xl font-semibold mb-2">
-            What is portfolio rebalancing?
+            What is Portfolio Rebalancing?
           </h2>
           <p className="mb-6 text-gray-100">
             {LearnRebalance.whatIsRebalancing}

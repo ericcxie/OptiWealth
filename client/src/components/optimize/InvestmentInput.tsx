@@ -17,6 +17,14 @@ const InvestmentInput: React.FC<Props> = ({
   const [cash, setCash] = useState<string>("");
 
   const handleSubmit = () => {
+    if (bonds === "") {
+      setBonds("0");
+    }
+
+    if (cash === "") {
+      setCash("0");
+    }
+
     onInputSubmit(Number(bonds), Number(cash));
   };
 
@@ -25,7 +33,11 @@ const InvestmentInput: React.FC<Props> = ({
   }, []);
 
   return (
-    <div
+    <form
+      onSubmit={(e) => {
+        e.preventDefault();
+        handleSubmit();
+      }}
       className="bg-gray-800 py-6 px-6 m-4 w-96 rounded-xl mx-auto"
       data-aos="fade-up"
       data-aos-once
@@ -54,12 +66,12 @@ const InvestmentInput: React.FC<Props> = ({
       </div>
 
       <button
-        className="w-full bg-gradient-to-br hover:bg-gradient-to-bl from-purple-600 to-blue-500 text-white p-2 rounded-xl"
-        onClick={handleSubmit}
+        type="submit"
+        className="w-full p-2 text-center text-white transition duration-300 rounded-xl hover:from-purple-700 hover:to-blue-600 ease bg-gradient-to-br from-purple-600 to-blue-500"
       >
         Submit
       </button>
-    </div>
+    </form>
   );
 };
 
