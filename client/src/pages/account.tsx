@@ -53,17 +53,21 @@ const Account: React.FC = () => {
     const { name, value } = e.target;
     setUserData((prev) => ({ ...prev, [name]: value }));
   };
+
   const handlePasswordDataChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setPasswordData((prev) => ({ ...prev, [name]: value }));
   };
+
   const promptPassword = () => {
     setShowPasswordModal(true);
   };
+
   const handleAccountDetailsSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setShowPasswordModal(true);
   };
+
   const handlePasswordDataSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (user && user.email) {
@@ -77,6 +81,11 @@ const Account: React.FC = () => {
         setMessage("Password updated successfully!");
         setIsSaved(true);
         setTimeout(() => setIsSaved(false), 10000);
+        setPasswordData((prev) => ({
+          ...prev,
+          currentPassword: "",
+          newPassword: "",
+        }));
       } catch (error: any) {
         if (error.code == "auth/wrong-password") {
           setMessage("Incorrect password. Please try again");
@@ -94,9 +103,11 @@ const Account: React.FC = () => {
       }
     }
   };
+
   const handleDeleteAccount = () => {
     setShowModal(true);
   };
+
   const handleConfirmDelete = async (inputValue: string) => {
     if (user && inputValue === `${firstName}/confirm-delete`) {
       try {
@@ -124,6 +135,7 @@ const Account: React.FC = () => {
       console.error("Failed to confirm deletion");
     }
   };
+
   const handleNameUpdate = async (user: User, name: string) => {
     await updateProfile(user, { displayName: name });
     setMessage("Name updated successfully!");
@@ -131,6 +143,7 @@ const Account: React.FC = () => {
     setIsSaved(true);
     setTimeout(() => setIsSaved(false), 10000);
   };
+
   const handleEmailUpdate = async (user: User, email: string) => {
     await verifyBeforeUpdateEmail(user, email);
     setMessage("Verification email sent. Please verify your new email");
@@ -158,6 +171,7 @@ const Account: React.FC = () => {
       setTimeout(() => setIsSaved(false), 10000);
     }
   };
+
   const handleConfirmUpdate = async (password: string) => {
     setShowPasswordModal(false);
     if (user && user.email && password) {
