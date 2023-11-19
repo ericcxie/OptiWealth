@@ -1,27 +1,23 @@
-from flask import request, jsonify
-from werkzeug.utils import secure_filename
-import os
-import pandas as pd
-from sqlalchemy.exc import IntegrityError
 import logging
-from threading import Thread
+import os
 from concurrent.futures import ThreadPoolExecutor
+from datetime import datetime
 
-from . import app, db, cache
-from .utils.app_functions import (
-    parse_image,
-    clean_data,
-    get_portfolio_data,
-    get_stock_prices,
-    insert_portfolio_value,
-    get_portfolio_history_from_db,
-    is_valid_ticker,
-    delete_account_from_db,
-    upsert_user_email_in_db
-)
-from .utils.rebalance import rebalance
-from .models import UserPortfolio
+import pandas as pd
+from flask import jsonify, request, send_file
+from sqlalchemy.exc import IntegrityError
+from werkzeug.utils import secure_filename
+
+from . import app, cache, db
 from .config import ALLOWED_EXTENSIONS
+from .models import UserPortfolio
+from .utils.app_functions import (clean_data, delete_account_from_db,
+                                  dict_to_xlsx, get_portfolio_data,
+                                  get_portfolio_history_from_db,
+                                  get_stock_prices, insert_portfolio_value,
+                                  is_valid_ticker, parse_image,
+                                  upsert_user_email_in_db)
+from .utils.rebalance import rebalance
 
 
 def allowed_file(filename):
@@ -356,3 +352,27 @@ def edit_user_email():
     print(f"Updating email from {old_email} to {new_email}")
     upsert_user_email_in_db(old_email, new_email)
     return jsonify({'message': 'Email updated successfully'})
+
+
+@app.route('/dict-to-excel', methods=['POST'])
+def dict_to_excel():
+    """
+    Converts a dictionary to an excel file and returns the file.
+    """
+    results = {
+        "model_name": request.json.get('model_name'),
+        "initial_allocations": request.json.get('initial_allocations'),
+        "updated_allocations": request.json.get('updated_allocations'),
+        "instructions": request.json.get('instructions')
+    }
+
+    file_name = f"Rebalancing_Results_{datetime.now().strftime('%Y-%m-%d')}.xlsx"
+    file_path = os.path.join(app.config['DATA_FOLDER'], file_name)
+
+    dict_to_xlsx(results, file_path)
+    output_path = os.path.join('../', file_path)
+
+    response = send_file(output_path, as_attachment=True,
+                         download_name=file_name)
+    os.remove(file_path)
+    return response
