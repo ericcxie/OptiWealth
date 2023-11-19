@@ -1,18 +1,19 @@
 import os
 import re
-import pytz
-import requests
+from concurrent.futures import ThreadPoolExecutor
+from datetime import datetime
+
+import pandas as pd
 import psycopg2
 import pytesseract
-import yfinance as yf
+import pytz
+import requests
+from app.utils.yfinance3 import YFinance
+from cachetools import TTLCache, cached
 from dotenv import load_dotenv
 from forex_python.converter import CurrencyRates
 from PIL import Image
-from cachetools import cached, TTLCache
-from concurrent.futures import ThreadPoolExecutor
-from datetime import datetime, timedelta
 
-from app.utils.yfinance3 import YFinance
 # from yfinance3 import YFinance
 
 EXCHANGE_RATE_CACHE = {}
@@ -188,26 +189,22 @@ def upsert_user_email_in_db(old_email, new_email):
     try:
         with psycopg2.connect(**DATABASE_CONFIG) as conn:
             with conn.cursor() as cursor:
-                # Step 1: Drop the foreign key constraint
                 cursor.execute("""
                     ALTER TABLE portfolio_history DROP CONSTRAINT IF EXISTS portfolio_history_user_email_fkey;
                 """)
 
-                # Step 2: Update emails in users_portfolio
                 cursor.execute("""
                     UPDATE users_portfolio
                     SET user_email = %s
                     WHERE user_email = %s
                 """, (new_email, old_email))
 
-                # Step 3: Update emails in portfolio_history
                 cursor.execute("""
                     UPDATE portfolio_history
                     SET user_email = %s
                     WHERE user_email = %s
                 """, (new_email, old_email))
 
-                # Step 4: Re-add the foreign key constraint
                 cursor.execute("""
                     ALTER TABLE portfolio_history
                     ADD CONSTRAINT portfolio_history_user_email_fkey FOREIGN KEY (user_email)
@@ -337,14 +334,110 @@ def get_portfolio_history_from_db(user_email):
     return data
 
 
+def parse_amount(amount_str):
+    """
+    Parse the amount string to a numeric value.
+    """
+    # Remove currency symbols and commas
+    amount_str = amount_str.replace('$', '').replace(',', '')
+    # Convert to negative number if enclosed in parentheses
+    if '(' in amount_str and ')' in amount_str:
+        return -float(amount_str.strip('()'))
+    return float(amount_str)
+
+
+def dict_to_xlsx(data, file_path):
+    """
+    Converts a dictionary to an Excel file and returns the file path.
+
+    Args:
+        data (dict): The dictionary to be converted.
+
+    Returns:
+        str: The file path of the Excel file.
+    """
+    initial_allocations = pd.DataFrame(list(data['initial_allocations'].items()), columns=[
+                                       'Category', 'Initial Allocation'])
+    updated_allocations = pd.DataFrame(list(data['updated_allocations'].items()), columns=[
+                                       'Category', 'Rebalanced Allocation'])
+    instructions = pd.DataFrame(data['instructions'])
+
+    with pd.ExcelWriter(file_path, engine='xlsxwriter', engine_kwargs={'options': {'strings_to_numbers': True}}) as writer:
+        workbook = writer.book
+        worksheet_name = f"{data['model_name']} Portfolio"
+        worksheet = workbook.add_worksheet(worksheet_name)
+        writer.sheets[worksheet_name] = worksheet
+
+        header_format = workbook.add_format({
+            'bold': True,
+            'bg_color': '#0B2C77',
+            'border': 1,
+            'font_color': 'white',
+            'font_size': 12,
+            'text_wrap': True,
+            'valign': 'vcenter',
+            'align': 'center',
+            'num_format': '@'
+        })
+        data_format = workbook.add_format({'border': 1, 'font_size': 12})
+        amount_format = workbook.add_format({
+            'num_format': '$#,##0.00_);[Red]($#,##0.00)',
+            'border': 1,
+            'font_size': 12
+        })
+        percentage_format = workbook.add_format({
+            'num_format': '0.00\%;[Red](0.00##\%)',
+            'border': 1,
+            'font_size': 12
+        })
+
+        start_row = 0
+        allocations = pd.merge(initial_allocations,
+                               updated_allocations, on='Category')
+
+        allocations.to_excel(writer, sheet_name=worksheet_name,
+                             startrow=start_row + 1, header=False, index=False)
+
+        for col_num, value in enumerate(allocations.columns.values):
+            worksheet.write(start_row, col_num, value, header_format)
+
+        for row in range(len(allocations)):
+            for col in range(len(allocations.columns)):
+                cell_value = allocations.iloc[row, col]
+                if col > 0:
+                    worksheet.write_number(
+                        row + start_row + 1, col, cell_value, percentage_format)
+                else:
+                    worksheet.write(row + start_row + 1, col,
+                                    cell_value, data_format)
+
+        instructions_start_row = start_row + len(allocations) + 2
+        instructions.to_excel(writer, sheet_name=worksheet_name,
+                              startrow=instructions_start_row + 1, header=False, index=False)
+
+        for col_num, value in enumerate(instructions.columns.values):
+            capitalized_header = value.title()
+            worksheet.write(instructions_start_row,
+                            col_num, capitalized_header, header_format)
+
+        for row in range(len(instructions)):
+            for col in range(len(instructions.columns)):
+                cell_value = instructions.iloc[row, col]
+                if instructions.columns[col].lower() == 'amount':
+                    cell_value = parse_amount(cell_value)
+                    worksheet.write_number(
+                        row + instructions_start_row + 1, col, cell_value, amount_format)
+                else:
+                    worksheet.write(row + instructions_start_row +
+                                    1, col, cell_value, data_format)
+
+        worksheet.autofit()
+
+    return file_path
+
+
 if __name__ == "__main__":
-    # test_email = "ex.ericxie@gmail.com"
-    # portfolio_data = get_portfolio_data(test_email)
-    # print("Portfolio Data:", portfolio_data)
-
-    # tickers = [stock['Ticker'] for stock in portfolio_data[0]]
-    # print("Tickers:", tickers)
-
-    # stock_prices = {ticker: get_stock_price(ticker)[1] for ticker in tickers}
-    # print("Stock Prices:", stock_prices)
-    print(is_valid_ticker("VFV.TO"))
+    data = {'model_name': 'Aggressive', 'initial_allocations': {'Bonds': 0, 'Cash': 0, 'Stocks': 100}, 'updated_allocations': {'Bonds': 15, 'Cash': 5, 'Stocks': 80}, 'instructions': [{'action': 'Buy', 'asset': 'Cash', 'amount': '$421.38'}, {'action': 'Buy', 'asset': 'Bonds', 'amount': '$1,264.14'}, {'action': 'Sell', 'asset': 'AAPL', 'amount': '($0.34)'}, {'action': 'Sell', 'asset': 'BAM', 'amount': '($41.91)'}, {
+        'action': 'Sell', 'asset': 'BMO', 'amount': '($0.28)'}, {'action': 'Sell', 'asset': 'GSY.TO', 'amount': '($0.18)'}, {'action': 'Sell', 'asset': 'TD', 'amount': '($0.37)'}, {'action': 'Sell', 'asset': 'VFV.TO', 'amount': '($0.44)'}, {'action': 'Sell', 'asset': 'VGRO.TO', 'amount': '($1.02)'}, {'action': 'Sell', 'asset': 'XEQT.TO', 'amount': '($1.21)'}, {'action': 'Sell', 'asset': 'XGRO.TO', 'amount': '($1.29)'}]}
+    file_path = '../../data/Rebalance_results_11-18-2023.xlsx'
+    dict_to_xlsx(data, file_path)

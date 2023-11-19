@@ -68,11 +68,13 @@ const Results: React.FC = () => {
     };
   });
 
+  console.log("instructions", instructions);
+
   const formatAsPercentage = (obj: any) => {
     return Object.entries(obj)
       .map(([key, value]) => {
         const numericValue = value as number;
-        return `${key}: ${numericValue.toFixed(2)}%`; // Display as percentage
+        return `${key}: ${numericValue.toFixed(2)}%`;
       })
       .join(", ");
   };
@@ -89,6 +91,54 @@ const Results: React.FC = () => {
     if (["Bonds", "Cash"].includes(b.asset)) return 1;
     return 0;
   });
+
+  const downloadResults = async () => {
+    const payload = {
+      model_name: modelName,
+      initial_allocations: data.rebalancing_results.initial_allocations,
+      updated_allocations: data.rebalancing_results.updated_allocations,
+      instructions: sortedInstructions,
+    };
+
+    try {
+      console.log("payload", payload);
+      const response = await fetch("/dict-to-excel", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(payload),
+      });
+
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      }
+
+      const contentDisposition = response.headers.get("Content-Disposition");
+      let filename = "results.xlsx";
+
+      if (contentDisposition) {
+        const filenameToken = "filename=";
+        const startIndex = contentDisposition.indexOf(filenameToken);
+        if (startIndex !== -1) {
+          filename = contentDisposition.slice(
+            startIndex + filenameToken.length
+          );
+        }
+      }
+
+      const blob = await response.blob();
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.setAttribute("download", filename);
+      document.body.appendChild(link);
+      link.click();
+      link.parentNode?.removeChild(link);
+    } catch (error) {
+      console.error("There was a problem with the fetch operation:", error);
+    }
+  };
 
   return (
     <div className="bg-background min-h-screen p-4 text-inter flex justify-center items-center">
@@ -154,14 +204,24 @@ const Results: React.FC = () => {
           </div>
           <InstructionsTable instructions={sortedInstructions} />
         </div>
-        <Link
-          to="/dashboard"
-          className="relative inline-flex items-center justify-center p-0.5 mb-2 overflow-hidden text-sm font-medium text-gray-900 rounded-xl group bg-gradient-to-br from-purple-600 to-blue-500 group-hover:from-purple-600 group-hover:to-blue-500 hover:text-white dark:text-white focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800"
-        >
-          <span className="relative px-5 py-2.5 transition-all ease-in duration-75 bg-background rounded-lg group-hover:bg-opacity-0">
-            Back to Dashboard
-          </span>
-        </Link>
+        <div>
+          <Link
+            to="/dashboard"
+            className="mx-2 relative inline-flex items-center justify-center p-0.5 mb-2 overflow-hidden text-sm font-medium text-gray-900 rounded-xl group bg-gradient-to-br from-purple-600 to-blue-500 group-hover:from-purple-600 group-hover:to-blue-500 hover:text-white dark:text-white focus:ring-4 focus:outline-none focus:ring-blue-800"
+          >
+            <span className="relative px-5 py-2.5 transition-all ease-in duration-75 bg-background rounded-lg group-hover:bg-opacity-0">
+              Back to Dashboard
+            </span>
+          </Link>
+          <button
+            onClick={downloadResults}
+            className="mx-2 relative inline-flex items-center justify-center p-0.5 mb-2 overflow-hidden text-sm font-medium text-gray-900 rounded-xl group bg-gradient-to-br from-blue-600 to-teal-500 group-hover:from-blue-600 group-hover:to-teal-500 hover:text-white dark:text-white focus:ring-4 focus:outline-none focus:ring-blue-800"
+          >
+            <span className="relative px-5 py-2.5 transition-all ease-in duration-75 bg-background rounded-lg group-hover:bg-opacity-0">
+              Download Results
+            </span>
+          </button>
+        </div>
       </div>
     </div>
   );
