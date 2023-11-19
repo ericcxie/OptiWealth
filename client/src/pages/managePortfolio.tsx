@@ -109,7 +109,7 @@ const ManagePortfolio: React.FC = () => {
         console.error("Error uploading file:", error);
         setMessageWithTimeout("Error uploading portfolio!", 3000);
       } finally {
-        setTimeout(() => setLoading(false), 1500);
+        setLoading(false);
       }
     }
   };
