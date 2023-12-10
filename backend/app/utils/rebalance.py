@@ -1,12 +1,10 @@
 import yfinance as yf
-from app.utils.yfinance3 import YFinance
 
 
 def fetch_price_and_pe(ticker):
-    stock_info = YFinance(ticker)
+    stock_info = yf.Ticker(ticker)
     info = stock_info.info
-    current_price = info.get(
-        'currentPrice', info.get('regularMarketPreviousClose'))
+    current_price = info.get('currentPrice')
 
     if current_price is None:
         raise ValueError(
@@ -80,3 +78,8 @@ def rebalance(user_portfolio, target_model, bonds_value, cash_value):
         "updated_allocations": updated_allocations,
         "instructions": instructions
     }
+
+
+if __name__ == '__main__':
+    ticker = "AAPL"
+    print(fetch_price_and_pe(ticker))
