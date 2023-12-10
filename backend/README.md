@@ -11,5 +11,5 @@ python3 run.py
 
 ```
 cd tests && pip install -r test-requirements.txt
-cd .. && python -m pytest
+cd .. && python3 -m pytest
 ```
