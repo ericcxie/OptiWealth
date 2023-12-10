@@ -1,5 +1,6 @@
 import app.utils.app_functions as app_functions
 import app.utils.rebalance as rebalance
+import utils.common as common
 
 
 def test_get_stock_price_stocks():
@@ -29,7 +30,7 @@ def test_is_valid_ticker_valid():
 
 def test_is_valid_ticker_invalid():
     # Yahoo Finance requires ETFs to have a suffix
-    ticker = 'VFV'
+    ticker = 'XEQT'
     response = app_functions.is_valid_ticker(ticker)
 
     assert response == False
@@ -43,3 +44,21 @@ def test_fetch_price_and_pe_valid():
     assert pe_ratio is not None
     assert isinstance(current_price, float)
     assert isinstance(pe_ratio, float)
+
+
+def test_fetch_stock_prices_time():
+    ticker = 'AAPL'
+    time_threshold = 0.5
+
+    elapsed_time = common.time_function(app_functions.get_stock_price, ticker)
+
+    assert elapsed_time < time_threshold, f"fetch_stock_prices took too long: {elapsed_time} seconds"
+
+
+def test_fetch_pe_time():
+    ticker = 'AAPL'
+    time_threshold = 0.5
+
+    elapsed_time = common.time_function(rebalance.fetch_price_and_pe, ticker)
+
+    assert elapsed_time < time_threshold, f"fetch_pe took too long: {elapsed_time} seconds"
