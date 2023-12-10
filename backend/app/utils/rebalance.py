@@ -1,12 +1,11 @@
 import yfinance as yf
-from app.utils.yfinance3 import YFinance
 
 
 def fetch_price_and_pe(ticker):
-    stock_info = YFinance(ticker)
+    stock_info = yf.Ticker(ticker)
     info = stock_info.info
     current_price = info.get(
-        'currentPrice', info.get('regularMarketPreviousClose'))
+        'currentPrice', info.get('regularMarketOpen', None))
 
     if current_price is None:
         raise ValueError(
