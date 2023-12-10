@@ -8,13 +8,12 @@ import psycopg2
 import pytesseract
 import pytz
 import requests
-from app.utils.yfinance3 import YFinance
 from cachetools import TTLCache, cached
 from dotenv import load_dotenv
 from forex_python.converter import CurrencyRates
 from PIL import Image
+import yfinance as yf
 
-# from yfinance3 import YFinance
 
 EXCHANGE_RATE_CACHE = {}
 
@@ -90,7 +89,7 @@ def clean_data(target_data):
 
 def is_valid_ticker(ticker):
     """
-    Checks if a given ticker symbol is valid.
+    Checks if a given ticker symbol is valid using the official YFinance API.
 
     Args:
         ticker (str): The ticker symbol to be checked.
@@ -98,11 +97,10 @@ def is_valid_ticker(ticker):
     Returns:
         bool: True if the ticker symbol is valid, False otherwise.
     """
-    yf_custom = YFinance(ticker)
+    stock = yf.Ticker(ticker)
     try:
-        stock_info = yf_custom.info
-        # If the ticker is valid, the following line will not raise an exception
-        return 'currency' in stock_info
+        # Fetch info and check if the ticker has data
+        return 'regularMarketOpen' in stock.info
     except Exception:
         return False
 
@@ -280,7 +278,7 @@ def convert_usd_to_cad(amount):
 
 def get_stock_price(ticker):
     """
-    Returns the current price of a stock given its ticker symbol using the custom YFinance class.
+    Returns the current price of a stock given its ticker symbol using the official YFinance API.
 
     Args:
         ticker (str): The ticker symbol of the stock.
@@ -290,18 +288,18 @@ def get_stock_price(ticker):
                If the stock price cannot be fetched, the price will be None.
     """
     try:
-        yf_custom = YFinance(ticker)
-        stock_info = yf_custom.info
+        stock = yf.Ticker(ticker)
+        stock_info = stock.info
 
         stock_price = stock_info.get(
-            'currentPrice', stock_info.get('regularMarketPreviousClose'))
+            'currentPrice', stock_info.get('regularMarketOpen', None))
 
-        if 'currency' in stock_info:
-            converted_price = round(convert_usd_to_cad(stock_price), 2) if stock_info.get(
-                'currency') == 'USD' else stock_price
+        if stock_price and 'currency' in stock_info:
+            converted_price = round(convert_usd_to_cad(
+                stock_price), 2) if stock_info['currency'] == 'USD' else stock_price
             return (ticker, converted_price)
         else:
-            print(f"No currency info for {ticker}")
+            print(f"No valid price or currency info for {ticker}")
             return (ticker, None)
     except Exception as e:
         print(f"Error fetching price for {ticker}: {e}")
@@ -434,10 +432,3 @@ def dict_to_xlsx(data, file_path):
         worksheet.autofit()
 
     return file_path
-
-
-if __name__ == "__main__":
-    data = {'model_name': 'Aggressive', 'initial_allocations': {'Bonds': 0, 'Cash': 0, 'Stocks': 100}, 'updated_allocations': {'Bonds': 15, 'Cash': 5, 'Stocks': 80}, 'instructions': [{'action': 'Buy', 'asset': 'Cash', 'amount': '$421.38'}, {'action': 'Buy', 'asset': 'Bonds', 'amount': '$1,264.14'}, {'action': 'Sell', 'asset': 'AAPL', 'amount': '($0.34)'}, {'action': 'Sell', 'asset': 'BAM', 'amount': '($41.91)'}, {
-        'action': 'Sell', 'asset': 'BMO', 'amount': '($0.28)'}, {'action': 'Sell', 'asset': 'GSY.TO', 'amount': '($0.18)'}, {'action': 'Sell', 'asset': 'TD', 'amount': '($0.37)'}, {'action': 'Sell', 'asset': 'VFV.TO', 'amount': '($0.44)'}, {'action': 'Sell', 'asset': 'VGRO.TO', 'amount': '($1.02)'}, {'action': 'Sell', 'asset': 'XEQT.TO', 'amount': '($1.21)'}, {'action': 'Sell', 'asset': 'XGRO.TO', 'amount': '($1.29)'}]}
-    file_path = '../../data/Rebalance_results_11-18-2023.xlsx'
-    dict_to_xlsx(data, file_path)
