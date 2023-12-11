@@ -1,10 +1,12 @@
-import { Link } from "react-router-dom";
-import Logo from "../components/ui/logo";
-import { useNavigate } from "react-router-dom";
-import { auth } from "../utils/firebase";
+import React, { useState, useEffect } from "react";
 import { signOut } from "firebase/auth";
+import { Link, useNavigate } from "react-router-dom";
+import Logo from "./ui/logo";
+import { auth } from "../utils/firebase";
 
 export default function SideBar() {
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
   const navigate = useNavigate();
 
   const handleLogout = () => {
@@ -16,14 +18,35 @@ export default function SideBar() {
         console.error("Error signing out:", error);
       });
   };
+
+  const toggleSidebar = () => {
+    setIsSidebarOpen(!isSidebarOpen);
+  };
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const show = window.scrollY > 50;
+      if (show !== isScrolled) setIsScrolled(show);
+    };
+
+    document.addEventListener("scroll", handleScroll);
+    return () => {
+      document.removeEventListener("scroll", handleScroll);
+    };
+  }, [isScrolled]);
+
   return (
-    <div className="font-inter">
+    <div className="font-inter relative sm:absolute">
       <button
+        onClick={toggleSidebar}
         data-drawer-target="logo-sidebar"
         data-drawer-toggle="logo-sidebar"
         aria-controls="logo-sidebar"
         type="button"
-        className="inline-flex items-center p-2 mt-2 ml-3 text-sm text-gray-500 rounded-lg sm:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600"
+        className={`z-50 inline-flex items-center p-2 mt-2 ml-3 text-sm text-gray-500 rounded-lg sm:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600 ${
+          isScrolled ? "bg-gray-500 bg-opacity-40 backdrop-blur-sm" : ""
+        }`}
+        style={{ position: "fixed", top: "0", left: "0" }}
       >
         <span className="sr-only">Open sidebar</span>
         <svg
@@ -43,10 +66,12 @@ export default function SideBar() {
 
       <aside
         id="logo-sidebar"
-        className="fixed left-0 z-40 w-64 h-screen transition-transform -translate-x-full sm:translate-x-0"
+        className={`fixed top-0 left-0 z-40 w-full h-screen transition-transform ${
+          isSidebarOpen ? "translate-x-0" : "-translate-x-full"
+        } sm:w-64 sm:translate-x-0`}
         aria-label="Sidebar"
       >
-        <div className="h-full px-3 py-4 overflow-y-auto bg-[#111828] pt-10">
+        <div className="h-full px-3 py-4 overflow-y-auto bg-[#111828] pt-16 md:pt-10">
           <Link to="/dashboard" className="flex items-center pl-4 mb-5">
             <div className="w-7 mr-2">
               <Logo />
@@ -120,7 +145,7 @@ export default function SideBar() {
             <li>
               <a
                 href="/account"
-                className="absolute bottom-24 flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
+                className="absolute bottom-36 md:bottom-24 flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
               >
                 <svg
                   className="flex-shrink-0 w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"
@@ -137,7 +162,7 @@ export default function SideBar() {
             <li>
               <button
                 onClick={handleLogout}
-                className="absolute bottom-12 flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
+                className="absolute bottom-24 md:bottom-12 flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
               >
                 <svg
                   className="flex-shrink-0 w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"

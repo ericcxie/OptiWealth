@@ -98,19 +98,29 @@ const Dashboard: React.FC = () => {
   }, []);
 
   return (
-    <div className="flex h-screen bg-background text-white font-inter">
+    <div className="flex flex-col md:flex-row h-full md:h-screen bg-background text-white font-inter">
       <SideBar />
-      <div className="flex-initial flex flex-col w-full pr-16 items-start justify-start pl-80">
-        <Greeting
-          name={firstName}
-          portfolioValue={portfolioValue}
-          loading={loading}
-        />
-        <div data-aos="fade-up" data-aos-once className="flex gap-10 w-full">
-          <PortfolioAreaChart portfolioHistory={portfolioHistory} />
-          <PortfolioPieChart portfolioAllocation={portfolioAllocation} />
+      <div className="flex-initial flex flex-col w-full md:pr-16 items-center md:items-start justify-start md:pl-80">
+        <div className="self-start pl-5 pt-2 md:pl-0 md:pt-0">
+          <Greeting
+            name={firstName}
+            portfolioValue={portfolioValue}
+            loading={loading}
+          />
         </div>
-        <div data-aos="fade-up" data-aos-once className="mb-10 w-full">
+        <div
+          data-aos="fade-up"
+          data-aos-once
+          className="flex flex-col px-4 md:flex-row w-full"
+        >
+          <div className="w-full md:w-2/3">
+            <PortfolioAreaChart portfolioHistory={portfolioHistory} />
+          </div>
+          <div className="w-full md:w-1/3">
+            <PortfolioPieChart portfolioAllocation={portfolioAllocation} />
+          </div>
+        </div>
+        <div data-aos="fade-up" data-aos-once className="mb-10 w-full px-4">
           {userEmail && <Portfolio userEmail={userEmail} />}
         </div>
       </div>

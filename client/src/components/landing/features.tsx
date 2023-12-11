@@ -13,23 +13,23 @@ export default function FeaturesBlocks() {
         className="absolute inset-0 top-1/2 md:mt-24 lg:mt-0 bg-gray-900 pointer-events-none"
         aria-hidden="true"
       ></div>
-      <div className="absolute left-0 right-0 bottom-0 m-auto w-px p-px h-20 bg-gray-200 transform translate-y-1/2"></div>
+      <div className="hidden md:inline absolute left-0 right-0 bottom-0 m-auto w-px p-px h-20 bg-gray-200 transform translate-y-1/2"></div>
 
       <div className="relative max-w-6xl mx-auto px-4 sm:px-6">
         <div className="py-12 md:py-20">
           {/* Section header */}
-          <div className="max-w-3xl mx-auto text-center pb-12 md:pb-20 text-white text-5xl font-inter">
-            <h2 className="h2 mb-4 font-bold">Explore the Solutions</h2>
-            <p className="text-xl font-inter text-gray-600 italic">
+          <div className="max-w-3xl mx-auto text-center pb-12 md:pb-20 text-white text-4xl md:text-5xl font-inter">
+            <h2 className="h2 mb-4 font-bold">Explore the Features</h2>
+            <p className="text-base md:text-xl font-inter text-gray-600 italic">
               A modern investment management platform designed to assist users
               in optimizing their portfolio allocations.
             </p>
           </div>
 
           {/* Items */}
-          <div className="max-w-sm mx-auto grid gap-6 md:grid-cols-2 lg:grid-cols-3 items-start md:max-w-2xl lg:max-w-none font-inter">
+          <div className="max-w-xs mx-auto grid gap-6 md:grid-cols-2 lg:grid-cols-3 items-start md:max-w-2xl lg:max-w-none font-inter text-sm md:text-base leading-snug">
             {/* 1st item */}
-            <div className="relative flex flex-col items-center p-6 bg-gray-50 rounded-2xl shadow-xl">
+            <div className="relative flex flex-col items-center p-6 bg-gray-800 rounded-2xl shadow-xl">
               <svg
                 className="w-16 h-16 p-1 -mt-1 mb-2"
                 viewBox="0 0 64 64"
@@ -37,7 +37,7 @@ export default function FeaturesBlocks() {
               >
                 <g fill="none" fillRule="evenodd">
                   <rect
-                    className="fill-current text-indigo-600"
+                    className="fill-current text-indigo-700"
                     width="64"
                     height="64"
                     rx="32"
@@ -64,17 +64,17 @@ export default function FeaturesBlocks() {
                   </g>
                 </g>
               </svg>
-              <h4 className="text-xl font-bold leading-snug tracking-tight mb-1">
+              <h4 className="text-xl text-white font-bold leading-snug tracking-tight mb-1">
                 Manage your portfolio
               </h4>
-              <p className="text-gray-600 text-center">
+              <p className="text-gray-400 text-center">
                 OptiWealth ensures seamless management of your investments by
                 tracking and organizing your portfolio in one place.
               </p>
             </div>
 
             {/* 2nd item */}
-            <div className="relative flex flex-col items-center p-6 bg-gray-50 rounded-2xl shadow-xl">
+            <div className="relative flex flex-col items-center p-6 bg-gray-800 rounded-2xl shadow-xl">
               <svg
                 className="w-16 h-16 p-1 -mt-1 mb-2"
                 viewBox="0 0 64 64"
@@ -82,7 +82,7 @@ export default function FeaturesBlocks() {
               >
                 <g fill="none" fillRule="evenodd">
                   <rect
-                    className="fill-current text-indigo-600"
+                    className="fill-current text-indigo-700"
                     width="64"
                     height="64"
                     rx="32"
@@ -106,17 +106,17 @@ export default function FeaturesBlocks() {
                   </g>
                 </g>
               </svg>
-              <h4 className="text-xl font-bold leading-snug tracking-tight mb-1">
+              <h4 className="text-xl text-white font-bold leading-snug tracking-tight mb-1">
                 Optimize your investments
               </h4>
-              <p className="text-gray-600 text-center">
+              <p className="text-gray-400 text-center">
                 Leverage OptiWealth's intelligent algorithms to optimize asset
                 allocations and maximize your returns while minimizing risks.
               </p>
             </div>
 
             {/* 3rd item */}
-            <div className="relative flex flex-col items-center p-6 bg-gray-50 rounded-2xl shadow-xl">
+            <div className="relative flex flex-col items-center p-6 bg-gray-800 rounded-2xl shadow-xl">
               <svg
                 className="w-16 h-16 p-1 -mt-1 mb-2"
                 viewBox="0 0 64 64"
@@ -124,7 +124,7 @@ export default function FeaturesBlocks() {
               >
                 <g fill="none" fillRule="evenodd">
                   <rect
-                    className="fill-current text-indigo-600"
+                    className="fill-current text-indigo-700"
                     width="64"
                     height="64"
                     rx="32"
@@ -151,10 +151,10 @@ export default function FeaturesBlocks() {
                   </g>
                 </g>
               </svg>
-              <h4 className="text-xl font-bold leading-snug tracking-tight mb-1">
+              <h4 className="text-xl text-white font-bold leading-snug tracking-tight mb-1">
                 Set financial goals
               </h4>
-              <p className="text-gray-600 text-center">
+              <p className="text-gray-400 text-center">
                 Define and track your financial objectives with OptiWealth,
                 ensuring that your investments are aligned with your long-term
                 goals.

@@ -12,8 +12,8 @@ import { useNavigate } from "react-router-dom";
 import SideBar from "../components/sidebar";
 import { auth } from "../utils/firebase";
 
-import DeleteConfirmationModal from "../components/ui/modal/ConfirmDeleteModal";
-import PromptPasswordModal from "../components/ui/modal/PromptPasswordModal";
+import DeleteConfirmationModal from "../components/modal/ConfirmDeleteModal";
+import PromptPasswordModal from "../components/modal/PromptPasswordModal";
 
 interface UserData {
   name: string;
@@ -213,11 +213,11 @@ const Account: React.FC = () => {
   return (
     <div className="bg-background">
       <SideBar />
-      <div className="flex h-screen flex-1 flex-col justify-center pl-60">
-        <div className="max-w-3xl mx-auto w-full flex space-x-8">
+      <div className="flex h-screen flex-1 flex-col justify-center md:pl-60">
+        <div className="max-w-3xl mx-auto w-full items-center space-y-8 md:space-y-0 flex-col md:flex-row flex md:space-x-8">
           {/* User Details Form */}
-          <div className="w-1/2">
-            <h1 className="font-inter mt-4 text-center text-2xl font-bold leading-9 tracking-tight text-white mb-6">
+          <div className="w-full px-10 md:px-0 md:w-1/2">
+            <h1 className="font-inter md:mt-4 text-center text-2xl font-bold leading-9 tracking-tight text-white mb-6">
               Update Account Details
             </h1>
             <form onSubmit={handleAccountDetailsSubmit} className="space-y-6">
@@ -271,7 +271,7 @@ const Account: React.FC = () => {
           </div>
 
           {/* Password Update Form */}
-          <div className="w-1/2">
+          <div className="w-full px-10 md:px-0 md:w-1/2">
             <h1 className="font-inter mt-4 text-center text-2xl font-bold leading-9 tracking-tight text-white mb-6">
               Change Password
             </h1>

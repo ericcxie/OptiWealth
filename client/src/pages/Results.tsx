@@ -145,43 +145,45 @@ const Results: React.FC = () => {
       <div
         data-aos="fade-up"
         data-aos-once
-        className="results-container w-full px-52 mx-auto text-center"
+        className="results-container w-full px-4 md:px-52 mx-auto text-center"
       >
         {" "}
         <div className="text-center my-10">
-          <h1 className="pb-2 text-inter text-transparent font-bold bg-clip-text bg-gradient-to-r from-blue-700 to-purple-600 text-5xl">
+          <h1 className="pb-2 text-inter text-transparent font-bold bg-clip-text bg-gradient-to-r from-blue-700 to-purple-600 text-4xl md:text-5xl">
             Rebalancing Results
           </h1>
-          <p className="text-white">
-            Here are the results based on your portfolio and chosen <br />
+          <p className="text-white max-w-sm mx-auto">
+            Here are the results based on your portfolio and chosen {""}
             <span className="lowercase font-bold">{modelName}</span> model.
           </p>
         </div>
-        <div className="mb-4 flex gap-48 justify-center">
-          <div>
-            <h2 className="text-xl text-white font-bold mb-2">
-              Initial Allocations:
-            </h2>
-            <p className="text-gray-400">{initialAllocations}</p>
+        <div className="flex flex-col md:flex-row items-center justify-center space-y-8 md:space-x-24">
+          <div className="mb-4">
+            <div>
+              <h2 className="text-xl text-white font-bold mb-2">
+                Initial Allocations:
+              </h2>
+              <p className="text-gray-400">{initialAllocations}</p>
+            </div>
+            <AllocationPieChart
+              stocks={initialStocksAllocation}
+              bonds={initialBondsAllocation}
+              cash={initialCashAllocation}
+            />
           </div>
-          <div>
-            <h2 className="text-xl text-white font-bold mb-2">
-              Rebalanced Allocations:
-            </h2>
-            <p className="text-gray-400">{updatedAllocations}</p>
+          <div className="mb-4">
+            <div>
+              <h2 className="text-xl text-white font-bold mb-2">
+                Rebalanced Allocations:
+              </h2>
+              <p className="text-gray-400">{updatedAllocations}</p>
+            </div>
+            <AllocationPieChart
+              stocks={updatedStocksAllocation}
+              bonds={updatedBondsAllocation}
+              cash={updatedCashAllocation}
+            />
           </div>
-        </div>
-        <div className="flex">
-          <AllocationPieChart
-            stocks={initialStocksAllocation}
-            bonds={initialBondsAllocation}
-            cash={initialCashAllocation}
-          />
-          <AllocationPieChart
-            stocks={updatedStocksAllocation}
-            bonds={updatedBondsAllocation}
-            cash={updatedCashAllocation}
-          />
         </div>
         <hr className="mt-10 border-t-2 border-gray-400" />
         <div className="mt-6">
