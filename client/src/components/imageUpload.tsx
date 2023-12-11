@@ -93,7 +93,6 @@ class ImageUpload extends Component<{}, State> {
             />
           </label>
         </div>
-
         <div>
           <button
             onClick={this.uploadHandler}

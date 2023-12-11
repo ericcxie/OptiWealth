@@ -20,7 +20,7 @@ export default function Greeting({
   };
 
   return (
-    <div className="flex-1 flex flex-col justify-start items-start pt-14">
+    <div className="flex flex-col justify-start items-start pt-14">
       <h1 className="text-xl font-medium mb-4 text-gray-200">
         {getGreeting()} {name}. You have
       </h1>

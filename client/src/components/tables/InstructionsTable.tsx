@@ -12,7 +12,7 @@ const InstructionsTable: React.FC<InstructionsTableProps> = ({
   instructions,
 }) => {
   return (
-    <div className="relative overflow-y-auto h-96 mb-6 shadow-md sm:rounded-lg scrollbar-thin scrollbar-thumb-gray scrollbar-track-gray">
+    <div className="relative overflow-y-auto h-96 mb-6 shadow-md rounded-lg scrollbar-thin scrollbar-thumb-gray scrollbar-track-gray">
       <table className="w-full text-md text-left text-gray-500 dark:text-white">
         <thead className="sticky uppercase top-0 bg-slate-700 dark:text-gray-300">
           <tr>

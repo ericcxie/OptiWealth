@@ -10,7 +10,8 @@ import { BarLoader } from "react-spinners";
 import InvestmentInput from "../components/optimize/InvestmentInput";
 import ModelCard from "../components/optimize/ModelCard";
 import BackButton from "../components/ui/BackButton";
-import InfoModal from "../components/ui/modal/InfoModal";
+import InfoModal from "../components/modal/InfoModal";
+import SideBar from "../components/sidebar";
 
 const Optimize: React.FC = () => {
   const [selectedModel, setSelectedModel] = React.useState<string | null>(null);
@@ -86,11 +87,18 @@ const Optimize: React.FC = () => {
 
   return (
     <div className="bg-background min-h-screen p-4 text-inter">
-      <div data-aos="fade-up" data-aos-once className="text-center mb-16 mt-14">
-        <h1 className="text-4xl text-white font-bold mb-3 inline-flex items-center">
+      <div className="md:hidden">
+        <SideBar />
+      </div>
+      <div
+        data-aos="fade-up"
+        data-aos-once
+        className="text-center mb-4 md:mb-16 mt-14"
+      >
+        <h1 className="text-3xl md:text-4xl text-white font-bold mb-3 inline-flex items-center">
           {selectedModel ? "Your Current Holdings" : "Pick a Portfolio Model"}
           <FiInfo
-            className="ml-2 cursor-pointer text-white hover:text-gray-400 scale-75"
+            className="hidden md:inline ml-2 cursor-pointer text-white hover:text-gray-400 scale-75"
             onClick={() => setIsModalOpen(true)}
           />
         </h1>
@@ -101,33 +109,38 @@ const Optimize: React.FC = () => {
         </p>
       </div>
       <InfoModal show={isModalOpen} onClose={() => setIsModalOpen(false)} />
-      {selectedModel ? (
-        <InvestmentInput
-          onInputSubmit={handleSubmit}
-          onReset={resetModelSelection}
-          portfolioModel={selectedModel}
-        />
-      ) : (
-        <div
-          data-aos="fade-up"
-          data-aos-once
-          className="flex flex-wrap justify-center items-start gap-6"
-        >
-          {portfolios.map((portfolio) => (
-            <ModelCard
-              key={portfolio.name}
-              portfolio={portfolio}
-              onSelect={setSelectedModel}
-            />
-          ))}
-        </div>
-      )}
 
-      {selectedModel ? (
-        <BackButton onClick={resetModelSelection} />
-      ) : (
-        <BackButton link="/dashboard" />
-      )}
+      <div className="flex-1 flex justify-center items-center">
+        {selectedModel ? (
+          <InvestmentInput
+            onInputSubmit={handleSubmit}
+            onReset={resetModelSelection}
+            portfolioModel={selectedModel}
+          />
+        ) : (
+          <div
+            data-aos="fade-up"
+            data-aos-once
+            className="flex flex-wrap justify-center items-start md:gap-6"
+          >
+            {portfolios.map((portfolio) => (
+              <ModelCard
+                key={portfolio.name}
+                portfolio={portfolio}
+                onSelect={setSelectedModel}
+              />
+            ))}
+          </div>
+        )}
+      </div>
+
+      <div className="hidden md:block">
+        {selectedModel ? (
+          <BackButton onClick={resetModelSelection} />
+        ) : (
+          <BackButton link="/dashboard" />
+        )}
+      </div>
     </div>
   );
 };

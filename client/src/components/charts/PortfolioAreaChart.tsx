@@ -1,10 +1,10 @@
+import React, { useEffect, useRef, useState } from "react";
 import {
-  ColorType,
+  createChart,
   IChartApi,
   ISeriesApi,
-  createChart,
+  ColorType,
 } from "lightweight-charts";
-import React, { useEffect, useRef } from "react";
 
 interface PortfolioAreaChartProps {
   portfolioHistory: Array<{ time: string; value: number }>;
@@ -17,10 +17,18 @@ const PortfolioAreaChart: React.FC<PortfolioAreaChartProps> = ({
   const chartRef = useRef<IChartApi | null>(null);
   const seriesRef = useRef<ISeriesApi<"Area"> | null>(null);
 
+  const resizeChart = () => {
+    if (chartContainerRef.current) {
+      const width = chartContainerRef.current.clientWidth;
+      const height = chartContainerRef.current.clientHeight;
+      chartRef.current?.applyOptions({ width, height });
+    }
+  };
+
   // Initialize the chart
   useEffect(() => {
     if (chartContainerRef.current && !chartRef.current) {
-      const chartOptions = {
+      const chart = createChart(chartContainerRef.current, {
         layout: {
           textColor: "#D9D9D9",
           background: {
@@ -36,30 +44,33 @@ const PortfolioAreaChart: React.FC<PortfolioAreaChartProps> = ({
             color: "#0d121e",
           },
         },
-        width: 780,
-        height: 350,
-        priceFormat: {
-          type: "custom",
-          formatter: (price: number) => `$${price.toFixed(2)}`,
+        rightPriceScale: {
+          visible: window.innerWidth > 768,
         },
-      };
+        width: chartContainerRef.current.clientWidth,
+        height: 350,
+      });
 
-      chartRef.current = createChart(chartContainerRef.current, chartOptions);
-      seriesRef.current = chartRef.current.addAreaSeries({
+      seriesRef.current = chart.addAreaSeries({
         lineColor: "#758696",
         topColor: "rgba(117, 134, 150, 0.28)",
         bottomColor: "rgba(117, 134, 150, 0.05)",
         lineWidth: 2,
       });
-    }
 
-    // Cleanup function
-    return () => {
-      if (chartRef.current) {
-        chartRef.current.remove();
-        chartRef.current = null;
-      }
-    };
+      chartRef.current = chart;
+
+      window.addEventListener("resize", resizeChart);
+
+      // Cleanup function
+      return () => {
+        window.removeEventListener("resize", resizeChart);
+        if (chartRef.current) {
+          chartRef.current.remove();
+          chartRef.current = null;
+        }
+      };
+    }
   }, []);
 
   useEffect(() => {
@@ -75,7 +86,7 @@ const PortfolioAreaChart: React.FC<PortfolioAreaChartProps> = ({
 
   return (
     <div className="w-full h-full flex items-center justify-center">
-      <div ref={chartContainerRef}></div>
+      <div ref={chartContainerRef} className="w-full h-full"></div>
     </div>
   );
 };
