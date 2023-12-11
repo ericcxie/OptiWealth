@@ -14,9 +14,11 @@ export default function Details() {
       className="bg-gradient-to-r from-purple-950 via-background to-blue-950 text-white sectionSize"
     >
       <div>
-        <h2 className="mb-4 text-5xl font-inter font-bold">How It Works</h2>
+        <h2 className="mb-4 text-4xl md:text-5xl font-inter font-bold">
+          How It Works
+        </h2>
       </div>
-      <div className="flex flex-col md:flex-row">
+      <div className="flex flex-col md:flex-row text-sm md:text-lg">
         <div className="flex-1 mx-8 flex flex-col items-center my-4">
           <div className="border-2 rounded-full bg-secondary text-white h-12 w-12 flex justify-center items-center mb-3">
             <FaCloudUploadAlt />

@@ -177,9 +177,9 @@ const ManagePortfolio: React.FC = () => {
       <div
         data-aos="fade-up"
         data-aos-once
-        className="flex-1 flex flex-col justify-start items-start pt-14 pl-80"
+        className="flex-1 flex flex-col justify-start items-center pt-14 md:pl-80"
       >
-        <h2 className="mt-2 text-center text-4xl font-bold leading-9 tracking-tight text-white">
+        <h2 className="mt-2 text-center text-3xl md:text-4xl font-bold leading-9 tracking-tight text-white">
           Update Your{" "}
           <span className="bg-clip-text text-transparent bg-gradient-to-r from-blue-700 to-teal-500">
             Portfolio
@@ -187,10 +187,10 @@ const ManagePortfolio: React.FC = () => {
         </h2>
 
         {/* Portfolio Table and Related Components */}
-        <div className="mt-6 w-full pr-16">
+        <div className="mt-6 px-6 w-full md:pr-16 mx-auto">
           <div className="font-inter">
             <div className="flex justify-between items-center mt-4">
-              <div className="text-xl text-gray-100 font-semibold">
+              <div className="text-lg md:text-xl text-gray-100 font-semibold">
                 {firstName}'s Portfolio
               </div>
               <div className="flex">
@@ -202,7 +202,7 @@ const ManagePortfolio: React.FC = () => {
                 </button>
                 <button
                   onClick={handleAddNewRow}
-                  className="h-9 mb-3 mx-1 px-4 bg-indigo-600 text-white rounded-lg hover:bg-indigo-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-600"
+                  className="h-9 mb-3 mx-1 px-4 bg-indigo-600 text-xs md:text-base text-white rounded-lg hover:bg-indigo-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-600"
                 >
                   Add Investment
                 </button>

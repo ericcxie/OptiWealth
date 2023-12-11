@@ -1,18 +1,18 @@
 import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import Landing from "../pages/landing";
+import Landing from "../pages/Landing";
 import Registration from "../pages/auth/registration";
 import ProtectedRoute from "./ProtectedRoute";
 import { AuthProvider } from "../context/authContext";
 
-import Setup from "../pages/setup";
+import Setup from "../pages/Setup";
 import Login from "../pages/auth/login";
-import Dashboard from "../pages/dashboard";
+import Dashboard from "../pages/Dashboard";
 import ForgotPassword from "../pages/auth/resetPass";
-import ManagePortfolio from "../pages/managePortfolio";
-import Optimize from "../pages/optimize";
-import Results from "../pages/results";
-import Account from "../pages/account";
+import ManagePortfolio from "../pages/ManagePortfolio";
+import Optimize from "../pages/Optimize";
+import Results from "../pages/Results";
+import Account from "../pages/Account";
 
 const AppRouter: React.FC = () => {
   return (

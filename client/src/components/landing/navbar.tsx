@@ -16,13 +16,13 @@ export default function Navbar() {
           </div>
         </Link>
 
-        <div className="font-inter hidden md:block">
+        <div className="font-inter">
           <Link to="/login">
             <button className="mr-6 text-white font-semibold transition duration-300 ease-in-out hover:text-gray-300">
               Log in
             </button>
           </Link>
-          <Link to="/signup">
+          <Link to="/signup" className="hidden md:inline-block">
             <button className="relative inline-flex items-center justify-center p-4 px-5 py-2 overflow-hidden font-medium text-indigo-600 rounded-3xl shadow-2xl group">
               <span className="absolute top-0 left-0 w-40 h-40 -mt-10 -ml-3 transition-all duration-700 bg-indigo-700 rounded-full blur-md ease"></span>
               <span className="absolute inset-0 w-full h-full transition duration-700 group-hover:rotate-180 ease">
@@ -33,18 +33,7 @@ export default function Navbar() {
             </button>
           </Link>
         </div>
-        <div id="showMenu" className="md:hidden">
-          <img src="dist/assets/logos/Menu.svg" alt="Menu icon" />
-        </div>
       </nav>
-      <div
-        id="mobileNav"
-        className="hidden px-4 py-6 fixed top-0 left-0 h-full w-full bg-secondary z-20 animate-fade-in-down"
-      >
-        <div id="hideMenu" className="flex justify-end">
-          <img src="dist/assets/logos/Cross.svg" alt="" className="h-16 w-16" />
-        </div>
-      </div>
     </div>
   );
 }

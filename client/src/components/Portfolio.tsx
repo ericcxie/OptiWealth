@@ -34,7 +34,6 @@ const Portfolio: React.FC<PortfolioProps> = ({ userEmail }) => {
         setLoading(false);
       }
     };
-
     fetchUserStocks();
   }, [userEmail]);
 
@@ -47,7 +46,7 @@ const Portfolio: React.FC<PortfolioProps> = ({ userEmail }) => {
   }
 
   return (
-    <div className="relative overflow-y-auto h-64 mt-10 shadow-md sm:rounded-lg scrollbar-thin scrollbar-thumb-gray scrollbar-track-gray">
+    <div className="relative overflow-y-auto h-64 mt-10 shadow-md rounded-lg scrollbar-thin scrollbar-thumb-gray scrollbar-track-gray">
       <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
         <thead
           className="sticky uppercase top-0 bg-gray-50 dark:bg-gray-700 dark:text-gray-400"
