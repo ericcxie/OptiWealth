@@ -157,13 +157,15 @@ const Results: React.FC = () => {
             <span className="lowercase font-bold">{modelName}</span> model.
           </p>
         </div>
-        <div className="flex flex-col md:flex-row items-center justify-center space-y-8 md:space-x-24">
+        <div className="flex flex-col md:flex-row items-center justify-center space-y-8 md:space-y-0 md:space-x-24">
           <div className="mb-4">
             <div>
               <h2 className="text-xl text-white font-bold mb-2">
                 Initial Allocations:
               </h2>
-              <p className="text-gray-400">{initialAllocations}</p>
+              <p className="text-gray-400 w-3/4 mx-auto mb-2">
+                {initialAllocations}
+              </p>
             </div>
             <AllocationPieChart
               stocks={initialStocksAllocation}
@@ -176,7 +178,9 @@ const Results: React.FC = () => {
               <h2 className="text-xl text-white font-bold mb-2">
                 Rebalanced Allocations:
               </h2>
-              <p className="text-gray-400">{updatedAllocations}</p>
+              <p className="text-gray-400 w-3/4 mx-auto mb-2">
+                {updatedAllocations}
+              </p>
             </div>
             <AllocationPieChart
               stocks={updatedStocksAllocation}
