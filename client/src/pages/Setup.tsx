@@ -163,7 +163,7 @@ const Setup: React.FC = () => {
         ) : data.length > 0 ? (
           <div>
             <div className="mb-6">
-              <h2 className="mt-4 text-center text-4xl font-bold leading-9 tracking-tight text-white">
+              <h2 className="mt-4 text-center text-3xl md:text-4xl font-bold leading-9 tracking-tight text-white">
                 Modify Your{" "}
                 <span className="bg-clip-text text-transparent bg-gradient-to-r from-blue-700 to-teal-500">
                   Portfolio
@@ -174,7 +174,7 @@ const Setup: React.FC = () => {
               </p>
             </div>
             <div className="flex justify-between">
-              <div className="text-xl text-gray-100 font-semibold">
+              <div className="text-lg md:text-xl text-gray-100 font-semibold">
                 {firstName}'s Portfolio
               </div>
               <button
@@ -207,7 +207,7 @@ const Setup: React.FC = () => {
         ) : (
           <>
             <div data-aos="fade-up" data-aos-once>
-              <h2 className="mt-4 text-center text-4xl font-bold leading-9 tracking-tight text-white">
+              <h2 className="mt-4 text-center text-3xl md:text-4xl font-bold leading-9 tracking-tight text-white">
                 Upload Your{" "}
                 <span className="bg-clip-text text-transparent bg-gradient-to-r from-blue-700 to-teal-500">
                   Portfolio
@@ -218,8 +218,14 @@ const Setup: React.FC = () => {
                   Upload Your Investment Portfolio
                 </label>
                 <p className="text-md text-gray-400 mb-4">
-                  You can upload a CSV/Excel file or an image (Currently beta,
-                  only supports Wealthsimple)
+                  You can upload a CSV/Excel file or an image.{" "}
+                  <a
+                    href="/dist/assets/portfolio_template.xlsx"
+                    download="portfolio_template.xlsx"
+                    className="text-blue-500 hover:underline"
+                  >
+                    Download portfolio template.
+                  </a>
                 </p>
                 <label
                   htmlFor="dropzone-file"
