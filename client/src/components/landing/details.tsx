@@ -25,8 +25,8 @@ export default function Details() {
           </div>
           <h3 className="font-inter font-medium text-xl mb-2">Upload</h3>
           <p className="text-center font-inter">
-            Setup your portfolio by uploading a spreadsheet or screenshot of
-            your financial statement
+            Setup your account by uploading a spreadsheet or screenshot of your
+            portfolio
           </p>
         </div>
         <div className="flex-1 mx-8 flex flex-col items-center my-4">

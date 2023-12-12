@@ -218,8 +218,14 @@ const Setup: React.FC = () => {
                   Upload Your Investment Portfolio
                 </label>
                 <p className="text-md text-gray-400 mb-4">
-                  You can upload a CSV/Excel file or an image (Currently beta,
-                  only supports Wealthsimple)
+                  You can upload a CSV/Excel file or an image.{" "}
+                  <a
+                    href="/dist/assets/portfolio_template.xlsx"
+                    download="portfolio_template.xlsx"
+                    className="text-blue-500 hover:underline"
+                  >
+                    Download portfolio template.
+                  </a>
                 </p>
                 <label
                   htmlFor="dropzone-file"

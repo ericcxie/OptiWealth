@@ -3,11 +3,13 @@ import "aos/dist/aos.css";
 import {
   GoogleAuthProvider,
   createUserWithEmailAndPassword,
-  signInWithPopup,
+  getRedirectResult,
+  signInWithRedirect,
   updateProfile,
 } from "firebase/auth";
 import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { BounceLoader } from "react-spinners";
 import Logo from "../../components/ui/logo";
 import { auth } from "../../utils/firebase";
 
@@ -17,20 +19,29 @@ const Registration: React.FC = () => {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
+  const [loading, setLoading] = useState(true);
 
   const navigate = useNavigate();
 
   // Sign in with google
-  const googleProvider = new GoogleAuthProvider();
-  const GoogleLogin = async () => {
-    try {
-      const result = await signInWithPopup(auth, googleProvider);
-      console.log(result.user);
-      navigate("/setup");
-    } catch (error) {
-      console.log(error);
-    }
+  const GoogleLogin = () => {
+    const googleProvider = new GoogleAuthProvider();
+    signInWithRedirect(auth, googleProvider);
   };
+
+  useEffect(() => {
+    getRedirectResult(auth)
+      .then((result) => {
+        if (result && result.user) {
+          navigate("/setup");
+        }
+        setLoading(false);
+      })
+      .catch((error) => {
+        console.log(error);
+        setLoading(false);
+      });
+  }, [auth, navigate]);
 
   const SignUp = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -81,6 +92,22 @@ const Registration: React.FC = () => {
   useEffect(() => {
     Aos.init({ duration: 1000 });
   }, []);
+
+  if (loading) {
+    return (
+      <div
+        className="bg-background min-h-screen p-4"
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          height: "100vh",
+        }}
+      >
+        <BounceLoader color="#FFFFFF" />
+      </div>
+    );
+  }
 
   return (
     <div className="bg-background flex h-screen flex-1 flex-col justify-center px-6 py-12 lg:px-8">
