@@ -2,11 +2,13 @@ import Aos from "aos";
 import "aos/dist/aos.css";
 import {
   GoogleAuthProvider,
+  getRedirectResult,
   signInWithEmailAndPassword,
-  signInWithPopup,
+  signInWithRedirect,
 } from "firebase/auth";
 import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { BounceLoader } from "react-spinners";
 import Logo from "../../components/ui/logo";
 import { auth } from "../../utils/firebase";
 
@@ -14,6 +16,7 @@ const Login: React.FC = () => {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [errorMessage, setErrorMessage] = useState("");
+  const [loading, setLoading] = useState<boolean>(true);
 
   const navigate = useNavigate();
 
@@ -34,19 +37,44 @@ const Login: React.FC = () => {
       });
   };
 
-  const googleProvider = new GoogleAuthProvider();
   const GoogleLogin = async () => {
-    try {
-      const result = await signInWithPopup(auth, googleProvider);
-      navigate("/dashboard");
-    } catch (error) {
-      console.log(error);
-    }
+    const googleProvider = new GoogleAuthProvider();
+    signInWithRedirect(auth, googleProvider);
   };
+
+  useEffect(() => {
+    getRedirectResult(auth)
+      .then((result) => {
+        if (result && result.user) {
+          navigate("/dashboard");
+        }
+        setLoading(false);
+      })
+      .catch((error) => {
+        console.log(error);
+        setLoading(false);
+      });
+  }, [auth, navigate]);
 
   useEffect(() => {
     Aos.init({ duration: 1000 });
   }, []);
+
+  if (loading) {
+    return (
+      <div
+        className="bg-background min-h-screen p-4"
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          height: "100vh",
+        }}
+      >
+        <BounceLoader color="#FFFFFF" />
+      </div>
+    );
+  }
 
   return (
     <div className="bg-background flex h-screen flex-1 flex-col justify-center px-6 py-12 lg:px-8">
