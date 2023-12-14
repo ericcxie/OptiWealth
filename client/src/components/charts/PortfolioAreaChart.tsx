@@ -17,6 +17,8 @@ const PortfolioAreaChart: React.FC<PortfolioAreaChartProps> = ({
   const chartRef = useRef<IChartApi | null>(null);
   const seriesRef = useRef<ISeriesApi<"Area"> | null>(null);
 
+  console.log("Portfolio history", portfolioHistory);
+
   const resizeChart = () => {
     if (chartContainerRef.current) {
       const width = chartContainerRef.current.clientWidth;

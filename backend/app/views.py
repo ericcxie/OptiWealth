@@ -60,7 +60,6 @@ def upload_file():
             try:
                 target_data = parse_image(filepath)
                 stock_data = clean_data(target_data)
-                print(stock_data)
                 os.remove(filepath)  # Deleting the file after processing
                 return jsonify(stock_data)
 
@@ -105,8 +104,6 @@ def submit_portfolio():
         if invalid_tickers:
             return jsonify({'error': 'Invalid stocks found', 'invalid_tickers': invalid_tickers}), 400
 
-        print("Portfolio data:", portfolio_data)
-
         encrypted_uid = aes_cipher.encrypt(user_uid)
         encrypted_portfolio_data = aes_cipher.encrypt(
             json.dumps(portfolio_data))
@@ -146,12 +143,10 @@ def get_portfolio():
     user_email = request.json.get('user_email')
     portfolio_data = get_portfolio_data(user_email)
 
-    if portfolio_data and len(portfolio_data) > 0:
-        portfolio_list = portfolio_data[0]
-    else:
+    if portfolio_data is None:
         portfolio_data = []
 
-    return jsonify(portfolio_list)
+    return jsonify(portfolio_data)
 
 
 @app.route('/get-portfolio-value', methods=['POST'])
@@ -192,12 +187,10 @@ def get_user_stocks():
         A JSON object containing the user's stock portfolio data with current stock prices attached.
     """
     email = request.json.get('email')
-
     if not email:
         return jsonify({"error": "Email is required"}), 400
 
     portfolio_data = get_portfolio_data(email)
-
     if not portfolio_data:
         return jsonify({"error": "User not found"}), 404
 
@@ -252,7 +245,10 @@ def update_portfolio():
     if not user_portfolio:
         return jsonify({'error': 'User not found in db'}), 404
 
-    user_portfolio.portfolio_data = portfolio_data
+    encrypted_portfolio_data = aes_cipher.encrypt(
+        json.dumps(portfolio_data))
+
+    user_portfolio.portfolio_data = encrypted_portfolio_data
     db.session.commit()
 
     return jsonify({'message': 'Portfolio updated successfully'}), 200
@@ -290,8 +286,6 @@ def rebalance_portfolio():
             "Cash": target_model.get('cash')
         }
     }
-
-    user_portfolio = user_portfolio[0]
 
     rebalancing_results = rebalance(
         user_portfolio, target_model, bonds_value, cash_value)

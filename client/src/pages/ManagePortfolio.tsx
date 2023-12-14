@@ -14,6 +14,8 @@ const ManagePortfolio: React.FC = () => {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [invalidTickers, setInvalidTickers] = useState<string[]>([]);
 
+  console.log("Portfolio data", portfolioData);
+
   const user = auth.currentUser;
   const userEmail = user ? user.email : null;
   const displayName = user ? user.displayName : "User";
