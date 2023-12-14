@@ -2,6 +2,7 @@ import logging
 import os
 from concurrent.futures import ThreadPoolExecutor
 from datetime import datetime
+import json
 
 import pandas as pd
 from flask import jsonify, request, send_file
@@ -18,6 +19,7 @@ from .utils.app_functions import (clean_data, delete_account_from_db,
                                   is_valid_ticker, parse_image,
                                   upsert_user_email_in_db)
 from .utils.rebalance import rebalance
+from .utils.encryption import aes_cipher
 
 
 def allowed_file(filename):
@@ -103,10 +105,16 @@ def submit_portfolio():
         if invalid_tickers:
             return jsonify({'error': 'Invalid stocks found', 'invalid_tickers': invalid_tickers}), 400
 
+        print("Portfolio data:", portfolio_data)
+
+        encrypted_uid = aes_cipher.encrypt(user_uid)
+        encrypted_portfolio_data = aes_cipher.encrypt(
+            json.dumps(portfolio_data))
+
         new_entry = UserPortfolio(
             user_email=user_email,
-            user_uid=user_uid,
-            portfolio_data=portfolio_data
+            user_uid=encrypted_uid,
+            portfolio_data=encrypted_portfolio_data
         )
 
         db.session.add(new_entry)
@@ -167,7 +175,7 @@ def get_portfolio_value():
 def calculate_portfolio_value(user_email):
     portfolio_data = get_portfolio_data(user_email)
     portfolio_dict = {stock['Ticker']: stock['Total Shares']
-                      for stock in portfolio_data[0]}
+                      for stock in portfolio_data}
     tickers = list(portfolio_dict.keys())
     stock_prices = get_stock_prices(tickers)
     total_value = sum(stock_prices[ticker] *
@@ -184,20 +192,22 @@ def get_user_stocks():
         A JSON object containing the user's stock portfolio data with current stock prices attached.
     """
     email = request.json.get('email')
+
     if not email:
         return jsonify({"error": "Email is required"}), 400
 
     portfolio_data = get_portfolio_data(email)
+
     if not portfolio_data:
         return jsonify({"error": "User not found"}), 404
 
-    tickers = [stock['Ticker'] for stock in portfolio_data[0]]
+    tickers = [stock['Ticker'] for stock in portfolio_data]
     stock_prices = get_stock_prices(tickers)
 
-    for stock in portfolio_data[0]:
+    for stock in portfolio_data:
         stock['Current Price'] = stock_prices.get(stock['Ticker'], None)
 
-    return jsonify(portfolio_data[0])
+    return jsonify(portfolio_data)
 
 
 def check_ticker(stock):
@@ -311,18 +321,18 @@ def get_portfolio_allocation():
     if not portfolio_data:
         return jsonify({"error": "User not found"}), 404
 
-    tickers = [stock['Ticker'] for stock in portfolio_data[0]]
+    tickers = [stock['Ticker'] for stock in portfolio_data]
     stock_prices = get_stock_prices(tickers)
 
     total_portfolio_value = 0
-    for stock in portfolio_data[0]:
+    for stock in portfolio_data:
         current_price = stock_prices.get(stock['Ticker'], None)
         stock['Current Price'] = current_price
         stock_value = current_price * stock['Total Shares']
         total_portfolio_value += stock_value
 
     portfolio_allocation = []
-    for stock in portfolio_data[0]:
+    for stock in portfolio_data:
         stock_value = stock['Current Price'] * stock['Total Shares']
         percentage = round((stock_value / total_portfolio_value) * 100, 2)
         portfolio_allocation.append(

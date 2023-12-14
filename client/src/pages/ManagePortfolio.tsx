@@ -55,6 +55,8 @@ const ManagePortfolio: React.FC = () => {
     fetchPortfolioData();
   }, [userEmail]);
 
+  console.log(portfolioData);
+
   const handleUpdate = (updatedData: any[]) => {
     setPortfolioData(updatedData);
   };

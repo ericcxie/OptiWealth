@@ -20,7 +20,7 @@ def create_tables():
     (
         id              SERIAL PRIMARY KEY,
         user_email      VARCHAR(255) REFERENCES users_portfolio (user_email),
-        portfolio_value NUMERIC(10, 2),
+        portfolio_value TEXT,
         timestamp       TIMESTAMP DEFAULT (now() AT TIME ZONE 'utc')
     );
     """
@@ -30,8 +30,8 @@ def create_tables():
     (
         id             SERIAL PRIMARY KEY,
         user_email     VARCHAR(255) NOT NULL UNIQUE,
-        user_uid       VARCHAR(255) NOT NULL UNIQUE,
-        portfolio_data JSONB NOT NULL
+        user_uid       TEXT NOT NULL UNIQUE,
+        portfolio_data TEXT NOT NULL
     );
     """
 

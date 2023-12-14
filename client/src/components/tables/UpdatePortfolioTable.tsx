@@ -28,6 +28,8 @@ const UpdatePortfolioTable: React.FC<PortfolioTableProps> = ({
     setEditableData(editableRow);
   };
 
+  console.log(data);
+
   // const handleAddRow = () => {
   //   const newRow = { Ticker: "", "Total Shares": 0 };
   //   onUpdate([...data, newRow]);
