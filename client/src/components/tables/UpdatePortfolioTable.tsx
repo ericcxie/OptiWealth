@@ -28,15 +28,6 @@ const UpdatePortfolioTable: React.FC<PortfolioTableProps> = ({
     setEditableData(editableRow);
   };
 
-  console.log(data);
-
-  // const handleAddRow = () => {
-  //   const newRow = { Ticker: "", "Total Shares": 0 };
-  //   onUpdate([...data, newRow]);
-  //   setEditingRow(data.length);
-  //   setEditableData(newRow);
-  // };
-
   const handleSave = (index: number) => {
     if (editableData) {
       const updatedData = [...data];
@@ -111,7 +102,7 @@ const UpdatePortfolioTable: React.FC<PortfolioTableProps> = ({
                     value={editableData?.Ticker || ""}
                     onKeyDown={(e) => handleKeyDown(e, index)}
                     onChange={(e) => handleInputChange(e, "Ticker", index)}
-                    className="px-2 py-1 rounded-md bg-gray-200 dark:bg-gray-700 dark:text-white"
+                    className="w-full px-2 py-1 rounded-md bg-gray-700 text-white"
                   />
                 ) : (
                   <>
@@ -144,7 +135,7 @@ const UpdatePortfolioTable: React.FC<PortfolioTableProps> = ({
                       handleInputChange(e, "Total Shares", index)
                     }
                     onKeyDown={(e) => handleKeyDown(e, index)}
-                    className="px-2 py-1 rounded-md bg-gray-200 dark:bg-gray-700 dark:text-white"
+                    className="w-full px-2 py-1 rounded-md bg-gray-700 text-white"
                   />
                 ) : (
                   row["Total Shares"]
@@ -179,14 +170,6 @@ const UpdatePortfolioTable: React.FC<PortfolioTableProps> = ({
           ))}
         </tbody>
       </table>
-      {/* <div>
-        <button
-          onClick={handleAddRow}
-          className="mt-10 bg-indigo-600 hover:bg-indigo-500 text-white h-10 w-full px-3 rounded-md"
-        >
-          Add Row
-        </button>
-      </div> */}
     </div>
   );
 };

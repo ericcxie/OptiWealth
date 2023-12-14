@@ -47,7 +47,9 @@ const PortfolioAreaChart: React.FC<PortfolioAreaChartProps> = ({
           },
         },
         rightPriceScale: {
-          visible: window.innerWidth > 768,
+          // visible: window.innerWidth > 768,
+          visible: true,
+          entireTextOnly: true,
         },
         width: chartContainerRef.current.clientWidth,
         height: 350,

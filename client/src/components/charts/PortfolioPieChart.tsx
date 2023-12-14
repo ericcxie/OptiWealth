@@ -34,6 +34,13 @@ const PortfolioPieChart: React.FC<Props> = ({ portfolioAllocation }) => {
         return opts.w.globals.labels[opts.seriesIndex];
       },
     },
+    tooltip: {
+      y: {
+        formatter: function (val: number) {
+          return val.toFixed(2) + "%";
+        },
+      },
+    },
     stroke: {
       width: 1,
     },
