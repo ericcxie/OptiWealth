@@ -112,7 +112,19 @@ const Account: React.FC = () => {
     if (user && inputValue === `${firstName}/confirm-delete`) {
       try {
         await deleteUser(user);
+      } catch (error: any) {
+        if (error.code === "auth/requires-recent-login") {
+          setShowModal(false);
+          setMessage("Please re-authenticate and try again.");
+          setIsSaved(true);
+          setTimeout(() => setIsSaved(false), 10000);
+          return;
+        }
+        console.error(error);
+        return;
+      }
 
+      try {
         const response = await fetch("/delete-account", {
           method: "POST",
           headers: {
