@@ -316,7 +316,7 @@ def get_stock_price(ticker):
 
 
 def get_stock_prices(tickers):
-    with ThreadPoolExecutor(max_workers=10) as executor:
+    with ThreadPoolExecutor() as executor:
         results = executor.map(get_stock_price, tickers)
     return dict(result for result in results if result[1] is not None)
 
