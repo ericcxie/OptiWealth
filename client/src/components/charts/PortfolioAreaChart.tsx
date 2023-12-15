@@ -1,10 +1,10 @@
-import React, { useEffect, useRef, useState } from "react";
 import {
-  createChart,
+  ColorType,
   IChartApi,
   ISeriesApi,
-  ColorType,
+  createChart,
 } from "lightweight-charts";
+import React, { useEffect, useRef } from "react";
 
 interface PortfolioAreaChartProps {
   portfolioHistory: Array<{ time: string; value: number }>;
@@ -16,6 +16,8 @@ const PortfolioAreaChart: React.FC<PortfolioAreaChartProps> = ({
   const chartContainerRef = useRef<HTMLDivElement>(null);
   const chartRef = useRef<IChartApi | null>(null);
   const seriesRef = useRef<ISeriesApi<"Area"> | null>(null);
+
+  console.log("Portfolio history", portfolioHistory);
 
   const resizeChart = () => {
     if (chartContainerRef.current) {
@@ -46,9 +48,22 @@ const PortfolioAreaChart: React.FC<PortfolioAreaChartProps> = ({
         },
         rightPriceScale: {
           visible: window.innerWidth > 768,
+          entireTextOnly: true,
         },
+
         width: chartContainerRef.current.clientWidth,
         height: 350,
+      });
+
+      chart.applyOptions({
+        localization: {
+          priceFormatter: (price: number) => {
+            return price.toLocaleString(undefined, {
+              minimumFractionDigits: 2,
+              maximumFractionDigits: 2,
+            });
+          },
+        },
       });
 
       seriesRef.current = chart.addAreaSeries({

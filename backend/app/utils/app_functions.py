@@ -1,3 +1,4 @@
+import json
 import os
 import re
 from concurrent.futures import ThreadPoolExecutor
@@ -8,12 +9,13 @@ import psycopg2
 import pytesseract
 import pytz
 import requests
+import yfinance as yf
 from cachetools import TTLCache, cached
 from dotenv import load_dotenv
 from forex_python.converter import CurrencyRates
 from PIL import Image
-import yfinance as yf
 
+from .encryption import aes_cipher
 
 EXCHANGE_RATE_CACHE = {}
 
@@ -128,7 +130,10 @@ def get_portfolio_data(user_email):
         cursor.execute(query, (user_email,))
         portfolio_data = cursor.fetchone()
 
-        return portfolio_data
+        decrypted_portfolio_data = json.loads(
+            aes_cipher.decrypt(portfolio_data[0]))
+
+        return decrypted_portfolio_data
 
     except Exception as error:
         print(f"Error retrieving data from database: {error}")
@@ -225,6 +230,8 @@ def insert_portfolio_value(user_email, value):
         value (float): The value of the user's portfolio.
     """
     print(f"Inserting portfolio value for {user_email} of value {value}")
+    encrypted_value = aes_cipher.encrypt(str(value))
+
     try:
         conn = psycopg2.connect(**DATABASE_CONFIG)
         cur = conn.cursor()
@@ -239,15 +246,17 @@ def insert_portfolio_value(user_email, value):
             result_date = result[1].replace(
                 tzinfo=utc).astimezone(eastern).date()
 
-            if abs(float(result[0]) - value) > 5 and result_date != datetime.today().date():
+            decrypted_portfolio_value = aes_cipher.decrypt(result[0])
+
+            if abs(float(decrypted_portfolio_value) - value) > 5 and result_date != datetime.today().date():
                 cur.execute(
-                    "INSERT INTO portfolio_history (user_email, portfolio_value) VALUES (%s, %s)", (user_email, value))
+                    "INSERT INTO portfolio_history (user_email, portfolio_value) VALUES (%s, %s)", (user_email, encrypted_value))
             else:
                 cur.execute(
-                    "UPDATE portfolio_history SET portfolio_value = %s WHERE user_email = %s AND timestamp = %s", (value, user_email, result[1]))
+                    "UPDATE portfolio_history SET portfolio_value = %s WHERE user_email = %s AND timestamp = %s", (encrypted_value, user_email, result[1]))
         else:
             cur.execute(
-                "INSERT INTO portfolio_history (user_email, portfolio_value) VALUES (%s, %s)", (user_email, value))
+                "INSERT INTO portfolio_history (user_email, portfolio_value) VALUES (%s, %s)", (user_email, encrypted_value))
 
         conn.commit()
     except Exception as e:
@@ -323,7 +332,7 @@ def get_portfolio_history_from_db(user_email):
     utc = pytz.timezone('UTC')
     eastern = pytz.timezone('US/Eastern')
 
-    data = [{"value": float(row[0]), "time": row[1].replace(
+    data = [{"value": float(aes_cipher.decrypt(row[0])), "time": row[1].replace(
         tzinfo=utc).astimezone(eastern).strftime("%Y-%m-%d")} for row in result]
 
     cur.close()

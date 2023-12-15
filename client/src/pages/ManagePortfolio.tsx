@@ -4,6 +4,9 @@ import axios from "axios";
 import React, { useEffect, useRef, useState } from "react";
 import SideBar from "../components/sidebar";
 import { auth } from "../utils/firebase";
+import { IoAdd } from "react-icons/io5";
+import { FaPlus } from "react-icons/fa6";
+import { MdOutlineFileUpload } from "react-icons/md";
 
 import UpdatePortfolioTable from "../components/tables/UpdatePortfolioTable";
 
@@ -13,6 +16,8 @@ const ManagePortfolio: React.FC = () => {
   const [message, setMessage] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [invalidTickers, setInvalidTickers] = useState<string[]>([]);
+
+  console.log("Portfolio data", portfolioData);
 
   const user = auth.currentUser;
   const userEmail = user ? user.email : null;
@@ -54,6 +59,8 @@ const ManagePortfolio: React.FC = () => {
 
     fetchPortfolioData();
   }, [userEmail]);
+
+  console.log(portfolioData);
 
   const handleUpdate = (updatedData: any[]) => {
     setPortfolioData(updatedData);
@@ -196,15 +203,16 @@ const ManagePortfolio: React.FC = () => {
               <div className="flex">
                 <button
                   onClick={triggerFileInput}
-                  className="h-9 mb-3 mx-1 px-5 bg-indigo-600 text-white rounded-lg hover:bg-indigo-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-600"
+                  className="h-9 mb-3 flex mx-1 px-5 md:px-8 bg-indigo-600 text-white rounded-lg hover:bg-indigo-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-600 items-center justify-center"
                 >
-                  Upload
+                  <span className="mr-1">Upload</span>
+                  <MdOutlineFileUpload size={23} />
                 </button>
                 <button
                   onClick={handleAddNewRow}
-                  className="h-9 mb-3 mx-1 px-4 bg-indigo-600 text-xs md:text-base text-white rounded-lg hover:bg-indigo-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-600"
+                  className="h-9 mb-3 mx-1 px-3 bg-indigo-600 text-base text-white rounded-lg hover:bg-indigo-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-600"
                 >
-                  Add Investment
+                  <FaPlus size={15} />
                 </button>
               </div>
             </div>

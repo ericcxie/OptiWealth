@@ -101,7 +101,7 @@ const Dashboard: React.FC = () => {
     <div className="flex flex-col md:flex-row h-full md:h-screen bg-background text-white font-inter">
       <SideBar />
       <div className="flex-initial flex flex-col w-full md:pr-16 items-center md:items-start justify-start md:pl-80">
-        <div className="self-start pl-5 pt-4 md:pl-0 md:pt-0">
+        <div className="self-start px-5 pt-4 md:pb-0 md:pl-0 md:pt-0">
           <Greeting
             name={firstName}
             portfolioValue={portfolioValue}
