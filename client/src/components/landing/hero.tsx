@@ -46,7 +46,7 @@ export default function Hero() {
       </div>
       <div className="mt-8 mb-8 md:mb-0 md:mt-0 md:flex-1 flex items-center justify-center">
         <img
-          src="/dist/assets/preview.jpg"
+          src="/assets/preview.jpg"
           alt="Application Preview"
           className="rounded-xl transform scale-90 md:scale-125"
         />

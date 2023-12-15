@@ -9,8 +9,8 @@ DATABASE_CONFIG = {
     'dbname': os.getenv('DATABASE_NAME'),
     'user': os.getenv('DATABASE_USER'),
     'password': os.getenv('DATABASE_PASSWORD'),
-    'host': 'localhost',
-    'port': '5432'
+    'host': 'monorail.proxy.rlwy.net',
+    'port': '32065'
 }
 
 
