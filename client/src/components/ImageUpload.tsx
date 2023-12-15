@@ -1,6 +1,8 @@
 import axios from "axios";
 import { ChangeEvent, Component } from "react";
 
+const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
+
 interface State {
   imageFile: File | null;
   imagePrediction: Record<string, any> | null; // Updated the type
@@ -36,7 +38,7 @@ class ImageUpload extends Component<{}, State> {
     formData.append("file", imageFile);
 
     axios
-      .post("http://127.0.0.1:5000/upload", formData)
+      .post(`${API_BASE_URL}/upload`, formData)
       .then((response) => {
         const data = response.data;
         this.setState({ imagePrediction: data });
@@ -102,9 +104,7 @@ class ImageUpload extends Component<{}, State> {
           </button>
         </div>
 
-        <div className="mt-4">
-          {this.renderPrediction()} {/* Render the prediction */}
-        </div>
+        <div className="mt-4">{this.renderPrediction()}</div>
       </div>
     );
   }

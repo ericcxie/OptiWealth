@@ -2,11 +2,10 @@ import Aos from "aos";
 import "aos/dist/aos.css";
 import axios from "axios";
 import React, { useEffect, useRef, useState } from "react";
-import SideBar from "../components/sidebar";
-import { auth } from "../utils/firebase";
-import { IoAdd } from "react-icons/io5";
 import { FaPlus } from "react-icons/fa6";
 import { MdOutlineFileUpload } from "react-icons/md";
+import SideBar from "../components/sidebar";
+import { auth } from "../utils/firebase";
 
 import UpdatePortfolioTable from "../components/tables/UpdatePortfolioTable";
 
@@ -17,7 +16,7 @@ const ManagePortfolio: React.FC = () => {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [invalidTickers, setInvalidTickers] = useState<string[]>([]);
 
-  console.log("Portfolio data", portfolioData);
+  const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
 
   const user = auth.currentUser;
   const userEmail = user ? user.email : null;
@@ -39,7 +38,7 @@ const ManagePortfolio: React.FC = () => {
       }
 
       try {
-        const response = await fetch("/get_portfolio", {
+        const response = await fetch(`${API_BASE_URL}/get_portfolio`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -87,15 +86,11 @@ const ManagePortfolio: React.FC = () => {
       const formData = new FormData();
       formData.append("file", file);
       try {
-        const response = await axios.post(
-          "http://127.0.0.1:5000/upload",
-          formData,
-          {
-            headers: {
-              "Content-Type": "multipart/form-data",
-            },
-          }
-        );
+        const response = await axios.post(`${API_BASE_URL}/upload`, formData, {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        });
         await new Promise((resolve) => setTimeout(resolve, 2000));
 
         if (
@@ -130,7 +125,7 @@ const ManagePortfolio: React.FC = () => {
     setLoading(true);
 
     try {
-      const response = await fetch("/update-portfolio", {
+      const response = await fetch(`${API_BASE_URL}/update-portfolio`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

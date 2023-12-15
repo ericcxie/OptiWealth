@@ -17,6 +17,8 @@ const Results: React.FC = () => {
   const data = location.state?.resultsData;
   const modelName = data.model_name;
 
+  const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
+
   const initialBondsAllocation = parseFloat(
     data.rebalancing_results.initial_allocations.Bonds.toFixed(2)
   );
@@ -102,7 +104,7 @@ const Results: React.FC = () => {
 
     try {
       console.log("payload", payload);
-      const response = await fetch("/dict-to-excel", {
+      const response = await fetch(`${API_BASE_URL}/dict-to-excel`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
