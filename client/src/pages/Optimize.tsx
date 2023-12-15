@@ -23,6 +23,8 @@ const Optimize: React.FC = () => {
   const userEmail = user ? user.email : null;
   const targetModel = portfolios.find((p) => p.name === selectedModel);
 
+  const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
+
   const handleSubmit = async (bonds: number, cash: number) => {
     setLoading(true);
 
@@ -36,7 +38,7 @@ const Optimize: React.FC = () => {
     let data;
 
     try {
-      const response = await fetch("/rebalance-portfolio", {
+      const response = await fetch(`${API_BASE_URL}/rebalance-portfolio`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

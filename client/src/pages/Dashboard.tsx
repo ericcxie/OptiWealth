@@ -20,6 +20,8 @@ const Dashboard: React.FC = () => {
   const displayName = user ? user.displayName : "User";
   const firstName = displayName ? displayName.split(" ")[0] : "User";
 
+  const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
+
   useEffect(() => {
     const fetchPortfolioValue = async () => {
       if (!userEmail) {
@@ -30,7 +32,7 @@ const Dashboard: React.FC = () => {
       }
 
       try {
-        const response = await fetch("/get-portfolio-value", {
+        const response = await fetch(`${API_BASE_URL}/get-portfolio-value`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -58,13 +60,16 @@ const Dashboard: React.FC = () => {
       }
 
       try {
-        const response = await fetch("/get-portfolio-allocation", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ email: userEmail }),
-        });
+        const response = await fetch(
+          `${API_BASE_URL}/get-portfolio-allocation`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ email: userEmail }),
+          }
+        );
 
         const data = await response.json();
         setPortfolioAllocation(data);
@@ -78,7 +83,7 @@ const Dashboard: React.FC = () => {
 
   useEffect(() => {
     const fetchPortfolioHistory = async () => {
-      const response = await fetch("/get-portfolio-history", {
+      const response = await fetch(`${API_BASE_URL}/get-portfolio-history`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

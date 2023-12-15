@@ -15,11 +15,13 @@ const Portfolio: React.FC<PortfolioProps> = ({ userEmail }) => {
   const [stocks, setStocks] = useState<Stock[]>([]);
   const [loading, setLoading] = useState(true);
 
+  const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
+
   useEffect(() => {
     // Fetch the user stocks from your Flask endpoint
     const fetchUserStocks = async () => {
       try {
-        const response = await fetch("/get-user-stocks", {
+        const response = await fetch(`${API_BASE_URL}/get-user-stocks`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",

@@ -37,6 +37,8 @@ const Account: React.FC = () => {
   const [showModal, setShowModal] = useState<boolean>(false);
   const [showPasswordModal, setShowPasswordModal] = useState<boolean>(false);
 
+  const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
+
   // Firebase related variables
   const user = auth.currentUser;
   const userEmail = user ? user.email : null;
@@ -125,7 +127,7 @@ const Account: React.FC = () => {
       }
 
       try {
-        const response = await fetch("/delete-account", {
+        const response = await fetch(`${API_BASE_URL}/delete-account`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -165,7 +167,7 @@ const Account: React.FC = () => {
     await user.reload();
     // Only update email in db if user has verified their new email
     if (user.emailVerified) {
-      const response = await fetch("/update-user-email", {
+      const response = await fetch(`${API_BASE_URL}/update-user-email`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

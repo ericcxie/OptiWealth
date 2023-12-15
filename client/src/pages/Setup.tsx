@@ -17,6 +17,8 @@ const Setup: React.FC = () => {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [invalidTickers, setInvalidTickers] = useState<string[]>([]);
 
+  const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
+
   const user = auth.currentUser;
   const displayName = user ? user.displayName : "User";
   const firstName = displayName ? displayName.split(" ")[0] : "User";
@@ -56,15 +58,11 @@ const Setup: React.FC = () => {
       const formData = new FormData();
       formData.append("file", file);
       try {
-        const response = await axios.post(
-          "http://127.0.0.1:5000/upload",
-          formData,
-          {
-            headers: {
-              "Content-Type": "multipart/form-data",
-            },
-          }
-        );
+        const response = await axios.post(`${API_BASE_URL}/upload`, formData, {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        });
 
         if (
           response.data &&
@@ -121,10 +119,7 @@ const Setup: React.FC = () => {
         portfolio_data: data,
       };
 
-      const apiCall = axios.post(
-        "http://127.0.0.1:5000/submit-portfolio",
-        payload
-      );
+      const apiCall = axios.post(`${API_BASE_URL}/submit-portfolio`, payload);
       const [response] = await Promise.all([apiCall, threeSecondsPromise]);
 
       setMessage("Portfolio updated successfully!");
