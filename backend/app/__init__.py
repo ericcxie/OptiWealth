@@ -9,8 +9,7 @@ app = Flask(__name__)
 app.config.from_object('app.config')
 
 db = SQLAlchemy(app)
-cors = CORS(app, resources={r"/api/*": {"origins": "*"}})
-CORS(app)
+CORS(app, resources={r"/api/*": {"origins": "*"}})
 cache = Cache(app)
 
 # Only import views and models after db and app have been created to avoid circular imports.
