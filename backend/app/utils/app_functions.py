@@ -3,6 +3,7 @@ import os
 import re
 from concurrent.futures import ThreadPoolExecutor
 from datetime import datetime
+from itertools import islice
 
 import pandas as pd
 import psycopg2
@@ -314,12 +315,25 @@ def get_stock_price(ticker):
             return (ticker, None)
     except Exception as e:
         print(f"Error fetching price for {ticker}: {e}")
-        return (ticker, None)
+#         return (ticker, None)
 
 
-def get_stock_prices(tickers):
-    with ThreadPoolExecutor() as executor:
-        results = executor.map(get_stock_price, tickers)
+# def get_stock_prices(tickers):
+#     with ThreadPoolExecutor() as executor:
+#         results = executor.map(get_stock_price, tickers)
+#     return dict(result for result in results if result[1] is not None)
+    
+def batch(iterable, size):
+    iterator = iter(iterable)
+    for first in iterator:
+        yield list(islice(iterator, first, first + size))
+
+def get_stock_prices(tickers, batch_size=100):
+    results = []
+    for ticker_batch in batch(tickers, batch_size):
+        with ThreadPoolExecutor() as executor:
+            batch_results = executor.map(get_stock_price, ticker_batch)
+        results.extend(batch_results)
     return dict(result for result in results if result[1] is not None)
 
 
