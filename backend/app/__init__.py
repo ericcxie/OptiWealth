@@ -9,7 +9,7 @@ app = Flask(__name__)
 app.config.from_object('app.config')
 
 db = SQLAlchemy(app)
-CORS(app)
+CORS(app, resources={r'/*': {'origins': 'https://www.optiwealth.app'}})
 cache = Cache(app)
 
 # Only import views and models after db and app have been created to avoid circular imports.
