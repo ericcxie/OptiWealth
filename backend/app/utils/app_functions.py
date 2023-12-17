@@ -28,12 +28,20 @@ DATABASE_PASSWORD = os.getenv('DATABASE_PASSWORD')
 DATABASE_HOST = os.getenv('DATABASE_HOST')
 DATABASE_PORT = os.getenv('DATABASE_PORT')
 
+# DATABASE_CONFIG = {
+#     'dbname': DATABASE_NAME,
+#     'user': DATABASE_USER,
+#     'password': DATABASE_PASSWORD,
+#     'host': DATABASE_HOST,
+#     'port': DATABASE_PORT
+# }
+
 DATABASE_CONFIG = {
     'dbname': DATABASE_NAME,
     'user': DATABASE_USER,
     'password': DATABASE_PASSWORD,
-    'host': DATABASE_HOST,
-    'port': DATABASE_PORT
+    'host': 'monorail.proxy.rlwy.net',
+    'port': '32065'
 }
 
 c = CurrencyRates()
@@ -270,7 +278,8 @@ def upsert_user_email_in_db(old_email, new_email):
 
 
 def insert_portfolio_value(user_email, value):
-    print(f"Starting to insert portfolio value for {user_email} with value {value}")
+    print(
+        f"Starting to insert portfolio value for {user_email} with value {value}")
 
     # Encrypt the value
     encrypted_value = aes_cipher.encrypt(str(value))
@@ -283,7 +292,7 @@ def insert_portfolio_value(user_email, value):
         print(f"Database connection established for {user_email}")
 
         cur.execute(
-            "SELECT portfolio_value, timestamp FROM portfolio_history WHERE user_email = %s ORDER BY timestamp DESC LIMIT 1", 
+            "SELECT portfolio_value, timestamp FROM portfolio_history WHERE user_email = %s ORDER BY timestamp DESC LIMIT 1",
             (user_email,)
         )
         result = cur.fetchone()
@@ -292,28 +301,32 @@ def insert_portfolio_value(user_email, value):
         if result is not None:
             utc = pytz.timezone('UTC')
             eastern = pytz.timezone('US/Eastern')
-            result_date = result[1].replace(tzinfo=utc).astimezone(eastern).date()
-            print(f"Result date timezone converted for {user_email}: {result_date}")
+            result_date = result[1].replace(
+                tzinfo=utc).astimezone(eastern).date()
+            print(
+                f"Result date timezone converted for {user_email}: {result_date}")
 
             decrypted_portfolio_value = aes_cipher.decrypt(result[0])
-            print(f"Decrypted portfolio value for {user_email}: {decrypted_portfolio_value}")
+            print(
+                f"Decrypted portfolio value for {user_email}: {decrypted_portfolio_value}")
 
             if abs(float(decrypted_portfolio_value) - value) > 5 and result_date != datetime.today().date():
                 print(f"Inserting new portfolio value for {user_email}")
                 cur.execute(
-                    "INSERT INTO portfolio_history (user_email, portfolio_value) VALUES (%s, %s)", 
+                    "INSERT INTO portfolio_history (user_email, portfolio_value) VALUES (%s, %s)",
                     (user_email, encrypted_value)
                 )
             else:
                 print(f"Updating portfolio value for {user_email}")
                 cur.execute(
-                    "UPDATE portfolio_history SET portfolio_value = %s WHERE user_email = %s AND timestamp = %s", 
+                    "UPDATE portfolio_history SET portfolio_value = %s WHERE user_email = %s AND timestamp = %s",
                     (encrypted_value, user_email, result[1])
                 )
         else:
-            print(f"No existing record found. Inserting new record for {user_email}")
+            print(
+                f"No existing record found. Inserting new record for {user_email}")
             cur.execute(
-                "INSERT INTO portfolio_history (user_email, portfolio_value) VALUES (%s, %s)", 
+                "INSERT INTO portfolio_history (user_email, portfolio_value) VALUES (%s, %s)",
                 (user_email, encrypted_value)
             )
 
@@ -332,7 +345,6 @@ def insert_portfolio_value(user_email, value):
             print(f"Connection closed for {user_email}")
 
     print(f"Completed insert_portfolio_value for {user_email}")
-
 
 
 @cached(cache=TTLCache(maxsize=1, ttl=3600))
@@ -388,11 +400,12 @@ def get_stock_price(ticker):
 #     with ThreadPoolExecutor() as executor:
 #         results = executor.map(get_stock_price, tickers)
 #     return dict(result for result in results if result[1] is not None)
-    
+
 def batch(iterable, size):
     iterator = iter(iterable)
     for first in iterator:
         yield list(islice(iterator, first, first + size))
+
 
 def get_stock_prices(tickers, batch_size=100):
     results = []
