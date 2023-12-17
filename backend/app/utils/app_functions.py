@@ -224,119 +224,49 @@ def upsert_user_email_in_db(old_email, new_email):
         print(f"Error updating email with foreign key drop/add: {error}")
 
 
-# def insert_portfolio_value(user_email, value):
-#     """
-#     Logs the portfolio value for a given user in the database.
-
-#     Args:
-#         user_email (str): The email address of the user.
-#         value (float): The value of the user's portfolio.
-#     """
-#     print(f"Inserting portfolio value for {user_email} of value {value}")
-#     encrypted_value = aes_cipher.encrypt(str(value))
-
-#     try:
-#         conn = psycopg2.connect(**DATABASE_CONFIG)
-#         cur = conn.cursor()
-
-#         cur.execute(
-#             "SELECT portfolio_value, timestamp FROM portfolio_history WHERE user_email = %s ORDER BY timestamp DESC LIMIT 1", (user_email,))
-#         result = cur.fetchone()
-
-#         if result is not None:
-#             utc = pytz.timezone('UTC')
-#             eastern = pytz.timezone('US/Eastern')
-#             result_date = result[1].replace(
-#                 tzinfo=utc).astimezone(eastern).date()
-
-#             decrypted_portfolio_value = aes_cipher.decrypt(result[0])
-
-#             if abs(float(decrypted_portfolio_value) - value) > 5 and result_date != datetime.today().date():
-#                 cur.execute(
-#                     "INSERT INTO portfolio_history (user_email, portfolio_value) VALUES (%s, %s)", (user_email, encrypted_value))
-#             else:
-#                 cur.execute(
-#                     "UPDATE portfolio_history SET portfolio_value = %s WHERE user_email = %s AND timestamp = %s", (encrypted_value, user_email, result[1]))
-#         else:
-#             cur.execute(
-#                 "INSERT INTO portfolio_history (user_email, portfolio_value) VALUES (%s, %s)", (user_email, encrypted_value))
-
-#         conn.commit()
-#     except Exception as e:
-#         print(f"Database error: {e}")
-#     finally:
-#         cur.close()
-#         conn.close()
-
-
 def insert_portfolio_value(user_email, value):
-    print(
-        f"Starting to insert portfolio value for {user_email} with value {value}")
+    """
+    Logs the portfolio value for a given user in the database.
 
-    # Encrypt the value
+    Args:
+        user_email (str): The email address of the user.
+        value (float): The value of the user's portfolio.
+    """
+    print(f"Inserting portfolio value for {user_email} of value {value}")
     encrypted_value = aes_cipher.encrypt(str(value))
-    print(f"Value encrypted for {user_email}")
 
     try:
-        print(f"Connecting to the database for {user_email}")
         conn = psycopg2.connect(**DATABASE_CONFIG)
         cur = conn.cursor()
-        print(f"Database connection established for {user_email}")
 
         cur.execute(
-            "SELECT portfolio_value, timestamp FROM portfolio_history WHERE user_email = %s ORDER BY timestamp DESC LIMIT 1",
-            (user_email,)
-        )
+            "SELECT portfolio_value, timestamp FROM portfolio_history WHERE user_email = %s ORDER BY timestamp DESC LIMIT 1", (user_email,))
         result = cur.fetchone()
-        print(f"Executed SELECT query for {user_email}, result: {result}")
 
         if result is not None:
             utc = pytz.timezone('UTC')
             eastern = pytz.timezone('US/Eastern')
             result_date = result[1].replace(
                 tzinfo=utc).astimezone(eastern).date()
-            print(
-                f"Result date timezone converted for {user_email}: {result_date}")
 
             decrypted_portfolio_value = aes_cipher.decrypt(result[0])
-            print(
-                f"Decrypted portfolio value for {user_email}: {decrypted_portfolio_value}")
 
             if abs(float(decrypted_portfolio_value) - value) > 5 and result_date != datetime.today().date():
-                print(f"Inserting new portfolio value for {user_email}")
                 cur.execute(
-                    "INSERT INTO portfolio_history (user_email, portfolio_value) VALUES (%s, %s)",
-                    (user_email, encrypted_value)
-                )
+                    "INSERT INTO portfolio_history (user_email, portfolio_value) VALUES (%s, %s)", (user_email, encrypted_value))
             else:
-                print(f"Updating portfolio value for {user_email}")
                 cur.execute(
-                    "UPDATE portfolio_history SET portfolio_value = %s WHERE user_email = %s AND timestamp = %s",
-                    (encrypted_value, user_email, result[1])
-                )
+                    "UPDATE portfolio_history SET portfolio_value = %s WHERE user_email = %s AND timestamp = %s", (encrypted_value, user_email, result[1]))
         else:
-            print(
-                f"No existing record found. Inserting new record for {user_email}")
             cur.execute(
-                "INSERT INTO portfolio_history (user_email, portfolio_value) VALUES (%s, %s)",
-                (user_email, encrypted_value)
-            )
+                "INSERT INTO portfolio_history (user_email, portfolio_value) VALUES (%s, %s)", (user_email, encrypted_value))
 
         conn.commit()
-        print(f"Database operation committed for {user_email}")
-
     except Exception as e:
-        print(f"Database error for {user_email}: {e}")
-
+        print(f"Database error: {e}")
     finally:
-        if cur:
-            cur.close()
-            print(f"Cursor closed for {user_email}")
-        if conn:
-            conn.close()
-            print(f"Connection closed for {user_email}")
-
-    print(f"Completed insert_portfolio_value for {user_email}")
+        cur.close()
+        conn.close()
 
 
 @cached(cache=TTLCache(maxsize=1, ttl=3600))
