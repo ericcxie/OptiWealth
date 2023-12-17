@@ -51,33 +51,3 @@ class AESCipher:
 # Load the AES key from an environment variable
 aes_key = base64.b64decode(os.getenv('AES_ENCRYPTION_KEY'))
 aes_cipher = AESCipher(aes_key)
-
-if __name__ == "__main__":
-    # Dummy Data
-    user_email = "dummy@example.com"
-    user_uid = "user123"
-    # Convert dict to JSON string
-    portfolio_data = json.dumps({"stock": "AAPL", "quantity": 10})
-
-    # Encryption
-    encrypted_email = aes_cipher.encrypt(user_email)
-    encrypted_uid = aes_cipher.encrypt(user_uid)
-    encrypted_portfolio_data = aes_cipher.encrypt(portfolio_data)
-
-    # Decryption
-    decrypted_email = aes_cipher.decrypt(encrypted_email)
-    decrypted_uid = aes_cipher.decrypt(encrypted_uid)
-    decrypted_portfolio_data = aes_cipher.decrypt(encrypted_portfolio_data)
-
-    # Display Results
-    print("Original Email:", user_email)
-    print("Encrypted Email:", encrypted_email)
-    print("Decrypted Email:", decrypted_email)
-
-    print("\nOriginal UID:", user_uid)
-    print("Encrypted UID:", encrypted_uid)
-    print("Decrypted UID:", decrypted_uid)
-
-    print("\nOriginal Portfolio Data:", portfolio_data)
-    print("Encrypted Portfolio Data:", encrypted_portfolio_data)
-    print("Decrypted Portfolio Data:", decrypted_portfolio_data)
