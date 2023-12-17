@@ -218,7 +218,6 @@ def upsert_user_email_in_db(old_email, new_email):
                 """)
 
                 conn.commit()
-                print("Email updated successfully.")
 
     except Exception as error:
         print(f"Error updating email with foreign key drop/add: {error}")
@@ -232,7 +231,6 @@ def insert_portfolio_value(user_email, value):
         user_email (str): The email address of the user.
         value (float): The value of the user's portfolio.
     """
-    print(f"Inserting portfolio value for {user_email} of value {value}")
     encrypted_value = aes_cipher.encrypt(str(value))
 
     try:
