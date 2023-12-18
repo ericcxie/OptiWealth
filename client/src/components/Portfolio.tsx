@@ -49,9 +49,9 @@ const Portfolio: React.FC<PortfolioProps> = ({ userEmail }) => {
 
   return (
     <div className="relative overflow-y-auto h-64 mt-10 shadow-md rounded-lg scrollbar-thin scrollbar-thumb-gray scrollbar-track-gray">
-      <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
+      <table className="w-full text-sm text-left text-gray-400">
         <thead
-          className="sticky uppercase top-0 bg-gray-50 dark:bg-gray-700 dark:text-gray-400"
+          className="sticky uppercase top-0 bg-gray-700 text-gray-400"
           style={{ zIndex: 1 }}
         >
           <tr>
@@ -70,7 +70,7 @@ const Portfolio: React.FC<PortfolioProps> = ({ userEmail }) => {
           {stocks.map((stock, index) => (
             <tr
               key={index}
-              className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
+              className="border-b bg-gray-800 border-gray-700 hover:bg-gray-600"
             >
               <td className="px-6 py-4">{stock.Ticker}</td>
               <td className="px-6 py-4">{stock["Total Shares"].toFixed(2)}</td>

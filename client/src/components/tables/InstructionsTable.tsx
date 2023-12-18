@@ -13,8 +13,8 @@ const InstructionsTable: React.FC<InstructionsTableProps> = ({
 }) => {
   return (
     <div className="relative overflow-y-auto h-96 mb-6 shadow-md rounded-lg scrollbar-thin scrollbar-thumb-gray scrollbar-track-gray">
-      <table className="w-full text-md text-left text-gray-500 dark:text-white">
-        <thead className="sticky uppercase top-0 bg-slate-700 dark:text-gray-300">
+      <table className="w-full text-md text-left text-white">
+        <thead className="sticky uppercase top-0 bg-slate-700 text-gray-300">
           <tr>
             <th scope="col" className="px-6 py-3">
               Action
@@ -31,10 +31,10 @@ const InstructionsTable: React.FC<InstructionsTableProps> = ({
           {instructions.map((instruction, index) => (
             <tr
               key={index}
-              className={`border-b dark:border-gray-700 ${
+              className={`border-b border-gray-700 ${
                 instruction.asset === "Bonds" || instruction.asset === "Cash"
-                  ? "bg-gray-800 dark:hover:bg-gray-700"
-                  : "bg-gray-900 dark:hover:bg-gray-700"
+                  ? "bg-gray-800 hover:bg-gray-700"
+                  : "bg-gray-900 hover:bg-gray-700"
               }`}
             >
               <th

@@ -15,7 +15,7 @@ const InfoModal: React.FC<ModalProps> = ({ show, onClose }) => {
 
   const closeModal = () => {
     setIsVisible(false);
-    setTimeout(() => onClose(), 300); // Close modal after the fade-out animation (300ms)
+    setTimeout(() => onClose(), 300);
   };
 
   return (
@@ -23,22 +23,22 @@ const InfoModal: React.FC<ModalProps> = ({ show, onClose }) => {
       className={`hs-overlay fixed top-0 left-0 w-full h-full z-[60] bg-black/40 flex justify-center items-center transition-opacity ${
         isVisible ? "opacity-100" : "opacity-0 pointer-events-none"
       }`}
-      onClick={closeModal} // Optional: Close modal when overlay is clicked
+      onClick={closeModal}
     >
       <div
-        className="bg-white dark:bg-gray-800 rounded-xl shadow-lg max-w-4xl w-full max-h-[80%] overflow-y-auto font-inter px-3 pt-2 transition-transform transform-gpu duration-300 ease-in-out"
+        className="bg-gray-800 rounded-xl shadow-lg max-w-4xl w-full max-h-[80%] overflow-y-auto font-inter px-3 pt-2 transition-transform transform-gpu duration-300 ease-in-out"
         style={{
           transform: isVisible ? "translateY(0)" : "translateY(100%)",
         }}
-        onClick={(e) => e.stopPropagation()} // Prevent modal from closing when the modal content is clicked
+        onClick={(e) => e.stopPropagation()}
       >
-        <div className="flex justify-between items-center py-3 px-4 border-b dark:border-gray-700">
-          <h3 className="font-bold text-3xl text-gray-800 dark:text-white">
+        <div className="flex justify-between items-center py-3 px-4 border-b border-gray-700">
+          <h3 className="font-bold text-3xl text-white">
             Portfolio Rebalancing
           </h3>
           <button
             type="button"
-            className="hs-dropdown-toggle inline-flex flex-shrink-0 justify-center items-center h-8 w-8 rounded-md text-gray-500 hover:text-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-offset-2 focus:ring-offset-white transition-all text-sm dark:focus:ring-gray-700 dark:focus:ring-offset-gray-800"
+            className="hs-dropdown-toggle inline-flex flex-shrink-0 justify-center items-center h-8 w-8 rounded-md text-gray-500 hover:text-gray-400 focus:outline-none focus:ring-2 focus:ring-offset-2 transition-all text-sm focus:ring-gray-700 focus:ring-offset-gray-800"
             onClick={closeModal}
           >
             <span className="sr-only">Close</span>
@@ -67,7 +67,7 @@ const InfoModal: React.FC<ModalProps> = ({ show, onClose }) => {
             </a>
           </p>
         </div>
-        <div className="flex justify-end items-center gap-x-2 py-3 px-4 border-t dark:border-gray-700">
+        <div className="flex justify-end items-center gap-x-2 py-3 px-4 border-t border-gray-700">
           <button
             type="button"
             className="hs-dropdown-toggle py-2 bg-indigo-600 hover:bg-indigo-500 rounded-xl px-4 text-white ..."
