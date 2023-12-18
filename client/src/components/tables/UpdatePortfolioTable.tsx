@@ -71,8 +71,8 @@ const UpdatePortfolioTable: React.FC<PortfolioTableProps> = ({
 
   return (
     <div className="relative overflow-y-auto max-h-96 mt-2 shadow-md rounded-lg scrollbar-thin scrollbar-thumb-gray scrollbar-track-gray">
-      <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
-        <thead className="sticky uppercase top-0 bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+      <table className="w-full text-sm text-left text-gray-400">
+        <thead className="sticky uppercase top-0 bg-gray-700 text-gray-400">
           <tr>
             <th scope="col" className="px-6 py-3">
               Ticker
@@ -89,11 +89,11 @@ const UpdatePortfolioTable: React.FC<PortfolioTableProps> = ({
           {data.map((row, index) => (
             <tr
               key={index}
-              className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
+              className="border-b bg-gray-800 border-gray-700 hover:bg-gray-600"
             >
               <th
                 scope="row"
-                className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
+                className="px-6 py-4 font-medium whitespace-nowrap text-white"
               >
                 {editingRow === index ? (
                   <input
@@ -146,13 +146,13 @@ const UpdatePortfolioTable: React.FC<PortfolioTableProps> = ({
                   <>
                     <button
                       onClick={() => handleSave(index)}
-                      className="font-medium text-blue-600 dark:text-blue-500 hover:underline"
+                      className="font-medium text-blue-500 hover:underline"
                     >
                       Save
                     </button>
                     <button
                       onClick={() => handleDelete(index)}
-                      className="font-medium text-red-600 dark:text-red-500 hover:underline ml-4"
+                      className="font-medium text-red-500 hover:underline ml-4"
                     >
                       Delete
                     </button>
@@ -160,7 +160,7 @@ const UpdatePortfolioTable: React.FC<PortfolioTableProps> = ({
                 ) : (
                   <button
                     onClick={() => handleEdit(index)}
-                    className="font-medium text-blue-600 dark:text-blue-500 hover:underline"
+                    className="font-medium text-blue-500 hover:underline"
                   >
                     Edit
                   </button>

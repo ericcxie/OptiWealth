@@ -56,7 +56,6 @@ def upload_file():
 
         # Check if the uploaded file is an image
         if filename.rsplit('.', 1)[1].lower() in {'png', 'jpg', 'jpeg'}:
-            print("Image received!")
             try:
                 target_data = parse_image(filepath)
                 stock_data = clean_data(target_data)
@@ -68,7 +67,6 @@ def upload_file():
 
         # Check if the uploaded file is a csv or xlsx
         elif filename.rsplit('.', 1)[1].lower() in {'csv', 'xlsx'}:
-            print("CSV/XLSX received!")
             try:
                 df = pd.read_excel(filepath) if filepath.endswith(
                     '.xlsx') else pd.read_csv(filepath)
@@ -353,7 +351,6 @@ def delete_account():
 def edit_user_email():
     old_email = request.json.get('email')
     new_email = request.json.get('new_email')
-    print(f"Updating email from {old_email} to {new_email}")
     upsert_user_email_in_db(old_email, new_email)
     return jsonify({'message': 'Email updated successfully'})
 

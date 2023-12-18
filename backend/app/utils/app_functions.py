@@ -3,6 +3,7 @@ import os
 import re
 from concurrent.futures import ThreadPoolExecutor
 from datetime import datetime
+from itertools import islice
 
 import pandas as pd
 import psycopg2
@@ -24,13 +25,15 @@ load_dotenv()
 DATABASE_NAME = os.getenv('DATABASE_NAME')
 DATABASE_USER = os.getenv('DATABASE_USER')
 DATABASE_PASSWORD = os.getenv('DATABASE_PASSWORD')
+DATABASE_HOST = os.getenv('DATABASE_HOST')
+DATABASE_PORT = os.getenv('DATABASE_PORT')
 
 DATABASE_CONFIG = {
     'dbname': DATABASE_NAME,
     'user': DATABASE_USER,
     'password': DATABASE_PASSWORD,
-    'host': 'localhost',
-    'port': '5432'
+    'host': DATABASE_HOST,
+    'port': DATABASE_PORT
 }
 
 c = CurrencyRates()
@@ -215,7 +218,6 @@ def upsert_user_email_in_db(old_email, new_email):
                 """)
 
                 conn.commit()
-                print("Email updated successfully.")
 
     except Exception as error:
         print(f"Error updating email with foreign key drop/add: {error}")
@@ -229,7 +231,6 @@ def insert_portfolio_value(user_email, value):
         user_email (str): The email address of the user.
         value (float): The value of the user's portfolio.
     """
-    print(f"Inserting portfolio value for {user_email} of value {value}")
     encrypted_value = aes_cipher.encrypt(str(value))
 
     try:

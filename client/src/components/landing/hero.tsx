@@ -36,8 +36,8 @@ export default function Hero() {
             </button>
           </Link>
           <a href="http://bit.ly/OptiWealthDocs" target="_blank">
-            <button className="relative inline-flex items-center justify-center p-0.5 mb-2 mr-2 overflow-hidden text-sm text-gray-900 font-medium rounded-3xl group bg-gradient-to-br from-cyan-500 to-blue-500 group-hover:from-cyan-500 group-hover:to-blue-500 hover:text-white dark:text-white focus:ring-4 focus:outline-none focus:ring-cyan-200 dark:focus:ring-cyan-800">
-              <span className="relative px-6 py-3 bg-white dark:bg-gray-900 rounded-3xl transition-all ease-in duration-75 group-hover:bg-opacity-0">
+            <button className="relative inline-flex items-center justify-center p-0.5 mb-2 mr-2 overflow-hidden text-sm text-white font-medium rounded-3xl group bg-gradient-to-br from-cyan-500 to-blue-500 group-hover:from-cyan-500 group-hover:to-blue-500 focus:ring-4 focus:outline-none focus:ring-cyan-800">
+              <span className="relative px-6 py-3 bg-gray-900 rounded-3xl transition-all ease-in duration-75 group-hover:bg-opacity-0">
                 Learn more
               </span>
             </button>
@@ -46,7 +46,7 @@ export default function Hero() {
       </div>
       <div className="mt-8 mb-8 md:mb-0 md:mt-0 md:flex-1 flex items-center justify-center">
         <img
-          src="/dist/assets/preview.jpg"
+          src="/assets/preview.jpg"
           alt="Application Preview"
           className="rounded-xl transform scale-90 md:scale-125"
         />

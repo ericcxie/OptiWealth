@@ -6,7 +6,7 @@ export default function Navbar() {
     <div>
       <nav className="fixed flex justify-between py-6 w-full lg:px-48 md:px-12 px-4 content-center bg-background z-10">
         <Link to="/">
-          <div className="flex flex-row">
+          <div className="flex flex-row ml-2 md:ml-0">
             <div className="mr-2 mt-0.5 w-7">
               <Logo />
             </div>
