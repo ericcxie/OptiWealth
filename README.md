@@ -119,7 +119,7 @@ _(As of Oct. 8, 2023)_
 
 ## Demo Account
 
-You can sign into a demo account at [OptiWealth.app](https://www.optiwealth.app) using the following account credentials:
+You can sign into a demo account at [optiwealth.app](https://www.optiwealth.app) using the following account credentials:
 
 ```
 Email address: johnsmith@gmail.com
