@@ -67,6 +67,7 @@ AES_ENCRYPTION_KEY=[Your32ByteBase64EncodedKey]
 To create the tables, run the `setup_db.py` file (located in `/backend` directory)
 
 ### Setting up Firebase Auth Environment Variables
+
 _OptiWealth uses Firebase for authentication, please create a Firebase account before running the application_
 
 1. `cd client`
@@ -86,7 +87,8 @@ REACT_APP_API_BASE_URL=http://127.0.0.1:5000
 ```
 
 ### Encryption
-AES symmetric key encryption is employed in the database to ensure the security of sensitive data like user portfolio and portfolio value. 
+
+AES symmetric key encryption is employed in the database to ensure the security of sensitive data like user portfolio and portfolio value.
 
 The AES key is 32 bytes long and base64-encoded, stored in the `.env` file. The key can be generated using the following script:
 
@@ -97,7 +99,7 @@ import base64
 AES_ENCRYPTION_KEY = base64.b64encode(get_random_bytes(32)).decode()
 ```
 
-The methods for encryption/decryption can be found in `backend/app/utils/encryption.py` 
+The methods for encryption/decryption can be found in `backend/app/utils/encryption.py`
 
 ### Running unit tests
 
@@ -114,6 +116,17 @@ The methods for encryption/decryption can be found in `backend/app/utils/encrypt
 </picture>
 
 _(As of Oct. 8, 2023)_
+
+## Demo Account
+
+You can sign into a demo account at [OptiWealth.app](https://www.optiwealth.app) using the following account credentials:
+
+```
+Email address: johnsmith@gmail.com
+Password: password
+```
+
+_Please note that this is a demo account, and the data you see is not real._
 
 ## Video Demo
 
