@@ -60,7 +60,11 @@ const InfoModal: React.FC<ModalProps> = ({ show, onClose }) => {
           </h2>
           <p className="text-gray-100">{LearnRebalance.algorithmOverview}</p>
           <p className="mt-3">
-            <a href="https://intelligent.schwab.com/article/determine-your-risk-tolerance-level">
+            <a
+              href="https://intelligent.schwab.com/article/determine-your-risk-tolerance-level"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
               <span className="underline hover:text-indigo-500">
                 Learn more about determining your risk tolerance
               </span>
